@@ -2,5 +2,6 @@ title: mojobojo
 permalink: /blog/:year/:month/:day/:title
 markdown: rdiscount
 pygments: true
+url: "imaip.github.io"              # your host, for absolute URL
 exclude:
   README.md
