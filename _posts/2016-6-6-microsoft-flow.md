@@ -1,7 +1,7 @@
 ---
 layout: blog
 title: Microsoft为个人云工作流提供Flow服务
-summary: 
+summary: flow,microsoft
 ---
 
 # {{ page.title }}
