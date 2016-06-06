@@ -1,7 +1,7 @@
 ---
 layout: blog
 title: Microsoft为个人云工作流提供Flow服务
-summary: flow,microsoft
+summary: Microsoft发布了一个名为Flow的个人工作流工具。这是一个类似“IFTTT”的工具平台，可通过对各种流行的SaaS服务进行编排实现个人任务的自动化处理
 ---
 
 # {{ page.title }}
