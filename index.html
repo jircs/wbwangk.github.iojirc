@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "mojobojo"
+title: "王伟兵的博客"
 ---
 
 <div id="posts">
@@ -8,22 +8,11 @@ title: "mojobojo"
 		{% for post in site.posts %}
 		<div class="post">
 			<div>
-				<span class="post_date">{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a>
+				 &raquo; <a href="{{ post.url }}">{{ post.title }}</a>
 			</div>
 			<div class="post_summary">{{ post.summary }}</div>
 		</div>	
 		{% endfor %}
 </div>
 
-<hr/>
 
-<div id="blurb">
-	<p>
-		<strong>Samurai:</strong> Hakuin, where do I go when I die?<br/>
-		<strong>Hakuin:</strong> I have no idea.<br/>
-		<strong>Samurai:</strong> What do you mean you don't know? You're a Zen master!<br/>
-		<strong>Hakuin:</strong> Yes, but not a dead one.<br/>
-	</p>
-</div>
-
-<hr/>
