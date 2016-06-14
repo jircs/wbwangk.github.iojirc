@@ -1,0 +1,13 @@
+---
+layout: blog
+title: CURL长传文件
+summary: CURL,文件上传
+---
+
+## {{ page.title }}
+
+命令行：
+curl -X PUT -H 'Content-Type: text/csv' \
+     --data-binary @yy71z8e6eb.1.csv http://ethercalc.imaicloud.com/_/csvexample
+     
+本地的文件要加上@符号。--data/--data-binary参数是区别的，ethercalc用的--data-binary
