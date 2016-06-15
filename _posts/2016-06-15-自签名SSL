@@ -1,0 +1,11 @@
+---
+layout: blog
+title: 自签名SSL
+summary: 自签名 SSL https
+---
+
+## {{ page.title }}
+
+https://docs.sandstorm.io/en/latest/administering/self-signed/
+
+如果把自签名证书的https嵌入iframe中，用户浏览器就不提示网站安全性了。
