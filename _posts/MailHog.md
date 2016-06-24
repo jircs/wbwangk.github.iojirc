@@ -1,3 +1,11 @@
+---
+layout: blog
+title: MailHog
+summary: MaiHog
+---
+
+# {{ page.title }}
+
 MailHog功能：
 
 ESMTP server implementing RFC5321(Simple Mail Transfer Protocol)
