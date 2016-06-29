@@ -13,4 +13,21 @@
     }
 ```
 ## 启动couchdb(couch/fo)
-docker run -p 5984:5984 -d -v /var/couchdb:/usr/local/var/lib/couchdb registry.aliyuncs.com/imaidev/couchdb
+docker run -p 5984:5984 -d -v /var/couchdb:/usr/local/var/lib/couchdb \
+ -v /var/couchdb/conf:/usr/local/etc/couchdb/local.d  \
+ -v /var/couchdb/log:/usr/local/var/log/couchdb \
+registry.aliyuncs.com/imaidev/couchdb
+
+curl -vX PUT http://couch.imaicloud.com/webb/df7a5aa5bc2a6d6852f61a078a00059f/aa.jpg \
+     --data-binary @aa.jpg -H "Content-Type:image/jpg"
+
+
+## 进入docker容器命令行
+docker exec -it 36cf373275dc /bin/bash
+
+## imaicloud 虚拟机清单 
+ ocs_dev_web01  内网：10.0.9.105 电信：58.56.17.102 联通：60.216.42.102 移动：223.99.170.102  dev.imaicloud.com  (平台开发)
+ ocs_dev_app01  内网：10.0.7.105  
+ ocs_web01  内网：10.0.9.106  电信：58.56.17.103 联通：60.216.42.103 移动：223.99.170.103  ocs.imaicloud.com  (在线客服生产) 
+ ocs_app01  内网：10.0.7.106 
+
