@@ -12,3 +12,5 @@
         rewrite /ethercalc(/.*) $1 break;
     }
 ```
+## 启动couchdb(couch/fo)
+docker run -p 5984:5984 -d -v /var/couchdb:/usr/local/var/lib/couchdb registry.aliyuncs.com/imaidev/couchdb
