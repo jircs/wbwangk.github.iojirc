@@ -30,4 +30,5 @@ docker exec -it 36cf373275dc /bin/bash
  ocs_dev_app01  内网：10.0.7.105  
  ocs_web01  内网：10.0.9.106  电信：58.56.17.103 联通：60.216.42.103 移动：223.99.170.103  ocs.imaicloud.com  (在线客服生产) 
  ocs_app01  内网：10.0.7.106 
-
+## 查看ubuntu端口占用
+   netstat -ap | grep 8080
