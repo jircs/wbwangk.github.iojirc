@@ -6,4 +6,4 @@ summary: NoSQL
 
 
 # {{ page.title }}
-[Visual Guide to NoSQL Systems\(http://blog.nahurst.com/visual-guide-to-nosql-systems)
+[Visual Guide to NoSQL Systems](http://blog.nahurst.com/visual-guide-to-nosql-systems)
