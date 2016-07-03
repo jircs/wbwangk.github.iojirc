@@ -1,4 +1,5 @@
 ---
+layout:blog
 title:NoSQL数据库的可视化比较
 ---
 
