@@ -12,6 +12,10 @@ summary: postfix,MTA,mail,邮件
 3. IP 地址反向解析
 4. 邮件内容不要含有特殊字符以及明显的广告内容
 
+0. 向DNS中添加SPF记录
+
+```v=spf1 ip4:imai365.cc ~all```
+
 1. 安装opendkim
 
 ```
@@ -24,3 +28,11 @@ yum(或apt-get) install opendkim
 
 3. 运行postfix
 
+```
+docker run -p 25:25 \
+         -e maildomain=mail.imai365.ccc -e smtp_user=user:pwd \
+         -v /etc/opendkim/keys/imai365.cc:/etc/opendkim/domainkeys \
+         --name postfix -d registry.aliyuncs.com/imaidev/postfix
+```
+4.PTR反向域名解析
+ 这个不是ISP（如万网）负责，而是专线提供商，如联通，提供的服务。
