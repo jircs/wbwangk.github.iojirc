@@ -12,6 +12,15 @@ summary: postfix,MTA,mail,邮件
 3. IP 地址反向解析
 4. 邮件内容不要含有特殊字符以及明显的广告内容
 
+被退信的要素：
+
+the server is an open mail relay
+the sender's or server's IP address is blacklisted
+the server does not have a [Fully Qualified Domain Name](https://github.com/DigitalOcean-User-Projects/Articles-and-Tutorials/blob/master/set_hostname_fqdn_on_ubuntu_centos.md) (FQDN) and a PTR record
+the [Sender Policy Framework](https://www.digitalocean.com/community/tutorials/how-to-use-an-spf-record-to-prevent-spoofing-improve-e-mail-reliability) (SPF) DNS record is missing or it is misconfigured
+the DomainKeys Identified Mail (DKIM) implementation is missing or it's not properly set up
+
+
 0. 向DNS中添加SPF记录
 
 ```v=spf1 ip4:imai365.cc ~all```
@@ -23,15 +32,15 @@ yum(或apt-get) install opendkim
 ```
 2. 生成公钥/私钥
 
-创建目录：```/etc/opendkim/keys/imai365.cc```
-在上述目录下执行```opendkim-genkey -d YourDomain.com -s default ```  就生成了两个文件。defaut.txt中就是DKIM签名的公钥，要以txt记录的形式放到DNS中。而另一个文件是私钥，执行postfix时要告诉它私钥的所在目录。
+创建目录：```/etc/opendkim/keys/imaicloud.com```
+在上述目录下执行```opendkim-genkey -d imaicloud.com -s default ```  就生成了两个文件。defaut.txt中就是DKIM签名的公钥，要以txt记录的形式放到DNS中。而另一个文件是私钥，执行postfix时要告诉它私钥的所在目录。
 
 3. 运行postfix
 
 ```
 docker run -p 25:25 \
-         -e maildomain=mail.imai365.ccc -e smtp_user=user:pwd \
-         -v /etc/opendkim/keys/imai365.cc:/etc/opendkim/domainkeys \
+         -e maildomain=mail.imaicloud.com -e smtp_user=admin:123jnyg \
+         -v /etc/opendkim/keys/imaicloud.com:/etc/opendkim/domainkeys \
          --name postfix -d registry.aliyuncs.com/imaidev/postfix
 ```
 4.PTR反向域名解析
