@@ -52,7 +52,7 @@ yum(或apt-get) install opendkim
 ```
 v=DKIM1; k=rsa;p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDBoFohDShGCZF+Wkk4BqOz+IlcjCm9nSwDWFWjGIr1T+gDhyyUMJVJv5kP7/dVnjR/aWYx3A1Tk7gb9wJlvZrSZXF+io0EgxtZpKZnxrGjD07kREzxrWEKsQnjRVMnOW+Y1m1MWvs+4CIYBtEug3cOhuwDOXgEMhLgDERHDxFn/QIDAQAB
 ```
-5. 安装和运行postfix
+5. 安装和运行postfix（MTA发送邮件)
 由于邮件服务器需要支持反向域名解析，担心docker方式运行会使问题复杂，确定不使用docker方式运行。
 CentOS默认已经安装了postfix。编辑/etc/postfix/main.cf。增加了如下配置，其他使用的默认配置。
 ```
@@ -61,5 +61,13 @@ mydomain = imaicloud.com
 myorigin = $mydomain
 mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
 ```
-6.PTR反向域名解析
+6. 安装dovecot(IMAP接收邮件)
+```yum(或apt-get) install dovecot```
+编辑配置文件```/etc/dovecot/dovecot.conf```
+配置文件删除和增加的内容见参考1.
+
+7.PTR反向域名解析
  这个不是ISP（如万网）负责，而是专线提供商，如联通，提供的服务。
+ 
+ 
+ 这个文档的[参考1](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-postfix-e-mail-server-with-dovecot)和[参考2](https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-dkim-with-postfix-on-debian-wheezy)
