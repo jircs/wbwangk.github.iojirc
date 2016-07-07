@@ -21,21 +21,24 @@ the [Sender Policy Framework](https://www.digitalocean.com/community/tutorials/h
 the DomainKeys Identified Mail (DKIM) implementation is missing or it's not properly set up
 
 
-0. 向DNS中添加SPF记录
+1. 向DNS中添加MX和SPF记录
 
-```v=spf1 ip4:imai365.cc ~all```
+DNS中增加MX记录，主机记录是：```@```，值是：```imaicloud.com.```
+检查MX记录：在windows系统的命令行控制体输入```nslookup -qt=mx imaicloud.com```，能显示```imaicloud.com```表示MX记录配置正确。
 
-1. 安装opendkim
+在DNS中增加TXT记录，值是：```v=spf1 ip4:imaicloud.com ~all```
+
+2. 安装opendkim
 
 ```
 yum(或apt-get) install opendkim
 ```
-2. 生成公钥/私钥
+3. 生成公钥/私钥
 
 创建目录：```/etc/opendkim/keys/imaicloud.com```
 在上述目录下执行```opendkim-genkey -d imaicloud.com -s default ```  就生成了两个文件。defaut.txt中就是DKIM签名的公钥，要以txt记录的形式放到DNS中。而另一个文件是私钥，执行postfix时要告诉它私钥的所在目录。
 
-3. 运行postfix
+4. 运行postfix
 
 ```
 docker run -p 25:25 \
@@ -43,5 +46,5 @@ docker run -p 25:25 \
          -v /etc/opendkim/keys/imaicloud.com:/etc/opendkim/domainkeys \
          --name postfix -d registry.aliyuncs.com/imaidev/postfix
 ```
-4.PTR反向域名解析
+5.PTR反向域名解析
  这个不是ISP（如万网）负责，而是专线提供商，如联通，提供的服务。
