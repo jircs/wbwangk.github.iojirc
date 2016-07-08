@@ -34,7 +34,7 @@ the DomainKeys Identified Mail (DKIM) implementation is missing or it's not prop
 DNS中增加MX记录，主机记录是：```@```，值是：```imaicloud.com.```
 检查MX记录：在windows系统的命令行控制体输入```nslookup -qt=mx imaicloud.com```，能显示```imaicloud.com```表示MX记录配置正确。
 
-在DNS中增加TXT记录，值是：```v=spf1 ip4:imaicloud.com ~all```
+在DNS中增加TXT记录，值是：```v=spf1 ip4:60.216.42.102 ip4:223.99.170.103 ~all```。```ip4```还可以替换成```a```，表示A记录。可[参考](http://www.openspf.org/Introduction)
 
 2. 安装opendkim
 
