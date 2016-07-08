@@ -36,24 +36,43 @@ DNS中增加MX记录，主机记录是：```@```，值是：```imaicloud.com.```
 
 在DNS中增加TXT记录，值是：```v=spf1 ip4:60.216.42.102 ip4:223.99.170.103 ~all```。```ip4```还可以替换成```a```，表示A记录。可[参考](http://www.openspf.org/Introduction)
 
-2. 安装opendkim
-
-```
-yum(或apt-get) install opendkim
-```
-3. 生成公钥/私钥
-
+#### 安装opendkim、生成公钥/私钥、在DNS中增加DKIM记录
+安装opendkim，执行```yum(或apt-get) install opendkim```。
 创建目录：```/etc/opendkim/keys/imaicloud.com```
-在上述目录下执行```opendkim-genkey -d imaicloud.com -s default ```  就生成了两个文件。defaut.txt中就是DKIM签名的公钥，要以txt记录的形式放到DNS中。而另一个文件是私钥，执行postfix时要告诉它私钥的所在目录。
+在上述目录下执行```opendkim-genkey -d imaicloud.com -s default ```  就生成了两个文件：defaut.txt中就是DKIM签名的公钥，要以txt记录的形式放到DNS中。而另一个文件是私钥，执行postfix时要告诉它私钥的所在目录。
 
-4. 在DNS中增加DKMIM记录
+编辑opendkim配置文件，执行```vi /etc/opendkim.conf```。可以看到opendkim创建了一个socket供MTA来通信：```Socket inet:8891@localhost```
+加入两行配置，以便opendkim找到key：
+
+```
+KeyTable       /etc/opendkim/KeyTable
+SigningTable   refile:/etc/opendkim/SigningTable
+```
+需要执行下列命令改一下私钥文件的访问权限。opendkim:opendkim是用户和用户组。
+```
+chown opendkim:opendkim default.private
+```
+这貌似是一个bug，如果不改权限，可以从日志文件/var/log/maillog中看到错误，说opendkim没有权限访问default.private
+
+执行```vi /etc/opendkim/KeyTable```，加入一行
+
+```
+default._domainkey.imaicloud.com imaicloud.com:default:/etc/opendkim/keys/imaicloud.com/default.private
+```
+执行```vi /etc/opendkim/SigningTable```，加入一行
+
+```
+*@imaicloud.com default._domainkey.imaicloud.com
+```
+
+在DNS中增加DKMIM记录，记录值来自```/etc/opendkim/keys/imaicloud.com/default.txt```
 记录类型TXT，主机记录是```default._domainkey```，记录值：
 
 ```
 v=DKIM1; k=rsa;p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDBoFohDShGCZF+Wkk4BqOz+IlcjCm9nSwDWFWjGIr1T+gDhyyUMJVJv5kP7/dVnjR/aWYx3A1Tk7gb9wJlvZrSZXF+io0EgxtZpKZnxrGjD07kREzxrWEKsQnjRVMnOW+Y1m1MWvs+4CIYBtEug3cOhuwDOXgEMhLgDERHDxFn/QIDAQAB
 ```
-5. 安装和运行postfix（MTA发送邮件)
-由于邮件服务器需要支持反向域名解析，担心docker方式运行会使问题复杂，确定不使用docker方式运行。
+#### 安装和运行postfix（MTA发送邮件)
+
 CentOS默认已经安装了postfix。编辑/etc/postfix/main.cf。增加了如下配置，其他使用的默认配置。
 ```
 myhostname = mail.imaicloud.com
@@ -61,12 +80,13 @@ mydomain = imaicloud.com
 myorigin = $mydomain
 mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
 ```
-6. 安装dovecot(IMAP接收邮件)
+#### dovecot与PTR反向域名解析
+安装dovecot(IMAP接收邮件)
 ```yum(或apt-get) install dovecot```
 编辑配置文件```/etc/dovecot/dovecot.conf```
 配置文件删除和增加的内容见参考1.
 
-7.PTR反向域名解析
+PTR反向域名解析
  这个不是ISP（如万网）负责，而是专线提供商，如联通，提供的服务。
  
  
