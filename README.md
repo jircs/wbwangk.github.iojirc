@@ -44,4 +44,6 @@ docker run -d -p 5000:5000 --name registry registry.aliyuncs.com/imaidev/registr
 生成密码文件:docker run --entrypoint htpasswd registry.aliyuncs.com/imaidev/registry -Bbn wbwang 1 > auth/htpasswd
 登录：docker login --username=wbwang registry.imaicloud.com
 
-docker run -d -p 5000:5000 --restart=always --name registry  registry.aliyuncs.com/imaidev/registry
+docker run -d -p 5000:5000 --restart=always -v /var/lib/registry:/var/lib/registry \
+--name registry  registry.aliyuncs.com/imaidev/registry
+
