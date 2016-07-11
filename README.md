@@ -32,3 +32,10 @@ docker exec -it 36cf373275dc /bin/bash
  ocs_app01  内网：10.0.7.106 
 ## 查看ubuntu端口占用
    netstat -ap | grep 8080
+## ui-for-docker
+docker run -d -p 9001:9000 --privileged -v /var/run/docker.sock:/var/run/docker.sock registry.aliyuncs.com/imaidev/ui-for-docker
+
+
+        location /.well-known {
+            root html-imaicloud;
+        }
