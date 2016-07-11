@@ -47,3 +47,9 @@ docker run -d -p 5000:5000 --name registry registry.aliyuncs.com/imaidev/registr
 docker run -d -p 5000:5000 --restart=always -v /var/lib/registry:/var/lib/registry \
 --name registry  registry.aliyuncs.com/imaidev/registry
 
+registry.imaicloud.com/docker-compose-ui
+registry.imaicloud.com/tobegit3hub/seagull
+ registry.imaicloud.com/mlabouardy/dockerswarm-ui
+ docker pull atcol/docker-registry-ui
+ docker pull hyper/docker-registry-web
+ docker pull jgsqware/registry-ui
