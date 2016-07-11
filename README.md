@@ -39,3 +39,9 @@ docker run -d -p 9001:9000 --privileged -v /var/run/docker.sock:/var/run/docker.
         location /.well-known {
             root html-imaicloud;
         }
+## docker registry
+docker run -d -p 5000:5000 --name registry registry.aliyuncs.com/imaidev/registry
+生成密码文件:docker run --entrypoint htpasswd registry.aliyuncs.com/imaidev/registry -Bbn wbwang 1 > auth/htpasswd
+登录：docker login --username=wbwang registry.imaicloud.com
+
+docker run -d -p 5000:5000 --restart=always --name registry  registry.aliyuncs.com/imaidev/registry
