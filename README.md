@@ -32,6 +32,7 @@ docker exec -it 36cf373275dc /bin/bash
  ocs_app01  内网：10.0.7.106 
 ## 查看ubuntu端口占用
    netstat -ap | grep 8080
+   curl -v -X OPTIONS https://registry.imaicloud.com/v2/ (测试CORS)
 ## ui-for-docker
 docker run -d -p 9001:9000 --privileged -v /var/run/docker.sock:/var/run/docker.sock registry.aliyuncs.com/imaidev/ui-for-docker
 
@@ -46,10 +47,12 @@ docker run -d -p 5000:5000 --name registry registry.aliyuncs.com/imaidev/registr
 
 docker run -d -p 5000:5000 --restart=always -v /var/lib/registry:/var/lib/registry \
 --name registry  registry.aliyuncs.com/imaidev/registry
+## 各种UI
+1. docker run --name docker-compose-ui -p 5000:5000 -v /var/run/docker.sock:/var/run/docker.sock registry.imaicloud.com/docker-compose-ui
+2. docker run -d -p 10086:10086 -v /var/run/docker.sock:/var/run/docker.sock registry.imaicloud.com/tobegit3hub/seagull(界面赞，多主题)
+3. docker run -d -p 3000:3000 -v /var/run/docker.sock:/var/run/docker.sock --name dockerswarm-ui   registry.imaicloud.com/mlabouardy/dockerswarm-ui (功能太单一，无法从镜像启动容器）
+4. docker pull registry.imaicloud.com/atcol/docker-registry-ui
+5. docker pull registry.imaicloud.com/hyper/docker-registry-web
+6. docker pull registry.imaicloud.com/jgsqware/registry-ui
+ 
 
-registry.imaicloud.com/docker-compose-ui
-registry.imaicloud.com/tobegit3hub/seagull
- registry.imaicloud.com/mlabouardy/dockerswarm-ui
- docker pull atcol/docker-registry-ui
- docker pull hyper/docker-registry-web
- docker pull jgsqware/registry-ui
