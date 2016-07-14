@@ -13,14 +13,17 @@
     }
 ```
 ## 启动couchdb(couch/fo)
+```
 docker run -p 5984:5984 -d -v /var/couchdb:/usr/local/var/lib/couchdb \
  -v /var/couchdb/conf:/usr/local/etc/couchdb/local.d  \
  -v /var/couchdb/log:/usr/local/var/log/couchdb \
 registry.aliyuncs.com/imaidev/couchdb
-
+```
+couchdb附件功能测试：
+```
 curl -vX PUT http://couch.imaicloud.com/webb/df7a5aa5bc2a6d6852f61a078a00059f/aa.jpg \
      --data-binary @aa.jpg -H "Content-Type:image/jpg"
-
+```
 
 ## 进入docker容器命令行
 docker exec -it 36cf373275dc /bin/bash
@@ -48,7 +51,7 @@ docker run -d -p 5000:5000 --name registry registry.aliyuncs.com/imaidev/registr
 docker run -d -p 5000:5000 --restart=always -v /var/lib/registry:/var/lib/registry \
 --name registry  registry.aliyuncs.com/imaidev/registry
 ## 各种UI
-1. docker run --name docker-compose-ui -p 5000:5000 -v /var/run/docker.sock:/var/run/docker.sock registry.imaicloud.com/docker-compose-ui
+1. docker run --name docker-compose-ui -p 5000:5000 -v /var/run/docker.sock:/var/run/docker.sock  registry.imaicloud.com/docker-compose-ui
 2. docker run -d -p 10086:10086 -v /var/run/docker.sock:/var/run/docker.sock registry.imaicloud.com/tobegit3hub/seagull(界面赞，多主题)
 3. docker run -d -p 3000:3000 -v /var/run/docker.sock:/var/run/docker.sock --name dockerswarm-ui   registry.imaicloud.com/mlabouardy/dockerswarm-ui (功能太单一，无法从镜像启动容器）
 4. docker pull registry.imaicloud.com/atcol/docker-registry-ui
