@@ -62,7 +62,7 @@ docker run -d -p 5000:5000 --restart=always -v /var/lib/registry:/var/lib/regist
 https://storage.googleapis.com/golang/go1.6.3.linux-amd64.tar.gz
 tar -C /usr/local -xzf go1.6.3.linux-amd64.tar.gz
 export PATH=$PATH:/usr/local/go/bin
-export GOROOT=$HOME/go
+export GOROOT=/usr/local/go
 export GOPATH=$HOME/work
 
 
