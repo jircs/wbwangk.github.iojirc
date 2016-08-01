@@ -1,4 +1,9 @@
-## nginx第三方模块echo安装
+---
+layout: blog
+title: Nginx安装echo插件
+summary: 
+---
+## {{ page.title }}
 **下载nginx**
 下载地址：http://nginx.org/en/download.html
 ```
