@@ -96,7 +96,10 @@ apg-get install make
 ```
 如果运行```./sbin/nginx -s reload```提示``` invalid PID number "" in "/opt/nginx/logs/nginx.pid"```则执行```./sbin/nginx -c conf/nginx.conf```
 
-
+## logstash
+```
+docker run -it --rm -v /opt/logstash/conf:/config-dir -v /opt/nginx/logs:/opt/nginx/logs logstash logstash -f /config-dir/logstash.conf
+```
 
 
 
