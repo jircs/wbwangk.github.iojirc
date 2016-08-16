@@ -3,7 +3,7 @@ layout: blog
 title: postfix邮件服务器
 summary: postfix,MTA,mail,邮件
 ---
-
+postfix入门文档推荐廖雪峰的[这篇](http://www.liaoxuefeng.com/article/00137387674890099a71c0400504765b89a5fac65728976000)
 ## {{ page.title }}
 
 发送邮件的要素：
