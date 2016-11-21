@@ -1,0 +1,42 @@
+---
+layout: blog
+title: rtmp与直播
+summary: rtmp,直播
+---
+
+## {{ page.title }}
+
+### 安装ffmpeg
+安装Nux-Dextop源
+```
+rpm --import http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro 
+rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-1.el7.nux.noarch.rpm
+(查看repo源是否安装成功)
+yum repolist 
+```
+
+### 部署rtmp服务器
+```
+docker run -p 1935:1935 -p 8080:8080 jasonrivers/nginx-rtmp
+```
+#### OBS Configuration
+Under broadcast settigns, set the follwing parameters:
+
+Streaming Service: Custom
+Server: rtmp://<your server ip>/live
+Play Path/Stream Key: mystream
+#### Watching the steam
+In your favorite RTMP video player connect to the stream using the URL:
+```
+rtmp://<your server ip>/live/mystream
+http://<your server ip>/hls/mystream.m3u8
+```
+#### Streaming-Example
+Send a stream:
+```
+ffmpeg -i input -c copy -f flv rtmp://localhost:1935/live/input
+```
+Receive a stream:
+```
+ffmpeg -i rtmp://localhost:1935/live/input -c copy -f flv output
+```
