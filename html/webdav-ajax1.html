@@ -20,7 +20,7 @@ function MKCOL() {
     document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
     }
   }
-  xmlhttp.open("DELETE","http://webdav.imaicloud.com/webb/",true);
+  xmlhttp.open("DELETE","http://webdav.imaicloud.com/hosts",true);
   xmlhttp.send();
 }
 </script>
@@ -29,7 +29,7 @@ function MKCOL() {
 
 <h2>AJAX</h2>
 <button type="button" onclick="MKCOL()">MKCOL /webb/</button>
-  <button type="button" onclick="DELETE()">DELETE /webb/</button>
+  <button type="button" onclick="DELETE()">DELETE /hosts</button>
 <div id="myDiv"></div>
 
 </body>
