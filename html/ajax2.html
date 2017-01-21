@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>	
+		<style>
+			.row {
+				padding:10px;
+			}
+		</style>
+	</head>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+	<body>
+		<div class="row">
+			<label>创建test.json：</label> 
+			<button id="putBtn" type="button">PUT</button>
+		</div>
+		<div class="row">
+			<label>删除test.json：</label> 
+			<button id="deletebtn" type="button">DELETE</button>
+		</div>
+		
+		<div class="row">
+			<label>测试HEAD方法：</label> 
+			<button id="headBtn" type="button">HEAD</button>
+		</div>
+		
+		<div class="row">
+			<label>改名 test.json---testCopy.json：</label> <button id="moveBtn" type="button">MOVE</button>
+		</div>
+		
+		<div class="row">
+			<label>创建testmk目录：</label> 
+			<button id="mkCol" type="button">MKCOL</button>
+		</div>	
+	</body>
+	<script>
+	
+		/**
+		 * PUT
+		 */
+		var putBtn = document.getElementById("putBtn");
+		var putFilePath = "http://webdav.imaicloud.com/webdav/test.json";    //文件路径
+		var fileContent = "{'msg':'Hello World!'}";   						//文件内容
+		putBtn.onclick = function(){
+			ajax({
+		        url: putFilePath,              //请求地址
+		        type: "PUT",                   //请求方式
+		        data: fileContent,        	   //请求参数
+		        success: function (response, xml) {
+		            // 此处放成功后执行的代码
+		        },
+		        fail: function (status) {
+		            // 此处放失败后执行的代码
+		        }
+		    });
+		}
+		
+		/**
+		 * 删除按钮
+		 */
+		var deleteBtn = document.getElementById("deletebtn");
+		//删除文件路径
+		var deleteFilePath = "http://webdav.imaicloud.com/webdav/test.json";
+		deleteBtn.onclick = function(){
+			var deleteFile = "";
+			ajax({
+		        url: deleteFilePath,              //请求地址
+		        type: "DELETE",                   //请求方式
+		        data: "",        			      //请求参数
+		        success: function (response, xml) {
+		            // 此处放成功后执行的代码
+		        },
+		        fail: function (status) {
+		            // 此处放失败后执行的代码
+		        }
+		    });
+		}
+	/**
+	 * HEAD
+	 */
+	var headBtn = document.getElementById("headBtn");
+	var headFilePath = "http://webdav.imaicloud.com/webdav/test.json";
+	headBtn.onclick = function(){
+		ajax({
+	        url: headFilePath,  //请求地址
+	        type: "HEAD",                       			//请求方式
+	        data: "",        								//请求参数
+	        success: function (response, xml) {
+	            // 此处放成功后执行的代码
+	        },
+	        fail: function (status) {
+	            // 此处放失败后执行的代码
+	        }
+	    });
+	}
+	
+	/**
+	 * MOVE
+	 */
+	var moveBtn = document.getElementById("moveBtn");
+	var reqPath = "http://webdav.imaicloud.com/webdav/test.json"; //请求路径
+	var desPath = "http://webdav.imaicloud.com/webdav/testCopy.json"; //目标路径
+	moveBtn.onclick = function(){
+	    $.ajax({
+	    	beforeSend: function(req){
+	    		req.setRequestHeader('Destination',desPath);
+			},
+	    	url: reqPath,              			//请求地址
+	        type: "MOVE",                       //请求方式
+	            //请求参数
+	        success: function (response, xml) {
+	            // 此处放成功后执行的代码
+	        },
+	        fail: function (status) {
+	            // 此处放失败后执行的代码
+	        }
+		})  
+	}
+	
+	/**
+	 * MKCOL
+	 */
+	var mkCol = document.getElementById("mkCol");
+	var mkPath = "http://webdav.imaicloud.com/webdav/testmk/";
+	mkCol.onclick = function(){
+	    ajax({
+	        url: mkPath,              //请求地址
+	        type: "MKCOL",                       //请求方式
+	        success: function (response, xml) {
+	            // 此处放成功后执行的代码
+	        },
+	        fail: function (status) {
+	            // 此处放失败后执行的代码
+	        }
+	    });  
+	}
+	
+	/**
+	 * 原声ajax方法
+	 * @param {Object} options
+	 */
+    function ajax(options) {
+        options = options || {};
+        options.type = (options.type || "GET").toUpperCase();
+        options.dataType = options.dataType || "json";
+        var params = options.data;
+
+        //创建 - 非IE6 - 第一步
+        if (window.XMLHttpRequest) {
+            var xhr = new XMLHttpRequest();
+        } else { //IE6及其以下版本浏览器
+            var xhr = new ActiveXObject('Microsoft.XMLHTTP');
+        }
+
+        //接收 - 第三步
+        xhr.onreadystatechange = function () {
+        	/**
+        	 * 打印返回信息
+        	 */
+        	//console.log("xhr.readyState=="+xhr.readyState);
+        	//console.log("xhr.responseText=="+xhr.responseText);
+        	//console.log("xhr.responseXML=="+xhr.responseXML);
+            if (xhr.readyState == 4) {
+                var status = xhr.status;
+                //console.log(status);
+                if (status >= 200 && status < 300) {
+                    options.success && options.success(xhr.responseText, xhr.responseXML);
+                } else {
+                    options.fail && options.fail(status);
+                }
+            }
+        }
+		
+        //连接 和 发送 - 第二步
+    	//if(options.type === "MOVE"){
+    		//xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    	//}
+    	xhr.open(options.type, options.url, true);
+    	xhr.send(params);    
+    }
+		
+	</script>
+</html>
