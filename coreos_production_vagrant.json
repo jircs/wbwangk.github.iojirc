@@ -1,0 +1,17 @@
+{
+name: "coreos-alpha",
+description: "CoreOS alpha",
+versions: [
+{
+version: "1313.0.0",
+providers: [
+{
+name: "virtualbox",
+url: "/c/u/coreos_production_vagrant.box",
+checksum_type: "sha256",
+checksum: "e5bb4d68dd1f68c07c66372330619abcfe3b2d3e1c18ea912758f320ea811f6e"
+}
+]
+}
+]
+}
