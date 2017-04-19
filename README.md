@@ -101,6 +101,10 @@ apg-get install make
 docker run -it --rm -v /opt/logstash/conf:/config-dir -v /opt/nginx/logs:/opt/nginx/logs logstash logstash -f /config-dir/logstash.conf
 ```
 
+ {% raw %}
+  $$a^2 + b^2 = c^2$$ --> note that all equations between these tags will not need escaping! 
+ {% endraw %}
+
 
 
 
