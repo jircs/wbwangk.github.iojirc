@@ -1,6 +1,3 @@
-curl -X GET --header 'Accept: application/json' 'http://localhost:3000/api/fabric/1_0/channels/mychannel/transactions/c72b588dc1cf70932a021d7005888d96b386d422fe37291c6d2b47323db0970b'
-
-
 {
   "validationCode": 0,
   "transactionEnvelope": {
