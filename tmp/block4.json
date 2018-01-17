@@ -1,0 +1,660 @@
+{
+  "header": {
+    "number": {
+      "low": 4,
+      "high": 0,
+      "unsigned": true
+    },
+    "previous_hash": "e9242c5b0c1735b3a21c750fbd6612a2ea07f7ac48ed13ffbf7f0315061cb677",
+    "data_hash": "2d0180dc2fc40228517c553459fdac2cdc5202ce48b235ca6d306e9549795423"
+  },
+  "data": {
+    "data": [
+      {
+        "signature": {
+          "type": "Buffer",
+          "data": [
+            48,
+            68,
+            2,
+            32,
+            59,
+            253,
+            175,
+            177,
+            80,
+            14,
+            52,
+            22,
+            132,
+            57,
+            113,
+            8,
+            205,
+            50,
+            12,
+            30,
+            184,
+            180,
+            187,
+            77,
+            214,
+            106,
+            173,
+            101,
+            8,
+            146,
+            80,
+            127,
+            118,
+            14,
+            90,
+            6,
+            2,
+            32,
+            36,
+            99,
+            224,
+            67,
+            178,
+            213,
+            94,
+            241,
+            178,
+            244,
+            60,
+            39,
+            164,
+            11,
+            37,
+            87,
+            231,
+            190,
+            230,
+            65,
+            79,
+            203,
+            216,
+            161,
+            113,
+            107,
+            142,
+            204,
+            199,
+            51,
+            115,
+            176
+          ]
+        },
+        "payload": {
+          "header": {
+            "channel_header": {
+              "type": "ENDORSER_TRANSACTION",
+              "version": 3,
+              "timestamp": "Wed Jan 17 2018 07:55:29 GMT+0000 (UTC)",
+              "channel_id": "mychannel",
+              "tx_id": "dbdc3501abe99b179716418d10215695549eed52043d0d7f959d62befd5bc016",
+              "epoch": 0,
+              "extension": {
+                "type": "Buffer",
+                "data": [
+                  18,
+                  8,
+                  18,
+                  6,
+                  102,
+                  97,
+                  98,
+                  99,
+                  97,
+                  114
+                ]
+              }
+            },
+            "signature_header": {
+              "creator": {
+                "Mspid": "Org1MSP",
+                "IdBytes": "-----BEGIN CERTIFICATE-----\nMIIB8DCCAZegAwIBAgIUUliyKtEAKPbCsV73qngR/S1EmrQwCgYIKoZIzj0EAwIw\nczELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNh\nbiBGcmFuY2lzY28xGTAXBgNVBAoTEG9yZzEuZXhhbXBsZS5jb20xHDAaBgNVBAMT\nE2NhLm9yZzEuZXhhbXBsZS5jb20wHhcNMTgwMTE3MDU1NjAwWhcNMTkwMTE3MDU1\nNjAwWjAQMQ4wDAYDVQQDEwV1c2VyMTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IA\nBMCKhKVKL/DvWyQYe45grBZ34dyKwltZ1TynVkYkjGFOs8yj+snAI+pl1DpH4jDi\npmZZpdB8kuXnHwYJ8Lo6VWqjbDBqMA4GA1UdDwEB/wQEAwIHgDAMBgNVHRMBAf8E\nAjAAMB0GA1UdDgQWBBRJ7HueOe0Ok1Mm3TvJBsNsD/WQkTArBgNVHSMEJDAigCBC\nOaoNzXba7ri6DNpwGFHRRQTTGq0bLd3brGpXNl5JfDAKBggqhkjOPQQDAgNHADBE\nAiBsPVPY7ixDD2WjPijAbSID9aNUP19ZbDOI4GwHpod/RAIgajVRdj58Rw/zKaPN\n0azxe3DaAoyXnmSN/22/RPU+Hmc=\n-----END CERTIFICATE-----\n"
+              },
+              "nonce": {
+                "type": "Buffer",
+                "data": [
+                  67,
+                  202,
+                  161,
+                  169,
+                  7,
+                  78,
+                  81,
+                  176,
+                  155,
+                  135,
+                  18,
+                  143,
+                  244,
+                  224,
+                  13,
+                  170,
+                  13,
+                  178,
+                  122,
+                  165,
+                  135,
+                  129,
+                  70,
+                  143
+                ]
+              }
+            }
+          },
+          "data": {
+            "actions": [
+              {
+                "header": {
+                  "creator": {
+                    "Mspid": "Org1MSP",
+                    "IdBytes": "-----BEGIN CERTIFICATE-----\nMIIB8DCCAZegAwIBAgIUUliyKtEAKPbCsV73qngR/S1EmrQwCgYIKoZIzj0EAwIw\nczELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNh\nbiBGcmFuY2lzY28xGTAXBgNVBAoTEG9yZzEuZXhhbXBsZS5jb20xHDAaBgNVBAMT\nE2NhLm9yZzEuZXhhbXBsZS5jb20wHhcNMTgwMTE3MDU1NjAwWhcNMTkwMTE3MDU1\nNjAwWjAQMQ4wDAYDVQQDEwV1c2VyMTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IA\nBMCKhKVKL/DvWyQYe45grBZ34dyKwltZ1TynVkYkjGFOs8yj+snAI+pl1DpH4jDi\npmZZpdB8kuXnHwYJ8Lo6VWqjbDBqMA4GA1UdDwEB/wQEAwIHgDAMBgNVHRMBAf8E\nAjAAMB0GA1UdDgQWBBRJ7HueOe0Ok1Mm3TvJBsNsD/WQkTArBgNVHSMEJDAigCBC\nOaoNzXba7ri6DNpwGFHRRQTTGq0bLd3brGpXNl5JfDAKBggqhkjOPQQDAgNHADBE\nAiBsPVPY7ixDD2WjPijAbSID9aNUP19ZbDOI4GwHpod/RAIgajVRdj58Rw/zKaPN\n0azxe3DaAoyXnmSN/22/RPU+Hmc=\n-----END CERTIFICATE-----\n"
+                  },
+                  "nonce": {
+                    "type": "Buffer",
+                    "data": [
+                      67,
+                      202,
+                      161,
+                      169,
+                      7,
+                      78,
+                      81,
+                      176,
+                      155,
+                      135,
+                      18,
+                      143,
+                      244,
+                      224,
+                      13,
+                      170,
+                      13,
+                      178,
+                      122,
+                      165,
+                      135,
+                      129,
+                      70,
+                      143
+                    ]
+                  }
+                },
+                "payload": {
+                  "chaincode_proposal_payload": {
+                    "input": {
+                      "type": "Buffer",
+                      "data": [
+                        10,
+                        43,
+                        8,
+                        1,
+                        18,
+                        8,
+                        18,
+                        6,
+                        102,
+                        97,
+                        98,
+                        99,
+                        97,
+                        114,
+                        26,
+                        29,
+                        10,
+                        14,
+                        99,
+                        104,
+                        97,
+                        110,
+                        103,
+                        101,
+                        67,
+                        97,
+                        114,
+                        79,
+                        119,
+                        110,
+                        101,
+                        114,
+                        10,
+                        5,
+                        67,
+                        65,
+                        82,
+                        49,
+                        48,
+                        10,
+                        4,
+                        68,
+                        97,
+                        118,
+                        101
+                      ]
+                    }
+                  },
+                  "action": {
+                    "proposal_response_payload": {
+                      "proposal_hash": "ec7ee438edf07147768bb8a8d36299214a94737bcd26e40a067e30a342f2bcf4",
+                      "extension": {
+                        "results": {
+                          "data_model": 0,
+                          "ns_rwset": [
+                            {
+                              "namespace": "fabcar",
+                              "rwset": {
+                                "reads": [
+                                  {
+                                    "key": "CAR10",
+                                    "version": {
+                                      "block_num": {
+                                        "low": 3,
+                                        "high": 0,
+                                        "unsigned": true
+                                      },
+                                      "tx_num": {
+                                        "low": 0,
+                                        "high": 0,
+                                        "unsigned": true
+                                      }
+                                    }
+                                  }
+                                ],
+                                "range_queries_info": [],
+                                "writes": [
+                                  {
+                                    "key": "CAR10",
+                                    "is_delete": false,
+                                    "value": "{\"make\":\"Chevy\",\"model\":\"Volt\",\"colour\":\"Red\",\"owner\":\"Dave\"}"
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "namespace": "lscc",
+                              "rwset": {
+                                "reads": [
+                                  {
+                                    "key": "fabcar",
+                                    "version": {
+                                      "block_num": {
+                                        "low": 1,
+                                        "high": 0,
+                                        "unsigned": true
+                                      },
+                                      "tx_num": {
+                                        "low": 0,
+                                        "high": 0,
+                                        "unsigned": true
+                                      }
+                                    }
+                                  }
+                                ],
+                                "range_queries_info": [],
+                                "writes": []
+                              }
+                            }
+                          ]
+                        },
+                        "events": {
+                          "chaincode_id": "",
+                          "tx_id": "",
+                          "event_name": "",
+                          "payload": {
+                            "type": "Buffer",
+                            "data": []
+                          }
+                        },
+                        "response": {
+                          "status": 200,
+                          "message": "",
+                          "payload": ""
+                        }
+                      }
+                    },
+                    "endorsements": [
+                      {
+                        "endorser": {
+                          "Mspid": "Org1MSP",
+                          "IdBytes": "-----BEGIN -----\nMIICGjCCAcCgAwIBAgIRAPlwF/rUZUP9mqN4wSml4iswCgYIKoZIzj0EAwIwczEL\nMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG\ncmFuY2lzY28xGTAXBgNVBAoTEG9yZzEuZXhhbXBsZS5jb20xHDAaBgNVBAMTE2Nh\nLm9yZzEuZXhhbXBsZS5jb20wHhcNMTcwODMxMDkxNDMyWhcNMjcwODI5MDkxNDMy\nWjBbMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMN\nU2FuIEZyYW5jaXNjbzEfMB0GA1UEAxMWcGVlcjAub3JnMS5leGFtcGxlLmNvbTBZ\nMBMGByqGSM49AgEGCCqGSM49AwEHA0IABHihxW6ks3B2+5XdbAVq3CBgxRRRZ22x\nzzpqnD86nKkz7fBElBuhlXl2K6rTxyY2OBOB0ts8keqZ93xueRGymrajTTBLMA4G\nA1UdDwEB/wQEAwIHgDAMBgNVHRMBAf8EAjAAMCsGA1UdIwQkMCKAIEI5qg3Ndtru\nuLoM2nAYUdFFBNMarRst3dusalc2Xkl8MAoGCCqGSM49BAMCA0gAMEUCIQD4j0Rn\ne1rrd0FSCzsR6u+IuuPK5dI/kR/bh7+VLf0TNgIgCfUtkJvfvzVEwZLFoFyjoHtr\ntvwzNUS1U0hEqIaDeo4=\n-----END -----\n"
+                        },
+                        "signature": {
+                          "type": "Buffer",
+                          "data": [
+                            48,
+                            68,
+                            2,
+                            32,
+                            78,
+                            186,
+                            218,
+                            39,
+                            97,
+                            12,
+                            108,
+                            223,
+                            23,
+                            189,
+                            16,
+                            211,
+                            178,
+                            190,
+                            109,
+                            170,
+                            177,
+                            218,
+                            192,
+                            74,
+                            137,
+                            190,
+                            149,
+                            224,
+                            208,
+                            153,
+                            149,
+                            203,
+                            109,
+                            236,
+                            85,
+                            232,
+                            2,
+                            32,
+                            32,
+                            210,
+                            6,
+                            71,
+                            140,
+                            200,
+                            45,
+                            160,
+                            166,
+                            187,
+                            137,
+                            247,
+                            200,
+                            101,
+                            109,
+                            191,
+                            238,
+                            216,
+                            79,
+                            130,
+                            131,
+                            240,
+                            71,
+                            233,
+                            100,
+                            96,
+                            68,
+                            191,
+                            114,
+                            2,
+                            253,
+                            185
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "metadata": {
+    "metadata": [
+      {
+        "value": "",
+        "signatures": [
+          {
+            "signature_header": {
+              "creator": {
+                "Mspid": "OrdererMSP",
+                "IdBytes": "-----BEGIN -----\nMIICDDCCAbOgAwIBAgIRAK30hdRcBxQJYNPqPkiFo3IwCgYIKoZIzj0EAwIwaTEL\nMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG\ncmFuY2lzY28xFDASBgNVBAoTC2V4YW1wbGUuY29tMRcwFQYDVQQDEw5jYS5leGFt\ncGxlLmNvbTAeFw0xNzA4MzEwOTE0MzJaFw0yNzA4MjkwOTE0MzJaMFgxCzAJBgNV\nBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1TYW4gRnJhbmNp\nc2NvMRwwGgYDVQQDExNvcmRlcmVyLmV4YW1wbGUuY29tMFkwEwYHKoZIzj0CAQYI\nKoZIzj0DAQcDQgAEUOJGzpasxjS5EJmbFIe/GtOJJAo6mhJqLyYT9PBvVSdaQ/TQ\nlMNlqLEZgFP6wc9CtrUp/WDnZ/M2zLpoDPjkcqNNMEswDgYDVR0PAQH/BAQDAgeA\nMAwGA1UdEwEB/wQCMAAwKwYDVR0jBCQwIoAgoGBqSoYKHjHJCiN4jabztrdJJe0N\nIwYa9ImUCbpGrmowCgYIKoZIzj0EAwIDRwAwRAIgHsU1f4jzuul6zYGY/Xn/H5X5\ngDe7/u8dZxJfWwXOGNsCICbXt6yezSzacOFQDkvAPz5/3OYI5YKLSTl+Wilfa/qy\n-----END -----\n"
+              },
+              "nonce": {
+                "type": "Buffer",
+                "data": [
+                  229,
+                  65,
+                  172,
+                  210,
+                  65,
+                  152,
+                  174,
+                  238,
+                  88,
+                  93,
+                  46,
+                  108,
+                  243,
+                  127,
+                  76,
+                  21,
+                  12,
+                  66,
+                  155,
+                  65,
+                  238,
+                  57,
+                  177,
+                  184
+                ]
+              }
+            },
+            "signature": {
+              "type": "Buffer",
+              "data": [
+                48,
+                68,
+                2,
+                32,
+                70,
+                252,
+                119,
+                184,
+                134,
+                24,
+                234,
+                159,
+                167,
+                230,
+                179,
+                201,
+                215,
+                209,
+                43,
+                252,
+                123,
+                2,
+                162,
+                44,
+                225,
+                147,
+                2,
+                104,
+                144,
+                165,
+                194,
+                89,
+                32,
+                220,
+                197,
+                251,
+                2,
+                32,
+                28,
+                89,
+                162,
+                127,
+                226,
+                54,
+                48,
+                113,
+                190,
+                123,
+                212,
+                90,
+                100,
+                206,
+                126,
+                147,
+                177,
+                28,
+                221,
+                88,
+                142,
+                217,
+                118,
+                45,
+                43,
+                185,
+                171,
+                242,
+                27,
+                183,
+                172,
+                12
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "value": {
+          "index": {
+            "low": 0,
+            "high": 0,
+            "unsigned": true
+          }
+        },
+        "signatures": [
+          {
+            "signature_header": {
+              "creator": {
+                "Mspid": "OrdererMSP",
+                "IdBytes": "-----BEGIN -----\nMIICDDCCAbOgAwIBAgIRAK30hdRcBxQJYNPqPkiFo3IwCgYIKoZIzj0EAwIwaTEL\nMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG\ncmFuY2lzY28xFDASBgNVBAoTC2V4YW1wbGUuY29tMRcwFQYDVQQDEw5jYS5leGFt\ncGxlLmNvbTAeFw0xNzA4MzEwOTE0MzJaFw0yNzA4MjkwOTE0MzJaMFgxCzAJBgNV\nBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1TYW4gRnJhbmNp\nc2NvMRwwGgYDVQQDExNvcmRlcmVyLmV4YW1wbGUuY29tMFkwEwYHKoZIzj0CAQYI\nKoZIzj0DAQcDQgAEUOJGzpasxjS5EJmbFIe/GtOJJAo6mhJqLyYT9PBvVSdaQ/TQ\nlMNlqLEZgFP6wc9CtrUp/WDnZ/M2zLpoDPjkcqNNMEswDgYDVR0PAQH/BAQDAgeA\nMAwGA1UdEwEB/wQCMAAwKwYDVR0jBCQwIoAgoGBqSoYKHjHJCiN4jabztrdJJe0N\nIwYa9ImUCbpGrmowCgYIKoZIzj0EAwIDRwAwRAIgHsU1f4jzuul6zYGY/Xn/H5X5\ngDe7/u8dZxJfWwXOGNsCICbXt6yezSzacOFQDkvAPz5/3OYI5YKLSTl+Wilfa/qy\n-----END -----\n"
+              },
+              "nonce": {
+                "type": "Buffer",
+                "data": [
+                  119,
+                  129,
+                  155,
+                  205,
+                  229,
+                  104,
+                  142,
+                  180,
+                  133,
+                  234,
+                  134,
+                  132,
+                  231,
+                  15,
+                  188,
+                  115,
+                  166,
+                  35,
+                  17,
+                  220,
+                  241,
+                  70,
+                  170,
+                  151
+                ]
+              }
+            },
+            "signature": {
+              "type": "Buffer",
+              "data": [
+                48,
+                69,
+                2,
+                33,
+                0,
+                150,
+                198,
+                161,
+                204,
+                99,
+                43,
+                85,
+                120,
+                14,
+                9,
+                102,
+                178,
+                195,
+                231,
+                205,
+                151,
+                169,
+                129,
+                192,
+                60,
+                26,
+                234,
+                9,
+                117,
+                89,
+                86,
+                237,
+                126,
+                22,
+                197,
+                42,
+                239,
+                2,
+                32,
+                125,
+                55,
+                242,
+                176,
+                50,
+                164,
+                29,
+                251,
+                217,
+                224,
+                139,
+                38,
+                63,
+                68,
+                65,
+                54,
+                49,
+                45,
+                165,
+                94,
+                94,
+                227,
+                108,
+                122,
+                64,
+                224,
+                182,
+                80,
+                92,
+                235,
+                239,
+                71
+              ]
+            }
+          }
+        ]
+      },
+      [
+        0
+      ]
+    ]
+  }
+}
