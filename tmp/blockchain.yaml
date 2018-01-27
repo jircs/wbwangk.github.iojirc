@@ -1,0 +1,1143 @@
+swagger: '2.0'
+info:
+  description: Blockchain RESTful API
+  version: 1.0.5.2
+  title: Blockchain RESTful API
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+schemes:
+  - http
+paths:
+  /blockchain/api/logon:
+    post:
+      tags:
+        - Logon
+      summary: User Logon
+      description: logon
+      operationId: userLogon
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: username and password
+          required: true
+          schema:
+            properties:
+              username:
+                type: string
+              password:
+                type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            example:
+              access_token: string
+              refresh_token: string
+              scope: string
+              token_type: string
+              expires_in: 59999
+              jti: string
+  /blockchain/api/logon/user:
+    post:
+      tags:
+        - Logon
+      summary: Get user's information
+      description: ''
+      operationId: userinfo
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success operation
+          schema:
+            type: object
+            example:
+              enabled: true
+              email: string
+              authorities:
+                - string
+              username: string
+  /blockchain/api/v1/blockchain/list:
+    post:
+      tags:
+        - Network
+      summary: Network information
+      description: get networks list
+      operationId: networkList
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: userId
+          required: true
+          schema:
+            properties:
+              userid:
+                type: string
+      responses:
+        '200':
+          description: successful operation
+  /blockchain/api/v1/blockchain/create:
+    post:
+      tags:
+        - Network
+      summary: create network
+      description: create a network
+      operationId: create a network
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: >-
+            create network option needed,explorer checked,if unchecked,delete
+            exploere
+          required: true
+          schema:
+            properties:
+              userid:
+                type: string
+              servicetype:
+                type: string
+              deploytype:
+                type: string
+              owner:
+                type: string
+              networkname:
+                type: string
+              config:
+                type: object
+                example:
+                  mode: string
+                  kafkas: 4
+                  zookeepers: 3
+                  orderers: 1
+                  sdks: 1
+                  explorer: 1
+                  orgs:
+                    - cas: 1
+                      peers: 2
+                      causername: string
+                      capassword: string
+                      x86peers: 0
+                      orgName: string
+                      org: string
+                      owner: string
+                    - cas: 1
+                      peers: 2
+                      causername: string
+                      capassword: string
+                      x86peers: 0
+                      orgName: string
+                      org: string
+                      owner: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            example:
+              ret: 200
+              msg: string
+              networkid: string
+  /blockchain/api/v1/blockchain/vm/members:
+    post:
+      tags:
+        - Network
+      summary: select a network
+      description: select a network
+      operationId: selectnetwork
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: id
+          required: true
+          schema:
+            properties:
+              id:
+                type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            example:
+              ret: 200
+              servicetype: string
+              members:
+                - '': ''
+                - '': ''
+              networkname: string
+              networkid: string
+  '/blockchain/api/v1/blockchain/vm/{id}/nodes':
+    get:
+      tags:
+        - Network
+      summary: get the nodes information
+      description: ''
+      operationId: nodeinfo
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            example:
+              ret: 200
+              nodes:
+                - '': ''
+                - '': ''
+              ns: string
+  /blockchain/api/v1/blockchain/delete:
+    post:
+      tags:
+        - Network
+      summary: delete a network
+      description: delete a network
+      operationId: deletenetwork
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: delete
+          required: true
+          schema:
+            properties:
+              id:
+                type: string
+              servicetype:
+                type: string
+              userid:
+                type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            example:
+              ret: 200
+              msg: string
+              network_id: string
+  '/blockchain/api/v1/blockchain/vm/{network_id}/node/{id}/action/start':
+    post:
+      tags:
+        - Dashboard
+      summary: start a node
+      description: ''
+      operationId: startnode
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: network_id
+          in: path
+          description: network_id
+          required: true
+          type: string
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+  '/blockchain/api/v1/blockchain/vm/{network_id}/node/{id}/action/stop':
+    post:
+      tags:
+        - Dashboard
+      summary: stop a node
+      description: ''
+      operationId: stopnode
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: network_id
+          in: path
+          description: network_id
+          required: true
+          type: string
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+  '/blockchain/api/v1/blockchain/vm/{network_id}/node/{id}/logs':
+    post:
+      tags:
+        - Dashboard
+      summary: get node logs
+      description: ''
+      operationId: nodelog
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: network_id
+          in: path
+          description: network_id
+          required: true
+          type: string
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+  # '/{nodeport}/explorer/':
+  #   get:
+  #     tags:
+  #       - Dashboard
+  #     summary: sdk link
+  #     description: sdk link
+  #     operationId: sdklink
+  #     produces:
+  #       - application/json
+  #     parameters:
+  #       - name: nodeport
+  #         in: path
+  #         description: nodeport
+  #         required: true
+  #         type: string
+  #     responses:
+  #       '200':
+  #         description: successful operation
+  #         schema:
+  #           type: object
+  #           additionalProperties:
+  #             type: integer
+  #             format: int32
+  # '/{nodeport}':
+  #   get:
+  #     tags:
+  #       - Dashboard
+  #     summary: explorer link
+  #     description: explorer link
+  #     operationId: explorerlink
+  #     produces:
+  #       - application/json
+  #     parameters:
+  #       - name: nodeport
+  #         in: path
+  #         description: nodeport
+  #         required: true
+  #         type: string
+  #     responses:
+  #       '200':
+  #         description: successful operation
+  #         schema:
+  #           type: object
+  #           additionalProperties:
+  #             type: integer
+  #             format: int32
+  /blockchain/api/debug/network/channels:
+    post:
+      tags:
+        - Channel
+      summary: get channel list
+      description: get channel list
+      operationId: channellist
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: network_id and userid
+          required: true
+          schema:
+            properties:
+              network_id:
+                type: string
+              userid:
+                type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              - {}
+            example:
+              - channel_name: mychannel
+                createtime: '01-19-2018 09:35:36 UTC'
+                orgids:
+                  - org1
+                  - org2
+                orgs:
+                  - org1
+                  - org2
+                block_height: '1'
+              - channel_name: mychannel333
+                createtime: '01-19-2018 09:35:36 UTC'
+                orgids:
+                  - org1
+                  - org2
+                orgs:
+                  - org1
+                  - org2
+                block_height: '1'
+  /blockchain/api/debug/network/channel/status:
+    post:
+      tags:
+        - Channel
+      summary: get channel status
+      description: get channel status
+      operationId: channelstatus
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: channelinfo
+          required: true
+          schema:
+            properties:
+              channel_id:
+                type: string
+                example: mychannel
+              network_id:
+                type: string
+                example: 3721b58201744ff19abdbff950b5637f
+              servicetype:
+                type: string
+                example: all
+              userid:
+                type: string
+                example: admin@ibm.com
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            example:
+              channel_name: mychannel
+              createtime: '01-19-2018 09:35:36 UTC'
+              last_time: '0'
+              invokedTimes: 0
+              orgs:
+                - - org1:
+                      owner: admin@ibm.com
+                      orgName: org1
+                      joined:
+                        - peer0
+                        - peer1
+                      free: []
+                - - org2:
+                      owner: admin@ibm.com
+                      orgName: org1
+                      joined:
+                        - peer0
+                        - peer1
+                      free: []
+              block_height: 1
+  /blockchain/api/debug/network/chaincodes/instantiated:
+    post:
+      tags:
+        - Channel
+      summary: get instantiated channel
+      description: get instantiated channels
+      operationId: instantiatedchannels
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: channelinfo
+          required: true
+          schema:
+            properties:
+              channel_id:
+                type: string
+                example: mychannel
+              network_id:
+                type: string
+                example: 3721b58201744ff19abdbff950b5637f
+              userid:
+                type: string
+                example: admin@ibm.com
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              - {}
+  /blockchain/api/debug/network/channel/create:
+    post:
+      tags:
+        - Channel
+      summary: create a channel
+      description: create channel
+      operationId: createchanel
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: network_id and userid
+          required: true
+          schema:
+            properties:
+              channel_id:
+                type: string
+              network_id:
+                type: string
+              peerName:
+                type: array
+                example:
+                  - 'org1:org1-peer0'
+                  - 'org1:org1-peer1'
+                  - 'org2:org2-peer0'
+                  - 'org2:org2-peer0'
+                  - 'org2:org2-peer1'
+              userid:
+                type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            example:
+              ret: 200
+              msg: string
+              networkid: string
+              channelid: string
+  /blockchain/api/installchaincode:
+    post:
+      tags:
+        - Chaincode
+      summary: installchaincode
+      description: installchaincode
+      operationId: installchaincode
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: access_token
+          required: true
+          type: string
+          description: access_token
+        - in: formData
+          name: file
+          type: file
+          description: file to upload.
+        - in: formData
+          name: filenameorg
+          type: string
+          description: filenameorg
+        - in: formData
+          name: userid
+          type: string
+          description: userid
+        - in: formData
+          name: ccname
+          type: string
+          description: ccname
+        - in: formData
+          name: ccversion
+          type: string
+          description: ccversion
+        - in: formData
+          name: cc_args
+          type: string
+          description: cc_args
+        - in: formData
+          name: network_id
+          type: string
+          description: network_id
+        - in: formData
+          name: ccaction
+          type: string
+          description: ccaction
+        - in: formData
+          name: peerName
+          type: string
+          description: peerName
+        - in: formData
+          name: channel_id
+          type: string
+          description: channel_id
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            example:
+              ret: 200
+              result: success
+  '/blockchain/api/network/{network_id}/peer/{peer}/chaincodes':
+    post:
+      tags:
+        - Chaincode
+      summary: chaincodes
+      description: chaincodes
+      operationId: chaincodes
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - in: path
+          name: network_id
+          description: network_id
+          required: true
+          type: string
+        - in: path
+          name: peer
+          description: peer
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: requestinfo
+          required: true
+          schema:
+            properties:
+              id:
+                type: string
+                example: ''
+              network_id:
+                type: string
+                example: 1dcd601d994f405592b917681aa7f5b9
+              servicetype:
+                type: string
+                example: ''
+              type:
+                type: string
+                example: sdk
+              url:
+                type: string
+                example: '/api/network/{network_id}/peer/{peer}/chaincodes'
+              userid:
+                type: string
+                example: admin@ibm.com
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            example:
+              ret: 200
+              result:
+                type: array
+                example:
+                  - 'peerid:org1:org1-peer0': null
+                    'chaincodeid:mychannel-example': null
+                    'chaincodeversion:v1': null
+                    'name:mychannel-example': null
+                    '_id:1dcd601d994f405592b917681aa7f5b9': null
+  /blockchain/api/debug/network/channel/chaincode/instantiate:
+    post:
+      tags:
+        - Chaincode
+      summary: instantiatechaincode
+      description: instantiatechaincode
+      operationId: instantiatechaincode
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: requestinfo
+          required: true
+          schema:
+            properties:
+              cc_args:
+                type: array
+                example:
+                  - a
+                  - '1000'
+                  - b
+                  - '2000'
+              cc_id:
+                type: string
+                example: mychannel-example
+              ccversion:
+                type: string
+                example: v1
+              channel_id:
+                type: string
+                example: mychannel
+              endorsement_policy:
+                type: object
+                example:
+                  identities:
+                    - role:
+                        name: member
+                        mspId: Org1MSP
+                    - role:
+                        name: member
+                        mspId: Org2MSP
+                  policy:
+                    1-of:
+                      - signed-by: 0
+                      - signed-by: 1
+              network_id:
+                type: string
+                example: 1dcd601d994f405592b917681aa7f5b9
+              peerName:
+                type: array
+                example:
+                  - 'org1:org1-peer0'
+                  - 'org1:org1-peer1'
+                  - 'org2:org2-peer0'
+                  - 'org2:org2-peer1'
+              policytype:
+                type: integer
+                example: 1
+              userid:
+                type: string
+                example: admin@ibm.com
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            example:
+              ret: 200
+              msg:
+                type: string
+                example: >-
+                  instantiateChaincode success, id:mychannel-example
+                  peer:[org1:org1-peer0,org1:org1-peer1,org2:org2-peer0,org2:org2-peer1
+              result: Success
+  /blockchain/api/debug/network/channel/chaincode/invoke:
+    post:
+      tags:
+        - Chaincode
+      summary: invokechaincode
+      description: invokechaincode
+      operationId: invokechaincode
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: requestinfo
+          required: true
+          schema:
+            properties:
+              cc_args:
+                type: array
+                example:
+                  - invoke
+                  - move
+                  - a
+                  - b
+                  - '100'
+              cc_id:
+                type: string
+                example: mychannel-example
+              cc_ver:
+                type: string
+                example: v1
+              channel_id:
+                type: string
+                example: mychannel
+              network_id:
+                type: string
+                example: 1dcd601d994f405592b917681aa7f5b9
+              peerName:
+                type: array
+                example:
+                  - 'org1:org1-peer0'
+                  - 'org1:org1-peer1'
+                  - 'org2:org2-peer0'
+                  - 'org2:org2-peer1'
+              userid:
+                type: string
+                example: admin@ibm.com
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            example:
+              statuscode: 200
+              ret: 200
+              result: Success
+              msg: >-
+                007faebf68e15e4474f57c9698e9c3435f69971281726a5351fb49df6647faae
+                is valid
+              validationCode: 0
+              transactionEnvelope:
+                type: object
+  /blockchain/api/debug/network/channel/chaincode/query:
+    post:
+      tags:
+        - Chaincode
+      summary: querychaincode
+      description: querychaincode
+      operationId: querychaincode
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: requestinfo
+          required: true
+          schema:
+            properties:
+              cc_args:
+                type: array
+                example:
+                  - invoke
+                  - query
+                  - a
+              cc_id:
+                type: string
+                example: mychannel-example
+              cc_ver:
+                type: string
+                example: v1
+              channel_id:
+                type: string
+                example: mychannel
+              network_id:
+                type: string
+                example: 1dcd601d994f405592b917681aa7f5b9
+              peerName:
+                type: array
+                example:
+                  - 'org1:org1-peer0'
+                  - 'org1:org1-peer1'
+                  - 'org2:org2-peer0'
+                  - 'org2:org2-peer1'
+              userid:
+                type: string
+                example: admin@ibm.com
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            example:
+              statuscode: 200
+              ret: 200
+              result: '900'
+              msg: '900'
+              $data: OTAw
+              $type: base64
+  /blockchain/api/upgradechaincode:
+    post:
+      tags:
+        - Chaincode
+      summary: updatechaincode
+      description: updatechaincode
+      operationId: updatechaincode
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - in: query
+          name: access_token
+          required: true
+          type: string
+          description: access_token
+        - in: formData
+          name: file
+          type: file
+          description: The file to upload.
+        - in: formData
+          name: filenameorg
+          type: string
+          description: filenameorg
+        - in: formData
+          name: userid
+          type: string
+          description: userid
+        - in: formData
+          name: ccname
+          type: string
+          description: ccname
+        - in: formData
+          name: ccversion
+          type: string
+          description: ccversion
+        - in: formData
+          name: cc_args
+          type: string
+          description: cc_args
+        - in: formData
+          name: network_id
+          type: string
+          description: network_id
+        - in: formData
+          name: ccaction
+          type: string
+          description: ccaction
+        - in: formData
+          name: peerName
+          type: string
+          description: peerName
+        - in: formData
+          name: endorsement_policy
+          type: string
+          description: endorsement_policy
+        - in: formData
+          name: policytype
+          type: number
+          description: policytype
+        - in: formData
+          name: channel_id
+          type: string
+          description: channel_id
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            example:
+              ret: 200
+              msg: >-
+                upgradeChaincode success,id:mychannel-example
+                peer:[org1:org1-peer0,org1:org1-peer1,org2:org2-peer0,org2:org2-peer1]
+              result: Success
+  /blockchain/api/v1/users:
+    get:
+      tags:
+        - SystemUser
+      summary: userlist
+      description: user list
+      operationId: userList
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: object
+            example:
+              users:
+                - username: test
+                  password: test
+                  enabled: true
+                  email: test@ibm.com
+                  authorities:
+                    - ROLE_ADMIN
+                - username: test1
+                  password: test1
+                  enabled: false
+                  email: test1@ibm.com
+                  authorities:
+                    - ROLE_ADMIN
+  /blockchain/api/v1/user:
+    post:
+      tags:
+        - SystemUser
+      summary: add a user
+      description: adduser
+      operationId: adduser
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: authorities and userinfo
+          required: true
+          schema:
+            properties:
+              authorities:
+                type: array
+                example:
+                  - username: string
+                    authority: string
+              user:
+                type: object
+                example:
+                  username: string
+                  email: string
+                  password: string
+                  enabled: 0 || 1
+      responses:
+        '200':
+          description: successful add
+          schema:
+            type: object
+            example:
+              ret: 200
+              msg: User has been created
+    put:
+      tags:
+        - SystemUser
+      summary: update a user
+      description: updateuser
+      operationId: updateuserinfo
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: authorities and userinfo
+          required: true
+          schema:
+            properties:
+              authorities:
+                type: array
+                example:
+                  - username: string
+                    authority: string
+              user:
+                type: object
+                example:
+                  username: string
+                  email: string
+                  password: string
+                  enabled: 0 || 1
+      responses:
+        '200':
+          description: successful update
+          schema:
+            type: object
+            example:
+              ret: 200
+              msg: User has been updated
+  '/blockchain/api/v1/user/{username}':
+    delete:
+      tags:
+        - SystemUser
+      summary: delete a user
+      description: delete a user
+      operationId: delete a user
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: token
+          required: true
+          type: string
+        - name: username
+          in: path
+          description: username
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful delete
+          schema:
+            type: object
+            example:
+              ret: 200
+              msg: User has been deleted
