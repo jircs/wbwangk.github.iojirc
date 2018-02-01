@@ -1,6 +1,6 @@
 title: 王伟兵的博客
 permalink: /blog/:year/:month/:day/:title
-pygments: true
+rouge: true
 url:
 github_username:  wbwangk
 
