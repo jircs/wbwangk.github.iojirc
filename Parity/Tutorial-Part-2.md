@@ -24,7 +24,7 @@ export class App extends React.Component {
 
 ### 1.你的第一个 `Bond`
 
-我们要做的第一件事是介绍[oo7库](https://github.com/paritytech/oo7)。这将JavaScript引入了被称为“bond”的被动值的概念。[被动值](https://en.wikipedia.org/wiki/Reactive_programming)与正常的“变量”类似，区别在于它们使用的任何地方都会随着值的变化自动更新。可以将它们`map`组合成任意复杂的表达式，然后放置在UI组件中以创建毫不费力的动态UI。
+我们要做的第一件事是介绍[oo7库](https://github.com/paritytech/oo7)。这将JavaScript引入了被称为“bond”的响应值的概念。[响应值](https://en.wikipedia.org/wiki/Reactive_programming)与正常的“变量”类似，区别在于它们使用的任何地方都会随着值的变化自动更新。可以将它们`map`组合成任意复杂的表达式，然后放置在UI组件中以创建毫不费力的动态UI。
 
 oo7包仍然在开发中，因此在本教程中可能会有一两个粗糙的边缘。Mea culpa。确保您使用最新的软件包运行。如果你仍然有麻烦，请来找我[gitter](https://gitter.im/paritytech/parity) :-)
 
@@ -68,7 +68,7 @@ export class App extends React.Component {
 }
 ```
 
-接下来，我们需要创建文本输入框和 `<span>`元素（文本字段的内容将反映在其中）。我们将使用一个语义UI版本的`Input`元素，以将该值传播到一个命名的`Bond`。这叫做`InputBond`。同样，对于`<span>`，我们将使用一个特殊的“被动”版本的`span`元素，它能够接受`Bond`作为子元素和某些属性的值; 这被称为`Rspan`。我们以前都导入过。
+接下来，我们需要创建文本输入框和 `<span>`元素（文本字段的内容将反映在其中）。我们将使用一个语义UI版本的`Input`元素，以将该值传播到一个命名的`Bond`。这叫做`InputBond`。同样，对于`<span>`，我们将使用一个特殊的“响应”版本的`span`元素，它能够接受`Bond`作为子元素和某些属性的值; 这被称为`Rspan`。我们以前都导入过。
 
 将该`<div>Hello world</div>`行更改为：
 
@@ -139,7 +139,7 @@ this.bond.map(t => t.match(/^[0-9]+$/) ? {color: 'red'} : {color: 'black'})
 {color: this.bond.map(t => t.match(/^[0-9]+$/) ? 'red' : 'black')}
 ```
 
-当然，这两者非常不同。前者无疑是一个`Bond`，后者是一个简单的对象，它恰好具有`Bond`其中一个值。事实上，后者确实有效。**为了方便起见，不仅可以直接识别被动值，而且可以在数组或对象字段的值内识别这些值。**为了提高效率，这只能达到一个深度。任何进一步进入对象结构的内容都将被忽略（然而，有些API会改变你希望`Bond`识别的深度）。
+当然，这两者非常不同。前者无疑是一个`Bond`，后者是一个简单的对象，它恰好具有`Bond`其中一个值。事实上，后者确实有效。**为了方便起见，不仅可以直接识别响应值，而且可以在数组或对象字段的值内识别这些值。**为了提高效率，这只能达到一个深度。任何进一步进入对象结构的内容都将被忽略（然而，有些API会改变你希望`Bond`识别的深度）。
 
 ### 4.结合`Bond`s
 
