@@ -1,4 +1,5 @@
 # Blockstack 技术白皮书
+[英文原文](https://blockstack.com/tokenpaper.pdf)
 
 Muneeb Ali Ryan Shea Jude Nelson Michael J. Freedman Blockstack：分散式应用程序的新互联网[https://blockstack.org](https://blockstack.org/) 
 技术白皮书1.1版2017年10月12日
