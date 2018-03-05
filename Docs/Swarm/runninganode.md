@@ -390,7 +390,7 @@ swarm --bzzaccount $BZZKEY \
 geth --exec 'admin.nodeInfo' attach ipc:$DATADIR/geth.ipc | grep difficulty
 ```
 
-## 组态（待续）
+## 配置
 
 ## swarm的命令行选项
 
@@ -400,9 +400,9 @@ Swarm可执行文件支持以下配置选项：
 - 环境变量
 - 命令行
 
-通过命令行提供的选项将覆盖环境变量中的选项，这将覆盖配置文件中的选项。如果没有明确提供选项，则会选择默认值。
+通过命令行提供的选项将覆盖环境变量中的选项，而环境变量会将覆盖配置文件中的选项。如果没有明确提供选项，则会选择默认值。
 
-为了保持标志和变量集合的可管理性，通过命令行和环境变量只有一部分可用的配置选项可用。有些仅通过TOML配置文件提供。
+为了保持标志和变量集合的可管理性，通过命令行和环境变量只有一部分的配置选项可用。有些仅可以通过TOML配置文件提供。
 
 注意
 
@@ -424,8 +424,7 @@ Swarm重用了以太坊的代码，特别是一些p2p网络协议和其他常见
 --nat
 --ipcdisable
 --ipcpath
-- 密码
-
+--password
 ```
 
 下表列出了所有配置选项以及如何提供它们。
@@ -434,111 +433,109 @@ Swarm重用了以太坊的代码，特别是一些p2p网络协议和其他常见
 
 注意
 
-swarm可以使用*dumpconfig*命令执行，该命令将默认配置打印到STDOUT，从而可以将其重定向到作为配置文件模板的文件。
+swarm可以使用*dumpconfig*命令执行，该命令将默认配置打印到STDOUT，从而可以将其重定向到一个文件，该文件可以作为配置文件模板。
 
-TOML配置文件按章节组织。下面的可用配置选项列表根据这些部分进行组织。这些部分对应于Go模块，因此需要遵守以使文件配置正常工作。有关Golang的TOML解析器和编码器库以及<https://github.com/toml-lang/toml>，请参阅<https://github.com/naoina/toml>以获取有关TOML的更多信息。
+TOML配置文件按章节(section)组织。下面按章节列出了可用配置选项。这些章节对应于Go模块，因此需要遵守以使文件配置正常工作。有关Golang的TOML解析器和编码器库参阅<https://github.com/naoina/toml>，更多关于TOML的信息参阅<https://github.com/toml-lang/toml>。
 
 ### 一般配置参数
 
-| 配置文件    | 命令行标志    | 环境变量              | 默认值                                     | 描述                                                         |
-| ----------- | ------------- | --------------------- | ------------------------------------------ | ------------------------------------------------------------ |
-| N / A       | -config       | N / A                 | N / A                                      | 以TOML格式配置文件的路径                                     |
-| 合约        | -支票簿       | SWARM_CHEQUEBOOK_ADDR | 0x0000000000000000000000000000000000000000 | 交换支票簿合约地址                                           |
-| EnsRoot     | -ens-地址     | SWARM_ENS_ADDR        | ens.TestNetAddress                         | 以太坊名称服务合约地址                                       |
-| EnsApi      | -ens-API      | SWARM_ENS_API         | <$ GETH_DATADIR> /geth.ipc                 | 以太坊名称服务API地址                                        |
-| 路径        | -datadir      | GETH_DATADIR          | <$ GETH_DATADIR> /群                       | geth配置目录的路径                                           |
-| ListenAddr  | -httpaddr     | SWARM_LISTEN_ADDR     | 127.0.0.1                                  | Swarm监听地址                                                |
-| 港口        | -bzzport      | SWARM_PORT            | 8500                                       | 运行http代理服务器的端口                                     |
-| 公钥        | N / A         | N / A                 | N / A                                      | 群基地账户的公钥                                             |
-| BzzKey      | N / A         | N / A                 | N / A                                      | Swarm节点基地址（hash（Pü b 升我Ç ķe y）h a s h （Pü b 升我Ç ķe y））H一个小号H（Püb升一世CķËÿ）H一个小号H（Püb升一世CķËÿ））。这用于决定基于半径的存储和由kademlia进行的路由。 |
-| NETWORKID   | -bzznetworkid | SWARM_NETWORK_ID      | 3                                          | 网络ID                                                       |
-| SwapEnabled | -交换         | SWARM_SWAP_ENABLE     | 假                                         | 启用SWAP                                                     |
-| SyncEnabled | -同步         | SWARM_SYNC_ENABLE     | 真正                                       | 禁用swarm节点同步。该选项将被弃用。它仅用于测试。            |
-| SwapApi     | -swap-API     | SWARM_SWAP_API        |                                            | 以太坊API提供商用于解决SWAP支付的URL                         |
-| CORS        | -corsdomain   | SWARM_CORS            |                                            | 要发送Access-Control-Allow-Origin标题的域（可以用'，'分隔多个域） |
-| BzzAccount  | -bzzaccount   | SWARM_ACCOUNT         |                                            | Swarm账号密钥                                                |
-| BootNodes   | -boot节点     | SWARM_BOOTNODES       |                                            | 启动节点                                                     |
+| Config file | Command-line flag | Environment variable  | Default value                              | Description                                                  |
+| ----------- | ----------------- | --------------------- | ------------------------------------------ | ------------------------------------------------------------ |
+| n/a         | –config           | n/a                   | n/a                                        | Path to config file in TOML format                           |
+| Contract    | –chequebook       | SWARM_CHEQUEBOOK_ADDR | 0x0000000000000000000000000000000000000000 | Swap chequebook contract address                             |
+| EnsRoot     | –ens-addr         | SWARM_ENS_ADDR        | ens.TestNetAddress                         | Ethereum Name Service contract address                       |
+| EnsApi      | –ens-api          | SWARM_ENS_API         | <$GETH_DATADIR>/geth.ipc                   | Ethereum Name Service API address                            |
+| Path        | –datadir          | GETH_DATADIR          | <$GETH_DATADIR>/swarm                      | Path to the geth configuration directory                     |
+| ListenAddr  | –httpaddr         | SWARM_LISTEN_ADDR     | 127.0.0.1                                  | Swarm listen address                                         |
+| Port        | –bzzport          | SWARM_PORT            | 8500                                       | Port to run the http proxy server                            |
+| PublicKey   | n/a               | n/a                   | n/a                                        | Public key of swarm base account                             |
+| BzzKey      | n/a               | n/a                   | n/a                                        | Swarm node base address (hash(PublicKey)hash(PublicKey))hash(PublicKey)hash(PublicKey)). This is used to decide storage based on radius and routing by kademlia. |
+| NetworkId   | –bzznetworkid     | SWARM_NETWORK_ID      | 3                                          | Network ID                                                   |
+| SwapEnabled | –swap             | SWARM_SWAP_ENABLE     | false                                      | Enable SWAP                                                  |
+| SyncEnabled | –sync             | SWARM_SYNC_ENABLE     | true                                       | Disable swarm node synchronization. This option will be deprecated. It is only for testing. |
+| SwapApi     | –swap-api         | SWARM_SWAP_API        |                                            | URL of the Ethereum API provider to use to settle SWAP payments |
+| Cors        | –corsdomain       | SWARM_CORS            |                                            | Domain on which to send Access-Control-Allow-Origin header (multiple domains can be supplied separated by a ‘,’) |
+| BzzAccount  | –bzzaccount       | SWARM_ACCOUNT         |                                            | Swarm account key                                            |
+| BootNodes   | –boot-nodes       | SWARM_BOOTNODES       |                                            | Boot nodes                                                   |
 
 ### 存储参数
 
-| 配置文件      | 命令行标志 | 环境变量 | 默认值                                      | 描述                                                         |
-| ------------- | ---------- | -------- | ------------------------------------------- | ------------------------------------------------------------ |
-| ChunkDbPath   | N / A      | N / A    | <$ GETH_ENV_DIR> /群/ BZZ - <$ BZZ_KEY> /块 | leveldb块DB的路径                                            |
-| DbCapacity    | N / A      | N / A    | 5000000                                     | 数据库容量，块数（5M大约20-25GB）                            |
-| CacheCapacity | N / A      | N / A    | 5000                                        | 高速缓存容量，最近在内存中缓存的块数                         |
-| 半径          | N / A      | N / A    | 0                                           | 存储半径：块的最小接近顺序（地址密钥的相同前缀位数），以保证存储。给定存储半径r[R和网络中的总块数nñ，节点存储n*2- rñ*2 - [R大块最小。如果你允许bb保证存储的字节和块存储大小为cC，您的半径应设定为我ÑŤ（升Ò克2（n c / b ））一世ñŤ（升ØG2（ñC/b）） |
+| Config file   | Command-line flag | Environment variable | Default value                               | Description                                                  |
+| ------------- | ----------------- | -------------------- | ------------------------------------------- | ------------------------------------------------------------ |
+| ChunkDbPath   | n/a               | n/a                  | <$GETH_ENV_DIR>/swarm/bzz-<$BZZ_KEY>/chunks | Path to leveldb chunk DB                                     |
+| DbCapacity    | n/a               | n/a                  | 5000000                                     | DB capacity, number of chunks (5M is roughly 20-25GB)        |
+| CacheCapacity | n/a               | n/a                  | 5000                                        | Cache capacity, number of recent chunks cached in memory     |
+| Radius        | n/a               | n/a                  | 0                                           | Storage Radius: minimum proximity order (number of identical prefix bits of address key) for chunks to warrant storage. Given a storage radius rr and total number of chunks in the network nn, the node stores n∗2−rn∗2−r chunks minimum. If you allow bb bytes for guaranteed storage and the chunk storage size is cc, your radius should be set to int(log2(nc/b))int(log2(nc/b)) |
 
 ### Chunker参数
 
-| 配置文件 | 命令行标志 | 环境变量 | 默认值 | 描述                                                         |
-| -------- | ---------- | -------- | ------ | ------------------------------------------------------------ |
-| 分行     | N / A      | N / A    | 128    | 在bzzhash merkle树中的分支数量。Branches*By吨Ë 小号我ze （H一个小号ħ ）乙[R一个ñCHË小号*乙ÿŤË小号一世žË（H一个小号H） 给出了块的数据大小 |
-| 哈希     | N / A      | N / A    | SHA3   | 散列：chunker（bzzhash的基本散列算法）使用的散列函数：SHA3或SHA256.此选项将在以后的版本中删除。 |
+| Config file | Command-line flag | Environment variable | Default value | Description                                                  |
+| ----------- | ----------------- | -------------------- | ------------- | ------------------------------------------------------------ |
+| Branches    | n/a               | n/a                  | 128           | Number of branches in bzzhash merkle tree. Branches∗ByteSize(Hash)Branches∗ByteSize(Hash) gives the datasize of chunks |
+| Hash        | n/a               | n/a                  | SHA3          | Hash: The hash function used by the chunker (base hash algo of bzzhash): SHA3 or SHA256.This option will be removed in a later release. |
 
-### 配置单元参数
+### Hive参数
 
-| 配置文件     | 命令行标志 | 环境变量 | 默认值                                    | 描述                                                         |
-| ------------ | ---------- | -------- | ----------------------------------------- | ------------------------------------------------------------ |
-| CallInterval | N / A      | N / A    | 30亿                                      | 尝试连接到最需要的对等体之前所经过的时间                     |
-| KadDbPath    | N / A      | N / A    | <$ GETH_ENV_DIR> /群/ BZZ - <$ BZZ_KEY> / | Kademblia数据库路径，json文件路径存储用于引导kademlia表的已知bzz对等。 |
+| Config file  | Command-line flag | Environment variable | Default value                         | Description                                                  |
+| ------------ | ----------------- | -------------------- | ------------------------------------- | ------------------------------------------------------------ |
+| CallInterval | n/a               | n/a                  | 3000000000                            | Time elapsed before attempting to connect to the most needed peer |
+| KadDbPath    | n/a               | n/a                  | <$GETH_ENV_DIR>/swarm/bzz-<$BZZ_KEY>/ | Kademblia DB path, json file path storing the known bzz peers used to bootstrap kademlia table. |
 
 ### Kademlia参数
 
-| 配置文件             | 命令行标志 | 环境变量 | 默认值    | 描述                                                         |
-| -------------------- | ---------- | -------- | --------- | ------------------------------------------------------------ |
-| MaxProx              | N / A      | N / A    | 8         | 认为最接近的次序（即，地址密钥的相同前缀位的最大数量）被认为是不同的。给定网络N中的节点总数ñ，MaxProx应该大于log2（N/ Pr o x B i n S我ze ）升ØG2（ñ/P[RØX乙一世ñ小号一世žË）），安全地升ö克2（N）升ØG2（ñ）。 |
-| ProxBinSize          | N / A      | N / A    | 2         | 最接近的节点数量集中在最接近的kademlia箱中                   |
-| BuckerSize           | N / A      | N / A    | 4         | 一个kademlia邻近仓中的最大活跃同伴数量。如果添加了新的对等体，则垃圾桶中最糟糕的对等体将被丢弃。 |
-| PurgeInterval        | N / A      | N / A    | 1512000亿 |                                                              |
-| InitialRetryInterval | N / A      | N / A    | 4200      |                                                              |
-| 的maxIdleInterval    | N / A      | N / A    | 420亿     |                                                              |
-| ConnRetryExp         | N / A      | N / A    | 2         |                                                              |
+| Config file          | Command-line flag | Environment variable | Default value   | Description                                                  |
+| -------------------- | ----------------- | -------------------- | --------------- | ------------------------------------------------------------ |
+| MaxProx              | n/a               | n/a                  | 8               | highest Proximity order (i.e., Maximum number of identical prefix bits of address key) considered distinct. Given the total number of nodes in the network NN, MaxProx should be larger than log2(N/ProxBinSize)log2(N/ProxBinSize)), safely log2(N)log2(N). |
+| ProxBinSize          | n/a               | n/a                  | 2               | Number of most proximate nodes lumped together in the most proximate kademlia bin |
+| BuckerSize           | n/a               | n/a                  | 4               | maximum number of active peers in a kademlia proximity bin. If new peer is added, the worst peer in the bin is dropped. |
+| PurgeInterval        | n/a               | n/a                  | 151200000000000 |                                                              |
+| InitialRetryInterval | n/a               | n/a                  | 42000000        |                                                              |
+| MaxIdleInterval      | n/a               | n/a                  | 42000000000     |                                                              |
+| ConnRetryExp         | n/a               | n/a                  | 2               |                                                              |
 
 ### SWAP配置文件参数
 
-POC 0.3中这些参数可能会发生变化
+这些参数可能会在POC 0.3中发生变化
 
-| 配置文件      | 命令行标志 | 环境变量 | 默认值 | 描述                                          |
-| ------------- | ---------- | -------- | ------ | --------------------------------------------- |
-| 布雅          | N / A      | N / A    | 200亿  | （2*10102*1010 wei），wei中每块的最高接受价格 |
-| SellAt        | N / A      | N / A    | 200亿  | （2*10102*1010 wei）在wei中提供每块价格       |
-| PayAt         | N / A      | N / A    | 100    | 没有收到支票的最大服务数量。债务承受能力。    |
-| DropAtMaximum | N / A      | N / A    | 10000  | 没有收到支票就服务的组块数量。债务承受能力。  |
+| Config file   | Command-line flag | Environment variable | Default value | Description                                                  |
+| ------------- | ----------------- | -------------------- | ------------- | ------------------------------------------------------------ |
+| BuyAt         | n/a               | n/a                  | 20000000000   | (2∗10102∗1010 wei), highest accepted price per chunk in wei  |
+| SellAt        | n/a               | n/a                  | 20000000000   | (2∗10102∗1010 wei) offered price per chunk in wei            |
+| PayAt         | n/a               | n/a                  | 100           | Maximum number of chunks served without receiving a cheque. Debt tolerance. |
+| DropAtMaximum | n/a               | n/a                  | 10000         | Number of chunks served without receiving a cheque. Debt tolerance. |
 
 ### SWAP策略参数
+这些参数可能会在POC 0.3中发生变化
 
-POC 0.3中这些参数可能会发生变化
-
-| 配置文件             | 命令行标志 | 环境变量 | 默认值   | 描述                                                         |
-| -------------------- | ---------- | -------- | -------- | ------------------------------------------------------------ |
-| AutoCashInterval     | N / A      | N / A    | 3000亿   | （3*10113*1011，5分钟）任何未完成支票兑现前的最长时间        |
-| AutoCashThreshold    | N / A      | N / A    | 500000亿 | （5*1013五*1013）魏最大的未兑现支票总额                      |
-| AutoDepositInterval  | N / A      | N / A    | 3000亿   | （3*10113*1011，5分钟）通过从基本账户发送资金，必要时补充支票簿之前的最长时间 |
-| AutoDepositThreshold | N / A      | N / A    | 500000亿 | （5*1013五*1013）在补充支票簿前，需要维持最低余额            |
-| AutoDepositBuffer    | N / A      | N / A    | 百兆     | （10141014）期望作为支票簿上安全信用缓冲区的Wei的最大金额    |
+| Config file          | Command-line flag | Environment variable | Default value   | Description                                                  |
+| -------------------- | ----------------- | -------------------- | --------------- | ------------------------------------------------------------ |
+| AutoCashInterval     | n/a               | n/a                  | 300000000000    | (3∗10<sup>11</sup>, 5 minutes) Maximum Time before any outstanding cheques are cashed |
+| AutoCashThreshold    | n/a               | n/a                  | 50000000000000  | (5∗10135∗1013) Maximum total amount of uncashed cheques in Wei |
+| AutoDepositInterval  | n/a               | n/a                  | 300000000000    | (3∗10113∗1011, 5 minutes) Maximum time before cheque book is replenished if necessary by sending funds from the baseaccount |
+| AutoDepositThreshold | n/a               | n/a                  | 50000000000000  | (5∗10135∗1013) Minimum balance in Wei required before replenishing the cheque book |
+| AutoDepositBuffer    | n/a               | n/a                  | 100000000000000 | (10141014) Maximum amount of Wei expected as a safety credit buffer on the cheque book |
 
 ### SWAP支付配置文件参数
+这些参数可能会在POC 0.3中发生变化
 
-POC 0.3中这些参数可能会发生变化
-
-| 配置文件 | 命令行标志 | 环境变量 | 默认值                                     | 描述                                                         |
-| -------- | ---------- | -------- | ------------------------------------------ | ------------------------------------------------------------ |
-| 公钥     | N / A      | N / A    |                                            | swarm base帐户使用的公钥                                     |
-| 合约     | N / A      | N / A    | 0x0000000000000000000000000000000000000000 | 在以太坊区块链上部署的支票簿合约的地址。如果空白，则会部署新的支票簿合约。 |
-| 受益人   | N / A      | N / A    | 0x0000000000000000000000000000000000000000 | 以太坊账户地址作为收款支票的受益人                           |
+| Config file | Command-line flag | Environment variable | Default value                              | Description                                                  |
+| ----------- | ----------------- | -------------------- | ------------------------------------------ | ------------------------------------------------------------ |
+| PublicKey   | n/a               | n/a                  |                                            | Public key of your swarm base account use                    |
+| Contract    | n/a               | n/a                  | 0x0000000000000000000000000000000000000000 | Address of the cheque book contract deployed on the Ethereum blockchain. If blank, a new chequebook contract will be deployed. |
+| Beneficiary | n/a               | n/a                  | 0x0000000000000000000000000000000000000000 | Ethereum account address serving as beneficiary of incoming cheques |
 
 ### 同步参数
 
-| 配置文件           | 命令行标志 | 环境变量 | 默认值                                        | 描述                                                         |
-| ------------------ | ---------- | -------- | --------------------------------------------- | ------------------------------------------------------------ |
-| RequestDbPath      | N / A      | N / A    | <$ GETH_ENV_DIR> /群/ BZZ - <$ BZZ_KEY> /请求 | 请求DB的路径                                                 |
-| RequestDbBatchSize | N / A      | N / A    | 512                                           | 请求数据库批量大小                                           |
-| KeyBufferSize      | N / A      | N / A    | 1024                                          | 用于未同步密钥的内存缓存                                     |
-| SyncBatchSize      | N / A      | N / A    | 128                                           | 用于未同步密钥的内存缓存                                     |
-| SyncBufferSize     | N / A      | N / A    | 128                                           | 用于传出发送的内存缓存                                       |
-| SyncCacheSize      | N / A      | N / A    | 1024                                          | 在一个批次中发送的未同步密钥的最大数量                       |
-| 同步优先级         | N / A      | N / A    | [2，1，1，0，0]                               | 与5种交付类型相对应的5种优先级的数组：<交付，传播，删除，历史，待办事项>。强烈建议指定单调减少的优先级列表。 |
-| SyncModes          | N / A      | N / A    | [真实，真实，真实，虚假]                      | 指定确认模式ON的布尔数组，对应于5种传送类型：<传送，传播，删除，历史，待办事项>。为一个类型指定true意味着所有交付都将以确认往返为前提：散列键首先在unsyncedKeysMsg中发送，并且只有在deliveryRequestMsg中确认后才会发送。 |
+| Config file        | Command-line flag | Environment variable | Default value                                 | Description                                                  |
+| ------------------ | ----------------- | -------------------- | --------------------------------------------- | ------------------------------------------------------------ |
+| RequestDbPath      | n/a               | n/a                  | <$GETH_ENV_DIR>/swarm/bzz-<$BZZ_KEY>/requests | Path to request DB                                           |
+| RequestDbBatchSize | n/a               | n/a                  | 512                                           | Request DB Batch size                                        |
+| KeyBufferSize      | n/a               | n/a                  | 1024                                          | In-memory cache for unsynced keys                            |
+| SyncBatchSize      | n/a               | n/a                  | 128                                           | In-memory cache for unsynced keys                            |
+| SyncBufferSize     | n/a               | n/a                  | 128                                           | In-memory cache for outgoing deliveries                      |
+| SyncCacheSize      | n/a               | n/a                  | 1024                                          | Maximum number of unsynced keys sent in one batch            |
+| Sync priorities    | n/a               | n/a                  | [2, 1, 1, 0, 0]                               | Array of 5 priorities corresponding to 5 delivery types:<delivery, propagation, deletion, history, backlog>.Specifying a monotonically decreasing list of priorities is highly recommended. |
+| SyncModes          | n/a               | n/a                  | [true, true, true, true, false]               | A boolean array specifying confirmation mode ON corresponding to 5 delivery types:<delivery, propagation, deletion, history, backlog>. Specifying true for a type means all deliveries will be preceeded by a confirmation roundtrip: the hash key is sent first in an unsyncedKeysMsg and delivered only if confirmed in a deliveryRequestMsg. |
 
 注意
 
