@@ -17,7 +17,7 @@ DATADIR=/tmp/BZZ/`date +%s`
 mkdir $DATADIR
 ```
 
-然后使用此目录创建一个新帐户
+然后使用此目录创建一个新账户
 
 ```
 geth --datadir $DATADIR account new
@@ -49,7 +49,7 @@ BZZKEY=2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1
 - 连接到swarm测试网和连接到Ropsten区块链
 - 以单点模式使用swarm，为了本地测试
 - 启动一个私有swarm
-- 使用私有Swarm测试SWAP会计
+- 使用私有Swarm测试SWAP计费
 
 ## 连接到swarm测试网
 
@@ -85,7 +85,7 @@ swarm --bzzaccount $BZZKEY \
 
 ### 将群集与Ropsten testnet区块链一起使用
 
-如果您还没有帐户，请运行
+如果您还没有账户，请运行
 
 ```
 geth --datadir $DATADIR --testnet account new
@@ -231,7 +231,7 @@ echo "swarm is running in the background, you can check its logs at "$DATADIR"/s
 
 ## 运行一个私有swarm
 
-您可以将您的单例节点扩展到私有swarm。首先按照上述说明启动多个`swarm`实例。您可以保留相同的数据目录，因为所有节点特定的数据都将驻留在下级目录`$DATADIR/bzz-$BZZKEY/`中 。确保您为要运行的每个swarm实例创建一个帐户。为简单起见，假设您运行一个geth实例，并且每个swarm守护进程都通过ipc连接到它，如果它们位于同一台计算机（或本地网络）上，则可以使用http或websockets作为eth网络通信的传输。
+您可以将您的单例节点扩展到私有swarm。首先按照上述说明启动多个`swarm`实例。您可以保留相同的数据目录，因为所有节点特定的数据都将驻留在下级目录`$DATADIR/bzz-$BZZKEY/`中 。确保您为要运行的每个swarm实例创建一个账户。为简单起见，假设您运行一个geth实例，并且每个swarm守护进程都通过ipc连接到它，如果它们位于同一台计算机（或本地网络）上，则可以使用http或websockets作为eth网络通信的传输。
 
 一旦你的`n`节点是启动和运行，您可以在swarm控制台中使用`admin.nodeInfo.enode`（或cleaner：`console.log(admin.nodeInfo.enode)`）列出所有的enodes。运行：
 
@@ -280,7 +280,7 @@ cat enodes.lst | perl -pe 's/@[\d\.]+/@[::]/' > local-enodes.lst
 
 ### 在您的私有区块链上测试SWAP。
 
-SWarm记帐协议（SWAP）默认是禁用的。设置`--swap`标志来启用它。如果它被设置为true，那么SWAP将被启用。但是，激活SWAP不仅仅需要添加-swap标志。这是因为它需要部署支票本合约，为此我们需要在主账户中拥有以太币。我们可以通过挖矿或者通过在一个定制创世区块中简单地发给自己一些以太币来获得一些以太币。
+SWarm计费协议（SWAP）默认是禁用的。设置`--swap`标志来启用它。如果它被设置为true，那么SWAP将被启用。但是，激活SWAP不仅仅需要添加-swap标志。这是因为它需要部署支票本合约，为此我们需要在主账户中拥有以太币。我们可以通过挖矿或者通过在一个定制创世区块中简单地发给自己一些以太币来获得一些以太币。
 
 #### 定制创世区块
 
@@ -449,7 +449,7 @@ TOML配置文件按章节(section)组织。下面按章节列出了可用配置�
 | ListenAddr  | –httpaddr         | SWARM_LISTEN_ADDR     | 127.0.0.1                                  | Swarm listen address                                         |
 | Port        | –bzzport          | SWARM_PORT            | 8500                                       | Port to run the http proxy server                            |
 | PublicKey   | n/a               | n/a                   | n/a                                        | Public key of swarm base account                             |
-| BzzKey      | n/a               | n/a                   | n/a                                        | Swarm node base address (hash(PublicKey)hash(PublicKey))hash(PublicKey)hash(PublicKey)). This is used to decide storage based on radius and routing by kademlia. |
+| BzzKey      | n/a               | n/a                   | n/a                                        | Swarm node base address (hash(PublicKey)hash(PublicKey)). This is used to decide storage based on radius and routing by kademlia. |
 | NetworkId   | –bzznetworkid     | SWARM_NETWORK_ID      | 3                                          | Network ID                                                   |
 | SwapEnabled | –swap             | SWARM_SWAP_ENABLE     | false                                      | Enable SWAP                                                  |
 | SyncEnabled | –sync             | SWARM_SYNC_ENABLE     | true                                       | Disable swarm node synchronization. This option will be deprecated. It is only for testing. |
@@ -465,13 +465,13 @@ TOML配置文件按章节(section)组织。下面按章节列出了可用配置�
 | ChunkDbPath   | n/a               | n/a                  | <$GETH_ENV_DIR>/swarm/bzz-<$BZZ_KEY>/chunks | Path to leveldb chunk DB                                     |
 | DbCapacity    | n/a               | n/a                  | 5000000                                     | DB capacity, number of chunks (5M is roughly 20-25GB)        |
 | CacheCapacity | n/a               | n/a                  | 5000                                        | Cache capacity, number of recent chunks cached in memory     |
-| Radius        | n/a               | n/a                  | 0                                           | Storage Radius: minimum proximity order (number of identical prefix bits of address key) for chunks to warrant storage. Given a storage radius rr and total number of chunks in the network nn, the node stores n∗2−rn∗2−r chunks minimum. If you allow bb bytes for guaranteed storage and the chunk storage size is cc, your radius should be set to int(log2(nc/b))int(log2(nc/b)) |
+| Radius        | n/a               | n/a                  | 0                                           | Storage Radius: minimum proximity order (number of identical prefix bits of address key) for chunks to warrant storage. Given a storage radius r and total number of chunks in the network n, the node stores n∗2<sup>−r</sup> chunks minimum. If you allow b bytes for guaranteed storage and the chunk storage size is c, your radius should be set to int(log<sub>2</sub>(nc/b)) |
 
 ### Chunker参数
 
 | Config file | Command-line flag | Environment variable | Default value | Description                                                  |
 | ----------- | ----------------- | -------------------- | ------------- | ------------------------------------------------------------ |
-| Branches    | n/a               | n/a                  | 128           | Number of branches in bzzhash merkle tree. Branches∗ByteSize(Hash)Branches∗ByteSize(Hash) gives the datasize of chunks |
+| Branches    | n/a               | n/a                  | 128           | Number of branches in bzzhash merkle tree. Branches∗ByteSize(Hash) gives the datasize of chunks |
 | Hash        | n/a               | n/a                  | SHA3          | Hash: The hash function used by the chunker (base hash algo of bzzhash): SHA3 or SHA256.This option will be removed in a later release. |
 
 ### Hive参数
@@ -485,7 +485,7 @@ TOML配置文件按章节(section)组织。下面按章节列出了可用配置�
 
 | Config file          | Command-line flag | Environment variable | Default value   | Description                                                  |
 | -------------------- | ----------------- | -------------------- | --------------- | ------------------------------------------------------------ |
-| MaxProx              | n/a               | n/a                  | 8               | highest Proximity order (i.e., Maximum number of identical prefix bits of address key) considered distinct. Given the total number of nodes in the network NN, MaxProx should be larger than log2(N/ProxBinSize)log2(N/ProxBinSize)), safely log2(N)log2(N). |
+| MaxProx              | n/a               | n/a                  | 8               | highest Proximity order (i.e., Maximum number of identical prefix bits of address key) considered distinct. Given the total number of nodes in the network NN, MaxProx should be larger than log<sub>2</sub>(N/ProxBinSize)), safely log<sub>2</sub>(N). |
 | ProxBinSize          | n/a               | n/a                  | 2               | Number of most proximate nodes lumped together in the most proximate kademlia bin |
 | BuckerSize           | n/a               | n/a                  | 4               | maximum number of active peers in a kademlia proximity bin. If new peer is added, the worst peer in the bin is dropped. |
 | PurgeInterval        | n/a               | n/a                  | 151200000000000 |                                                              |
@@ -499,8 +499,8 @@ TOML配置文件按章节(section)组织。下面按章节列出了可用配置�
 
 | Config file   | Command-line flag | Environment variable | Default value | Description                                                  |
 | ------------- | ----------------- | -------------------- | ------------- | ------------------------------------------------------------ |
-| BuyAt         | n/a               | n/a                  | 20000000000   | (2∗10102∗1010 wei), highest accepted price per chunk in wei  |
-| SellAt        | n/a               | n/a                  | 20000000000   | (2∗10102∗1010 wei) offered price per chunk in wei            |
+| BuyAt         | n/a               | n/a                  | 20000000000   | (2∗10<sup>10</sup> wei), highest accepted price per chunk in wei  |
+| SellAt        | n/a               | n/a                  | 20000000000   | (2∗10<sup>10</sup> wei) offered price per chunk in wei            |
 | PayAt         | n/a               | n/a                  | 100           | Maximum number of chunks served without receiving a cheque. Debt tolerance. |
 | DropAtMaximum | n/a               | n/a                  | 10000         | Number of chunks served without receiving a cheque. Debt tolerance. |
 
@@ -510,10 +510,10 @@ TOML配置文件按章节(section)组织。下面按章节列出了可用配置�
 | Config file          | Command-line flag | Environment variable | Default value   | Description                                                  |
 | -------------------- | ----------------- | -------------------- | --------------- | ------------------------------------------------------------ |
 | AutoCashInterval     | n/a               | n/a                  | 300000000000    | (3∗10<sup>11</sup>, 5 minutes) Maximum Time before any outstanding cheques are cashed |
-| AutoCashThreshold    | n/a               | n/a                  | 50000000000000  | (5∗10135∗1013) Maximum total amount of uncashed cheques in Wei |
-| AutoDepositInterval  | n/a               | n/a                  | 300000000000    | (3∗10113∗1011, 5 minutes) Maximum time before cheque book is replenished if necessary by sending funds from the baseaccount |
-| AutoDepositThreshold | n/a               | n/a                  | 50000000000000  | (5∗10135∗1013) Minimum balance in Wei required before replenishing the cheque book |
-| AutoDepositBuffer    | n/a               | n/a                  | 100000000000000 | (10141014) Maximum amount of Wei expected as a safety credit buffer on the cheque book |
+| AutoCashThreshold    | n/a               | n/a                  | 50000000000000  | (5∗10<sup>13</sup>) Maximum total amount of uncashed cheques in Wei |
+| AutoDepositInterval  | n/a               | n/a                  | 300000000000    | (3∗10<sup>11</sup>, 5 minutes) Maximum time before cheque book is replenished if necessary by sending funds from the baseaccount |
+| AutoDepositThreshold | n/a               | n/a                  | 50000000000000  | (5∗10<sup>13</sup>) Minimum balance in Wei required before replenishing the cheque book |
+| AutoDepositBuffer    | n/a               | n/a                  | 100000000000000 | (10<sup>14</sup>) Maximum amount of Wei expected as a safety credit buffer on the cheque book |
 
 ### SWAP支付配置文件参数
 这些参数可能会在POC 0.3中发生变化
@@ -539,38 +539,36 @@ TOML配置文件按章节(section)组织。下面按章节列出了可用配置�
 
 注意
 
-这个项目的状态保证这些选项可能会有很多变化。
+这个项目的状态使得这些选项可能会有很多变化。
 
 如果`config.Contract`为空（零地址），则部署新的支票簿合约。在区块链上确认合约之前，不允许传出检索请求。
 
 ### 设置SWAP
 
-SWAP（蜂窝计费协议）是允许公平使用带宽的系统（请参见[Incentivisation](http://swarm-guide.readthedocs.io/en/latest/architecture.html#incentivisation)，特别是[SWAP - Swarm Accounting Protocol](http://swarm-guide.readthedocs.io/en/latest/architecture.html#swap)）。为了使用SWAP，必须已经部署支票簿合约。如果启动客户端时支票簿合约不存在或者如果在配置文件中指定的合约无效，则客户端将尝试自动部署支票簿：
+SWAP（Swarm计费协议）是允许公平使用带宽的系统（请参见[Incentivisation](http://swarm-guide.readthedocs.io/en/latest/architecture.html#incentivisation)，特别是[SWAP - Swarm Accounting Protocol](http://swarm-guide.readthedocs.io/en/latest/architecture.html#swap)）。为了使用SWAP，必须已经部署支票簿合约。如果启动客户端时支票簿合约不存在或者如果在配置文件中指定的合约无效，则客户端将尝试自动部署支票簿：
 
 > [BZZ] SWAP部署新支票簿（所有者：0xe10536 .. 5e491）
 
 如果您已经在区块链上拥有有效的支票簿，只需将其输入到配置文件`Contract`字段即可。
 
-您可以设置一个单独的帐户作为您的服务兑现支票付款的受益人。将其设置`Beneficiary`在配置文件的字段中。
+您可以设置一个单独的账户作为您的服务兑现支票付款的受益人。将其设置在配置文件的`Beneficiary`字段中。
 
-如果基本帐户没有资金并且无法支付交易费用，自动部署支票簿可能会失败。请注意，如果您的区块链不同步，也会发生这种情况。在这种情况下，您将看到日志消息：
-
-```
-[ BZZ ] SWAP无法部署新支票簿：无法发送支票簿创建交易：帐户
- 不存在或帐户余额太低..在10秒内重新开始
-
-[ BZZ ] SWAP安排与<enode：// 23ae0e62 .. .. .. 8a4c6bc93b7d2aa4fb@195.228.155.76：30301>：从同伴购买禁用; 卖给同伴禁用）
+如果基本账户没有资金并且无法支付交易费用，自动部署支票簿可能会失败。请注意，如果您的区块链不同步，也会发生这种情况。在这种情况下，您将看到日志消息：
 
 ```
+[ BZZ ] SWAP无法部署新支票簿：无法发送支票簿创建交易：账户
+ 不存在或账户余额太低..在10秒内重新开始
 
-由于这里没有业务可能，所以在至少一方签署合约之前，连接处于闲置状态。实际上，这仅适用于测试阶段。如果我们不被允许购买块，那么不允许传出请求。如果我们仍然尝试下载我们本地没有的内容，则请求将失败（除非我们与其他同行相信）。
+[ BZZ ] SWAP安排与<enode：// 23ae0e62 .. .. .. 8a4c6bc93b7d2aa4fb@195.228.155.76：30301>：从peer购买禁用; 卖给peer禁用）
+```
+
+由于这里没有业务可能，所以在至少一方签署合约之前，连接处于闲置状态。实际上，这仅适用于测试阶段。如果我们不被允许购买块(chunk)，那么不允许传出请求。如果我们仍然尝试下载我们本地没有的内容，则请求将失败（除非我们与其他peer相信）。
 
 ```
 [ BZZ ] netStore.startSearch：无法发送retrieveRequest到对方[ <addr> ]：[ SWAP ] <enode：// 23ae0e62 .. .. .. 8a4c6bc93b7d2aa4fb@195.228.155.76：30301>我们不能有债务（无法购买）
-
 ```
 
-一旦有一个节点有资金（比如挖掘一下之后），并且网络上的某个人正在挖掘，那么自动部署将最终成功：
+一旦有一个节点有资金（比如挖矿之后），并且网络上的某个人正在挖矿，那么自动部署将最终成功：
 
 ```
 [支票簿]支票簿部署在0x77de9813e52e3a .. .c8835ea7 （所有者：0xe10536ae628f7d6e319435ef9b429dcdc085e491 ）
@@ -578,18 +576,16 @@ SWAP（蜂窝计费协议）是允许公平使用带宽的系统（请参见[Inc
 [ BZZ ] SWAP自动存款ON 为 0xe10536 - > 0x77de98：间隔 = 5m0s，阈值 =  50000000000000，缓冲区 =  100000000000000 ）
 [ BZZ ]Swarm：新支票簿集：保存配置文件，重置蜂巢中的所有连接
  [ KΛÐ ]：从表中删除节点enode：// 23ae0e6 .. .aa4fb @ 195.228.155.76：30301
-
 ```
 
-一旦节点部署了新的支票簿，其地址就会在配置文件中设置，并且所有连接都将重置为新条件。应该启用一个方向的购买。从没有有效支票簿的同行的角度来看日志：
+一旦节点部署了新的支票簿，其地址就会在配置文件中设置，并且所有连接都将重置为新条件。应该启用一个方向的购买。从没有有效支票簿的peer的角度来看日志：
 
 ```
 [ CHECKBOOK ]初始化的收件箱（ 0x9585 .. .3bceee6c  - > 0xa5df94be .. .bbef1e5 ）期望的签名者：041e18592 .. .. 702cf5e73cf8d618
  [ SWAP ] <enode：// 23ae0e62 .. .. .. 8a4c6bc93b7d2aa4fb@195.228.155.76 ：30301>     set autocash to every 5m0s，maximum uncashed limit：50000000000000 
 [ SWAP ] <enode：// 23ae0e62 .. .. .. 8a4c6bc93b7d2aa4fb@195.228.155.76：30301> autodeposit off （ not buying ）
 [ SWAP ] <enode：/ / 23ae0e62 .. .. 8a4c6bc93b7d2aa4fb@195.228.155.76：30301>远程配置文件集：支付：100，降至：10000，买入：20000000000，卖出：20000000000 
-[ BZZ ] SWAP安排与<enode：// 23ae0e62 .. .. .. 8a4c6bc93b7d2aa4fb@195.228.155.76：30301>：从同伴购买禁用;    以20000000000 wei / chunk 销售给同行）
-
+[ BZZ ] SWAP安排与<enode：// 23ae0e62 .. .. .. 8a4c6bc93b7d2aa4fb@195.228.155.76：30301>：从同伴购买禁用;    以20000000000 wei / chunk 销售给peer）
 ```
 
 根据自动存款设置，支票簿将定期补充：
@@ -599,19 +595,17 @@ SWAP（蜂窝计费协议）是允许公平使用带宽的系统（请参见[Inc
   interval  = 5m0s，threshold  =  50000000000000，
   buffer  =  100000000000000 ） 
  将100000000000000 wei 存入支票簿（ 0xefbb0c0 .. .16dea，余额：100000000000000，目标：100000000000000 ）
-
 ```
 
-没有支票簿（尚未）的同行不应该被允许下载，因此检索请求不会出去。然而，另一个同伴能够支付，因此这个其他同伴可以从第一个同伴中检索块并为它们付钱。这反过来又使第一个同行积极，他们可以同时使用它们（自动）部署自己的支票簿并支付检索数据。如果他们不出于任何原因部署支票簿，他们可以使用他们的余额来支付检索数据，但只能达到0余额; 在此之后，不再有任何请求被允许出去。你会再次看到：
+没有支票簿（尚未）的peer(peerA)不被允许下载，因此会发出检索请求。然而，另一个peer(peerB)能够支付，因此这个peer(peerB)可以从第一个peer(peerA)中检索块并为它们付钱。这反过来又使第一个peer(peerA)积极，他们可以同时使用它们（自动）部署自己的支票簿并支付检索数据。如果他们出于某种原因没有部署支票簿，他们可以使用自己的余额来支付检索数据，但只能达到0余额; 在此之后，不再有任何请求被允许出去。你会再次看到：
 
 ```
 [ BZZ ] netStore.startSearch：无法向[ peer89da0c6 ... 623e5671c01 ]发送retrieveRequest ：[ SWAP ]   <enode：//23ae0e62...8a4c6bc93b7d2aa4fb@195.228.155.76：30301>我们不能有债务（无法购买）
-
 ```
 
-如果没有支票簿的对等体尝试发送请求而没有支付，那么远程对等体（谁可以看到他们没有支票簿合约）将其解释为导致对等体被丢弃的恶意行为。
+如果没有支票簿的peer尝试发送请求而没有支付，那么远程peer（它可以看到他们没有支票簿合约）将其解释为导致peer被丢弃的恶意行为。
 
-在本例中，我们开始挖掘，然后重新启动节点。第二本支票簿autodeploys，同行同步他们的链和重新连接，然后如果一切顺利日志将显示如下所示：
+在本例中，我们开始挖矿，然后重新启动节点。第二本支票簿自动部署，peer同步他们的链和重新连接，然后如果一切顺利日志将显示如下所示：
 
 ```
 初始化的收件箱（ 0x95850c6 .. .bceee6c - > 0xa5df94b .. .bef1e5 ）预期签名者：041e185925bb .. .. .. 702cf5e73cf8d618
@@ -619,11 +613,10 @@ SWAP（蜂窝计费协议）是允许公平使用带宽的系统（请参见[Inc
 [ SWAP ] <e节点：// 23ae0e62 .. .. .. 8a4c6bc93b7d2aa4fb@195.228.155.76：30301> 设置 autodeposit每5m0s，付于：500000亿，缓冲液：百万亿
 [ SWAP ] <enode：// 23ae0e62 .. .. .. 8a4c6bc93b7d2aa4fb@195.228.155.76：30301>远程配置文件集：支付在：100，降在：10000，买入：20000000000，卖出：20000000000 
 [ SWAP ] <enode：// 23ae0e62 .. .. .. 8a4c6bc93b7d2aa4fb@195.228.155.76：30301>远程配置文件集：支付在：100，降到：10000，买入：20000000000，卖出：20000000000 
-[ BZZ ] SWAP安排与<node：//23ae0e62...8a4c6bc93b7d2aa4fb@195.228.155.76：30301>：以20000000000 wei / chunk 启用同级购买; 以20000000000 wei / chunk 销售给同行）
-
+[ BZZ ] SWAP安排与<node：//23ae0e62...8a4c6bc93b7d2aa4fb@195.228.155.76：30301>：以20000000000 wei / chunk 启用同级购买; 以20000000000 wei / chunk 销售给peer）
 ```
 
-作为正常操作的一部分，在对等体达到`PayAt`（块数）余额后，通过协议发送支票付款。登录接收端：
+作为正常操作的一部分，在peer达到`PayAt`（块数）余额后，通过协议发送支票付款。登录接收端：
 
 ```
 [支票簿]校验检查：合约：0x95850 .. .eee6c，受益：0xe10536ae628 .. .cdc085e491，量：8680200亿，签名：a7d52dc744b8 .. .. .. f1fe2001 -总和：8660200亿
@@ -631,11 +624,10 @@ SWAP（蜂窝计费协议）是允许公平使用带宽的系统（请参见[Inc
 
 ```
 
-支票被验证。如果未兑现的支票余额超过`AutoCashThreshold`，则最后一张支票（累计金额）兑现。这是通过发送一个包含支票的交易给远程同行的cheuebook合约来完成的。因此，为了兑现付款，您的发件人帐户（baseaddress）需要有资金，网络应该是挖掘。
+支票被验证。如果未兑现的支票余额超过`AutoCashThreshold`，则最后一张支票（累计金额）兑现。这是通过发送一个包含支票的交易给远程peer的支票簿(cheuebook)合约来完成的。因此，为了兑现付款，您的发件人账户（baseaddress）需要有资金，网络应该挖矿。
 
 ```
 [支票簿]兑现支票（总：1040000亿）上支票簿（ 0x95850c6 .. .eee6c ）发送到0xa5df94be .. .e5aaz
-
 ```
 
 要进一步细调SWAP，请参阅[SWAP配置文件参数](http://swarm-guide.readthedocs.io/en/latest/runninganode.html#swap-params)。
