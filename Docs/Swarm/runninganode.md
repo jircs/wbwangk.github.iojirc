@@ -1,633 +1,659 @@
-# 连接到Swarm（高级）
+# 用法
 
-这些说明将首先阐述如何启动一个本地、私有、个人（单个）swarm。使用它来熟悉客户端的功能; 上传、下载以及http代理。
+## 从命令行使用swarm
 
-## 准备
+### 上传文件或目录到swarm
 
-要启动一个基本的swarm节点，我们必须在私有网络上开始一个空的数据目录，然后将swarm守护程序连接到这个geth实例。
+确保你已经编译了swarm命令
 
-首先放置一个空的临时目录作为数据存储
+```
+cd $GOPATH/src/github.com/ethereum/go-ethereum
+go install ./cmd/swarm
+```
+
+swarm up子命令可以方便地上传文件和目录。用法：
+
+```
+swarm up /path/to/file/or/directory
+```
+
+默认情况下，假定您正在默认端口（8500）上运行带有本地http代理的自己的swarm节点。请参阅[连接到swarm（高级）](http://swarm-guide.readthedocs.io/en/latest/runninganode.html#run-swarm-client)以了解如何运行本地节点。可以使用`--bzzapi`选项指定替代代理端点。
+
+您可以使用其中一个公共网关作为代理，在这种情况下，您可以上传到swarm，而无需运行节点。
 
 注意
 
-如果您按照本指南中的安装说明进行操作，则可以在$GOPATH/bin目录中找到您的可执行文件。确保将文件移动到可执行文件$PATH中，或者在其上包含$GOPATH/bin目录。
+这种做法可能会在未来消失或受到严重限制。目前它也接受有限的文件大小。
 
 ```
-DATADIR=/tmp/BZZ/`date +%s`
-mkdir $DATADIR
+swarm --bzzapi http://swarm-gateways.net up /path/to/file/or/directory
 ```
 
-然后使用此目录创建一个新账户
+#### 示例：上传文件
+
+发出以下命令将go-ethereum自述文件上传到您的swarm
 
 ```
-geth --datadir $DATADIR account new
+swarm up $GOPATH/src/github.com/ethereum/go-ethereum/README.md
 ```
 
-系统会提示您输入密码：
+它产生以下输出
 
 ```
-Your new account is locked with a password. Please give a password. Do not forget this password.
-Passphrase:
-Repeat passphrase:
+> d1f25a870a7bb7e5d526a7623338e4e9b8399e76df8b634020d11d969594f24a
 ```
 
-一旦你指定了密码（例如MYPASSWORD），输出将是一个地址 - swarm节点的基地址。
+返回的哈希是一个清单(manifest)的哈希，该清单包含README.md文件作为唯一条目。所以默认情况下，主要内容和清单都会上传。你从swarm访问这个文件，方法是利用浏览器访问下面的链接
 
 ```
-Address: {2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1}
+http://localhost:8500/bzz:/d1f25a870a7bb7e5d526a7623338e4e9b8399e76df8b634020d11d969594f24a
 ```
 
-我们将其保存在名称 `BZZKEY`下
+清单确保您可以使用正确的MIME类型检索文件。
+
+您可能希望不为您的内容创建清单，而仅上传原始内容。也许你想将它包含在一个自定义索引中，或者将它作为一个已知的datablob进行处理，并仅由知道其mimetype的应用程序使用。为此，你可以设置-manifest = false：
 
 ```
-BZZKEY=2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1
+swarm --manifest=false --bzzapi http://swarm-gateways.net/ up yellowpaper.pdf 2> up.log
+> 7149075b7f485411e5cc7bb2d9b7c86b3f9f80fb16a3ba84f5dc6654ac3f8ceb
 ```
 
-完成这些准备工作后，我们现在可以启动我们的swarm客户端。在下面我们将详细介绍几种您可能想要使用swarm的方法。
+该选项可阻止自动清单上传。它按原样上传内容。但是，如果您希望检索该文件，则无法明确告知浏览器该文件所代表的内容。因此，swarm将返回一个404 Not Found。为了访问此文件，您可以使用`bzz-raw`方案(scheme)，请参阅[bzz-raw](http://swarm-guide.readthedocs.io/en/latest/usage.html#bzz-raw)。
 
-- 连接到没有区块链的swarm测试网
-- 连接到swarm测试网和连接到Ropsten区块链
-- 以单点模式使用swarm，为了本地测试
-- 启动一个私有swarm
-- 使用私有Swarm测试SWAP计费
+#### 示例：上传目录
 
-## 连接到swarm测试网
+上传目录是通过`swarm --recursive up`。
 
-注意
-
-重要提示：自动连接到测试网络目前无法为所有用户正常工作。这个问题现在正在解决。同时，请手动添加一些enodes来引导您的节点。请参阅下面的“手动添加enodes”。
-
-Swarm需要一个以太坊区块链
-
-- 使用以太坊名称服务（ENS）合约进行域名解析。
-- 激励（例如：SWAP）
-
-如果您不关心域名解析并在没有SWAP的情况下运行您的swarm（默认），则不需要连接到区块链。`swarm`默认情况下会尝试通过`geth`IPC的端点连接到区块链（通常为$DATADIR/geth.ipc）。因此，要启动`swarm`没有域名解析，`--ens-api`选项应设置为`""`（空字符串）。只有在SWAP被使能的情况下才应设置`--swap-api`标志。
-
-### 仅连接到swarm（无区块链）
-
-如上所示建立你的环境，即确保你有一个数据目录。
-
-注意
-
-即使你不需要以太坊区块链，你也需要geth来生成一个swarm账户（$BZZKEY），因为这个账户决定了你的swarm节点将要使用的基地址。
-
-在以下示例中，swarm的输出将写入日志文件。这些说明是为了熟悉swarm并使用语法来加快这个文档（例如自动输入密码）。请注意，密码将在您的shell的历史记录中保持纯文本。
+让我们创建一些测试文件
 
 ```
-swarm --bzzaccount $BZZKEY \
-       --datadir $DATADIR \
-       --ens-api '' \
-       2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
+mkdir upload-test
+echo "one" > upload-test/one.txt
+echo "two" > upload-test/two
+mkdir upload-test/three
+echo "four" > upload-test/three/four
 ```
 
-该`swarm`守护进程会寻找并连接到其他群节点。它独立管理自己的对等连接，而不依赖`geth`。
-
-### 将群集与Ropsten testnet区块链一起使用
-
-如果您还没有账户，请运行
+我们可以用下列命令上传这个目录
 
 ```
-geth --datadir $DATADIR --testnet account new
+swarm --recursive up upload-test/
 ```
 
-运行一个geth节点连接到Ropsten测试网络
+输出再次是您上传的目录的根哈希值，它可用于检索完整的目录
 
 ```
-nohup geth --datadir $DATADIR \
-       --unlock 0 \
-       --password <(echo -n "MYPASSWORD") \
-       --testnet \
-        2>> $DATADIR/geth.log &
+ab90f84c912915c2a300a94ec5bef6fc0747d1fbaf86d769b3eed1c836733a30
 ```
 
-然后启动swarm; 将它连接到geth节点（-ens-api）。
+然后，您可以像这样检索与根清单相关的文件：
 
 ```
-swarm --bzzaccount $BZZKEY \
-       --datadir $DATADIR \
-       --keystore $DATADIR/testnet/keystore \
-       --ens-api $DATADIR/testnet/geth.ipc \
-       2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
+curl http://localhost:8500/bzz:/ab90f84c912915c2a300a94ec5bef6fc0747d1fbaf86d769b3eed1c836733a30/three/four
 ```
 
-### 手动添加enodes
-
-最终自动节点发现将适用于swarm节点。在此之前，您可以通过使用`admin.addPeer`控制台命令手动添加一些对等方(peer)来启动连接过程。
+结果应该是
 
 ```
-geth --exec='admin.addPeer("ENODE")' attach ipc:/path/to/bzzd.ipc
+four
 ```
 
-ENODE是以下之一：
+如果您希望能够通过人类可读的名称（如'mysite.eth'）而不是上面的长十六进制字符串来访问您的内容，请参阅下面的[以太坊名称服务](http://swarm-guide.readthedocs.io/en/latest/usage.html#ethereum-name-service)部分。
+
+## 内容检索：哈希和清单
+
+### 使用http代理检索内容
+
+如上所述，您的本地swarm实例具有在端口8500上运行的HTTP API（默认情况下）。检索内容很简单，只需将浏览器指向下列路径
 
 ```
-enode://01f7728a1ba53fc263bcfbc2acacc07f08358657070e17536b2845d98d1741ec2af00718c79827dfdbecf5cfcd77965824421508cc9095f378eb2b2156eb79fa@40.68.194.101:30400
-enode://6d9102dd1bebb823944480282c4ba4f066f8dcf15da513268f148890ddea42d7d8afa58c76b08c16b867a58223f2b567178ac87dcfefbd68f0c3cc1990f1e3cf@40.68.194.101:30427
-enode://fca15e2e40788e422b6b5fc718d7041ce395ff65959f859f63b6e4a6fe5886459609e4c5084b1a036ceca43e3eec6a914e56d767b0491cd09f503e7ef5bb87a1@40.68.194.101:30428
-enode://b795d0c872061336fea95a530333ee49ca22ce519f6b9bf1573c31ac0b62c99fe5c8a222dbc83d4ef5dc9e2dfb816fdc89401a36ecfeaeaa7dba1e5285a6e63b@40.68.194.101:30429
-enode://756f582f597843e630b35371fc080d63b027757493f00df91dd799069cfc6cb52ac4d8b1a56b973baf015dd0e9182ea3a172dcbf87eb33189f23522335850e99@40.68.194.101:30430
-enode://d9ccde9c5a90c15a91469b865ffd81f2882dd8731e8cbcd9a493d5cf42d875cc2709ccbc568cf90128896a165ac7a0b00395c4ae1e039f17056510f56a573ef9@40.68.194.101:30431
-enode://65382e9cd2e6ffdf5a8fb2de02d24ac305f1cd014324b290d28a9fba859fcd2ed95b8152a99695a6f2780c342b9815d3c8c2385b6340e96981b10728d987c259@40.68.194.101:30433
-enode://7e09d045cc1522e86f70443861dceb21723fad5e2eda3370a5e14747e7a8a61809fa6c11b37b2ecf1d5aab44976375b6d695fe39d3376ff3a15057296e570d86@40.68.194.101:30434
-enode://bd8c3421167f418ecbb796f843fe340550d2c5e8a3646210c9c9d747bbd34d29398b3e3716ee76aa3f2fc46d325eb685ece0375a858f20b759b40429fbf0d050@40.68.194.101:30435
-enode://8bb7fb70b80f60962c8979b20905898f8f6172ae4f6a715b89712cb7e965bfaab9aa0abd74c7966ad688928604815078c5e9c978d6e57507f45173a03f95b5e0@40.68.194.101:30436
+GET http://localhost:8500/bzz:/HASH
 ```
 
-## 单例模式Swarm
+HASH是swarm清单的ID。这是swarm可以为web提供服务的最常见用例。
 
-要以单例模式启动，请使用`--maxpeers 0`参数启动geth 
+它看起来像从服务器传输HTTP内容，但实际上它使用的是swarm的无服务器体系结构。
 
-```
-nohup geth --datadir $DATADIR \
-       --unlock 0 \
-       --password <(echo -n "MYPASSWORD") \
-       --verbosity 4 \
-       --networkid 322 \
-       --nodiscover \
-       --maxpeers 0 \
-        2>> $DATADIR/geth.log &
-```
-
-和启动swarm; 将它连接到geth节点。为了保持一致性，我们使用与geth相同的网络ID 322。
+一般模式是：
 
 ```
-swarm --bzzaccount $BZZKEY \
-       --datadir $DATADIR \
-       --ens-api $DATADIR/geth.ipc \
-       --verbosity 4 \
-       --maxpeers 0 \
-       --bzznetworkid 322 \
-       2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
+<HTTP proxy>/<URL SCHEME>:/<DOMAIN OR HASH>/<PATH>?<QUERY_STRING>
 ```
 
-注意
+如果您在浏览器中注册了适当的方案处理程序，或者您使用了Mist，则可以取消HTTP代理部分。
 
-在这个例子中，运行geth是可选的，并非严格需要。要运行无geth的swarm，只需将ens-api标志更改为`--ens-api ''`（空字符串）。
+Swarm提供3种不同的URL方案：
 
-在这种冗长的级别上，你应该看到很多（！）的输出在日志文件中累积。你可以通过使用命令`tail -f $DATADIR/swarm.log`和`tail -f $DATADIR/geth.log`来查看输出。注意：如果从另一个终端执行此操作，您将不得不手动指定路径，因为不会设置$DATADIR。
+### bzz url方案
 
-您可以在不通过控制台重新启动geth和swarm的情况下更改详细级别：
+#### bzz
 
-```
-geth --exec "web3.debug.verbosity(3)" attach ipc:$DATADIR/geth.ipc
-geth --exec "web3.debug.verbosity(3)" attach ipc:$DATADIR/bzzd.ipc
-```
-
-注意
-
-按照这些说明，您现在正在运行一个本地swarm节点，没有连接到任何其他节点。
-
-如果你想在一个脚本中运行所有这些指令，你可以用类似的方法来包装它们
+例如：
 
 ```
-#!/bin/bash
-
-# Working directory
-cd /tmp
-
-# Preparation
-DATADIR=/tmp/BZZ/`date +%s`
-mkdir -p $DATADIR
-read -s -p "Enter Password. It will be stored in $DATADIR/my-password: " MYPASSWORD && echo $MYPASSWORD > $DATADIR/my-password
-echo
-BZZKEY=$($GOPATH/bin/geth --datadir $DATADIR --password $DATADIR/my-password account new | awk -F"{|}" '{print $2}')
-
-echo "Your account is ready: "$BZZKEY
-
-# Run geth in the background
-nohup $GOPATH/bin/geth --datadir $DATADIR \
-    --unlock 0 \
-    --password <(cat $DATADIR/my-password) \
-    --verbosity 6 \
-    --networkid 322 \
-    --nodiscover \
-    --maxpeers 0 \
-    2>> $DATADIR/geth.log &
-
-echo "geth is running in the background, you can check its logs at "$DATADIR"/geth.log"
-
-# Now run swarm in the background
-$GOPATH/bin/swarm \
-    --bzzaccount $BZZKEY \
-    --datadir $DATADIR \
-    --ens-api $DATADIR/geth.ipc \
-    --verbosity 6 \
-    --maxpeers 0 \
-    --bzznetworkid 322 \
-    &> $DATADIR/swarm.log < <(cat $DATADIR/my-password) &
-
-
-echo "swarm is running in the background, you can check its logs at "$DATADIR"/swarm.log"
-
-# Cleaning up
-# You need to perform this feature manually
-# USE THESE COMMANDS AT YOUR OWN RISK!
-##
-# kill -9 $(ps aux | grep swarm | grep bzzaccount | awk '{print $2}')
-# kill -9 $(ps aux | grep geth | grep datadir | awk '{print $2}')
-# rm -rf /tmp/BZZ
+GET http://localhost:8500/bzz:/theswarm.test
 ```
 
-## 运行一个私有swarm
+bzz方案假定url的域部分指向一个清单。当检索由url寻址的资产时，清单条目将与url路径匹配。具有最长匹配路径的条目将被检索，并与相应清单条目中指定的内容类型一起提供。
 
-您可以将您的单例节点扩展到私有swarm。首先按照上述说明启动多个`swarm`实例。您可以保留相同的数据目录，因为所有节点特定的数据都将驻留在下级目录`$DATADIR/bzz-$BZZKEY/`中 。确保您为要运行的每个swarm实例创建一个账户。为简单起见，假设您运行一个geth实例，并且每个swarm守护进程都通过ipc连接到它，如果它们位于同一台计算机（或本地网络）上，则可以使用http或websockets作为eth网络通信的传输。
-
-一旦你的`n`节点是启动和运行，您可以在swarm控制台中使用`admin.nodeInfo.enode`（或cleaner：`console.log(admin.nodeInfo.enode)`）列出所有的enodes。运行：
+例如：
 
 ```
-geth --exec "console.log(admin.nodeInfo.enode)" attach /path/to/bzzd.ipc
+GET http://localhost:8500/bzz:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d/read
 ```
 
-然后你可以通过注入`admin.addPeer(enode)`swarm控制台来连接每个节点和一个特定节点（称为bootnode）（这与你`static-nodes.json`为devp2p 创建一个文件具有相同的效果：
+如果给定哈希地址处的清单包含这样的条目，则返回readme.md文件。
+
+如果清单中包含可以解析URL的多个条目，就像上面的例子，清单中包含条目readme.md和reading-list.txt，那么API将返回HTTP响应“300 Multiple Choices”，指示该请求无法明确解决。可用条目的列表通过HTTP或JSON返回。
+
+此通用方案支持在以太坊名称服务（ENS，请参阅以太坊名称服务）上注册的域的名称解析。这是一个只读方案，意味着它只支持GET请求并用于从swarm中检索内容。
+
+#### bzz-immutable
 
 ```
-geth --exec “admin.addPeer（$ BOOTNODE ）” attach /path/to/bzzd.ipc
-
+GET http://localhost:8500/bzz-immutable:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
 ```
 
-幸运的是，还有一个更简单的捷径，即在启动Swarm时添加标志`--bootnodes $BOOTNODE`。
+与通用方案相同，但没有ENS域解析，路径的域部分需要是有效的哈希。这也是一种只读方案，但其完整性保护很明确。一个特定的bzz-immutable url将始终处理完全相同的固定不变内容。
 
-这些管理连接的繁琐步骤只需要执行一次。如果您第二次调出相同的节点，之前的peer会被会被记住并连接。
-
-注意
-
-请注意，如果您在同一个实例上本地运行多个swarm守护进程，则可以使用相同的数据目录（$DATADIR），每个swarm将自动使用与bzzaccount相对应的自己的子目录。这意味着您可以将所有密钥存储在一个密钥存储目录中：$DATADIR/keystore。
-
-如果您想在本地运行多个节点，并且您位于防火墙后面，则使用外部IP的节点之间的连接可能无法工作。在这种情况下，您需要用`[::]`（表明localhost）将enode中的IP地址替换。
-
-要列出本地swarm的所有enode：
+#### bzz-raw
 
 ```
-for i in `ls $DATADIR | grep -v keystore`; do geth --exec "console.log(admin.nodeInfo.enode)" attach $DATADIR/$i/bzzd.ipc; done > enodes.lst
+GET http://localhost:8500/bzz-raw:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
 ```
 
-要将IP更改为localhost：
+当使用bzz-raw方案响应GET请求时，swarm不会假定这是清单，而是直接返回url指定的资源。
+
+`content_type`查询参数可以提供给指定您所请求的MIME类型，否则内容供应按默认的字节流。例如，如果你有一个PDF文件（不是包裹它的清单）位于哈希`6a182226...`然后下面的URL将正确地提供它。
 
 ```
-cat enodes.lst | perl -pe 's/@[\d\.]+/@[::]/' > local-enodes.lst
+GET http://localhost:8500/bzz-raw:/6a18222637cafb4ce692fa11df886a03e6d5e63432c53cbf7846970aa3e6fdf5?content_type=application/pdf
 ```
 
-注意
+raw方案支持POST和PUT请求，对于通用方案来说非常重要且有点不同寻常。正如我们所知，这是swarm与互联网不同的一个至关重要的方式。
 
-如果您只想连接到swarm testnet，则本节中的步骤不是必需的。由于默认情况下testnet的bootnode已设置，您的节点将有一种方法来引导其连接。
+POST的可能性使swarm成为真正的云服务，为您的浏览带来上传功能。
 
-## 测试SWAP
+事实上，命令行工具`swarm up`在底层使用了带有bzz raw方案的http代理。
 
-注意
-
-重要！请仅在私有网络上测试SWAP。
-
-### 在您的私有区块链上测试SWAP。
-
-SWarm计费协议（SWAP）默认是禁用的。设置`--swap`标志来启用它。如果它被设置为true，那么SWAP将被启用。但是，激活SWAP不仅仅需要添加-swap标志。这是因为它需要部署支票本合约，为此我们需要在主账户中拥有以太币。我们可以通过挖矿或者通过在一个定制创世区块中简单地发给自己一些以太币来获得一些以太币。
-
-#### 定制创世区块
-
-打开一个文本编辑器并写下以下内容（确保包含正确的BZZKEY）
+#### bzz-list
 
 ```
-{
-"nonce": "0x0000000000000042",
-  "mixhash": "0x0000000000000000000000000000000000000000000000000000000000000000",
-  "difficulty": "0x4000",
-  "alloc": {
-    "THE BZZKEY address starting with 0x eg. 0x2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1": {
-    "balance": "10000000000000000000"
+GET http://localhost:8500/bzz-list:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d/path
+```
+
+返回<path>路径下包含在<manifest>中的所有文件的列表，按分隔符`/`为前缀进行分组。如果路径是`/`，则返回清单中的所有文件。响应是带有`common_prefixes`字符串字段和`entries`列表字段的JSON编码对象。
+
+#### bzz-hash
+
+```
+GET http://localhost:8500/bzz-hash:/theswarm.test
+```
+
+Swarm接受bzz-hash url方案的GET请求，并用原始内容的哈希值作出响应，这与使用bzz-raw方案的请求返回的内容相同。清单的哈希也是存储在ENS中的哈希，所以bzz-hash可以用于ENS域的解析。
+
+响应内容类型是*text/plain*。
+
+#### bzzr和bzzi
+
+简称方案bzzr和bzzi被弃用，代之以bzz-raw和bzz-immutable。他们保持向后兼容性，并将在下一个版本中删除。
+
+### 清单(manifests)
+
+一般而言，清单声明了一个与swarm哈希关联的字符串列表。清单与一个哈希恰好相匹配，它由一系列声明内容的条目组成，内容可通过该哈希检索。让我们从一个介绍性的例子开始。
+
+以下示例说明了这一点。让我们创建一个目录，其中包含两个黄皮书和一个列出两个pdf文档的html index文件。
+
+```
+$ ls -1 orange-papers/
+index.html
+smash.pdf
+sw^3.pdf
+
+$ cat orange-papers/index.html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <ul>
+      <li>
+        <a href="./sw^3.pdf">Viktor Trón, Aron Fischer, Dániel Nagy A and Zsolt Felföldi, Nick Johnson: swap, swear and swindle: incentive system for swarm.</a>  May 2016
+      </li>
+      <li>
+        <a href="./smash.pdf">Viktor Trón, Aron Fischer, Nick Johnson: smash-proof: auditable storage for swarm secured by masked audit secret hash.</a> May 2016
+      </li>
+    </ul>
+  </body>
+</html>
+```
+
+我们现在使用`swarm up`命令将目录上传到swarm以创建一个小虚拟站点。
+
+```
+swarm --recursive --defaultpath orange-papers/index.html --bzzapi http://swarm-gateways.net/ up orange-papers/ 2> up.log
+> 2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
+```
+
+返回的哈希值是上传内容（orange-papers目录）的清单的哈希值：
+
+我们现在可以通过使用bzz-raw协议`bzz-raw`直接获取清单本身（而不是它们引用的文件）：
+
+```
+wget -O - "http://localhost:8500/bzz-raw:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d"
+
+> {
+  "entries": [
+    {
+      "hash": "4b3a73e43ae5481960a5296a08aaae9cf466c9d5427e1eaa3b15f600373a048d",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "hash": "4b3a73e43ae5481960a5296a08aaae9cf466c9d5427e1eaa3b15f600373a048d",
+      "contentType": "text/html; charset=utf-8",
+      "path": "index.html"
+    },
+    {
+      "hash": "69b0a42a93825ac0407a8b0f47ccdd7655c569e80e92f3e9c63c28645df3e039",
+      "contentType": "application/pdf",
+      "path": "smash.pdf"
+    },
+    {
+      "hash": "6a18222637cafb4ce692fa11df886a03e6d5e63432c53cbf7846970aa3e6fdf5",
+      "contentType": "application/pdf",
+      "path": "sw^3.pdf"
     }
-  },
-  "coinbase": "0x0000000000000000000000000000000000000000",
-  "timestamp": "0x00",
-  "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
-  "extraData": "Custom Ethereum Genesis Block to test Swarm with SWAP",
-  "gasLimit": "0xffffffff"
+  ]
 }
 ```
 
-另存为文件`$DATADIR/genesis.json`。
-
-如果你已经运行了swarm和geth，杀死进程
+清单包含它们引用的哈希的content_type信息。在其他情况下，如果未提供content_type，或者怀疑信息错误，则可以在搜索查询中手动指定content_type。例如，清单本身应该是*text/plain*：
 
 ```
-killall -s SIGKILL geth
-killall -s SIGKILL swarm
+http://localhost:8500/bzz-raw:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d?content_type="text/plain"
 ```
 
-并从$ DATADIR中删除旧数据，然后使用定制创世区块重新初始化
+现在，您还可以检查清单哈希是否与内容匹配（实际上swarm会为您执行此操作）：
 
 ```
-rm -rf $DATADIR/geth $DATADIR/swarm
-geth --datadir $DATADIR init $DATADIR/genesis.json
+$ wget -O- http://localhost:8500/bzz-raw:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d?content_type="text/plain" > manifest.json
+
+$ swarm hash manifest.json
+> 2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
 ```
 
-现在我们利用定制创世块重新启动geth和swarm
+### 在清单上的路径匹配
+
+清单的一个有用功能是我们可以将路径与URL匹配。在某种意义上，这使得清单成为一个路由表，因此清单swarm条目就好像它是一个主机。
+
+更具体地说，继续我们的例子，当我们请求：
 
 ```
-nohup geth --datadir $DATADIR \
-       --mine \
-       --unlock 0 \
-       --password <(echo -n "MYPASSWORD") \
-       --verbosity 6 \
-       --networkid 322 \
-       --nodiscover \
-       --maxpeers 0 \
-        2>> $DATADIR/geth.log &
+GET http://localhost:8500/bzz:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d/sw^3.pdf
 ```
 
-并启动swarm（带SWAP）; 将它连接到geth节点。为了一致性，我们对swarm私有网络使用相同的网络ID 322。
+swarm首先检索与上面的清单匹配的文档。然后将url路径`sw^3`与条目进行匹配。在这种情况下，找到了完美匹配，并将6a182226 ...处的文档作为pdf返回。
+
+正如你所看到的清单包含4个条目，虽然我们的目录只包含3个。额外的条目在那里，因为`swarm up`时的选项`--defaultpath orange-papers/index.html`，它关联到您用参数给出的空路径文件。这使得在URL路径为空时可以提供默认页面。此功能实质上实现了最常用的网络服务器重写规则，用于设置网址仅包含域时提供的网站的登录页面。所以当你请求下面的路径时
 
 ```
-swarm --bzzaccount $BZZKEY \
-       --swap \
-       --swap-api $DATADIR/geth.ipc \
-       --datadir $DATADIR \
-       --verbosity 6 \
-       --ens-api $DATADIR/geth.ipc \
-       --maxpeers 0 \
-       --bzznetworkid 322 \
-       2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
+GET http://localhost:8500/bzz:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
 ```
 
-如果全部成功，您将在swarm.log上看到消息“正在部署新支票本(chequebook)”。交易一旦确认(mined)，SWAP就准备好了。
+你得到的索引页面（内容类型`text/html`）在`4b3a73e43ae5481960a5296a08aaae9cf466c9d5427e1eaa3b15f600373a048d`。
+
+## 以太坊名称服务
+
+ENS是Swarm用来允许通过人类可读名称引用内容的系统，例如“orangepapers.eth”。它的操作类似于DNS系统，将人类可读的名字翻译成机器标识符 - 在这种情况下，就是您所指的内容的swarm哈希。通过注册名称并将其设置为解析您网站的根清单的内容哈希值，用户可以通过诸如*bzz://orange-papers.eth/*之类的URL访问您的网站。
+
+如果我们采用前面的示例并将哈希2477cc85 ...设置为域“orangepapers.eth”的内容哈希，我们可以请求：
+
+```
+GET http://localhost:8500/bzz:/orange-papers.eth/sw^3.pdf
+```
+
+并获得与以下相同的内容：
+
+```
+GET http://localhost:8500/bzz:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d/sw^3.pdf
+```
+
+有关ENS的完整文档[可在此处获得](https://github.com/ethereum/ens/wiki)。
+
+如果您只是想设置ENS，以便您可以将您的Swarm内容托管在一个域中，下面是一系列快速入门的步骤。
+
+### 使用ENS检索内容
+
+swarm的默认配置是使用在Ropsten测试网上注册的名称。为了让您能够将名称解析为swarm哈希，需要发生的一切就是您的swarm客户端连接到一个与Ropsten测试网络同步的geth节点。请参阅[这里的](http://swarm-guide.readthedocs.io/en/latest/runninganode.html#using-swarm-together-with-the-ropsten-testnet-blockchain) “运行swarm客户端”一节。
+
+### 为swarm内容注册名称
+
+有几个步骤涉及注册新名称并为其分配swarm哈希。首先，您需要注册一个域，然后您需要将一个解析器分配给该域，然后将swarm哈希添加到解析器。
 
 注意
 
-精明的读者会注意到，在将maxpeers设置为0时启用SWAP似乎是徒劳的。这些说明将很快更新，以允许您使用多个peer运行私有 SWAP testnet。
+ENS系统可以让你注册甚至是无效的名字 - 例如带大写字母的名字，或禁止的Unicode字符 - 但你的浏览器永远不会解析它们。因此，在注册之前请确保您尝试注册的域名格式正确
 
-#### 在您的私有链上挖矿
+#### 准备
 
-除了创建定制创世区块之外，另一种获取以太币的方法是在您的私有链挖矿。您可以使用`--mine`标志以挖矿模式启动geth节点，或者（在我们的例子中），我们可以通过发出以下`miner.start()`命令开始在已经运行的geth节点上进行挖矿：
+第一步是下载[ensutils.js](https://github.com/ethereum/ens/blob/master/ensutils.js)（[直接链接](https://raw.githubusercontent.com/ethereum/ens/master/ensutils.js)）。
 
-```
-geth --exec 'miner.start()' attach ipc:$DATADIR/geth.ipc
-```
-
-在生成必要的DAG时会有一个初始延迟。您可以在geth.log文件中看到进度。挖矿开始后，您可以通过`eth.getBalance()`看到您的余额正在增加：
+你当然应该运行并连接到ropsten（*geth -testnet*）。连接到geth控制台：
 
 ```
-geth --exec 'eth.getBalance(eth.coinbase)' attach ipc:$DATADIR/geth.ipc
-# or
-geth --exec 'eth.getBalance(eth.accounts[0])' attach ipc:$DATADIR/geth.ipc
+./geth attach ipc:/path/to/geth.ipc
 ```
 
-一旦余额大于0，我们可以重启`swarm`来启用swap。
+一旦进入控制台，运行：
 
 ```
-killall swarm
-swarm --bzzaccount $BZZKEY \
-     --swap \
-     --swap-api $DATADIR/geth.ipc \
-     --datadir $DATADIR \
-     --verbosity 6 \
-     --ens-api $DATADIR/geth.ipc \
-     --maxpeers 0 \
-     2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
+loadScript('/path/to/ensutils.js')
 ```
 
-注意：如果没有定制创世区块，采矿难度可能太高而不实用（取决于您的系统）。你用`admin.nodeInfo`查看目前的困难度
+注意：您可以随时按ctrl + D离开控制台
+
+#### 注册一个.test域
+
+最简单的选择是注册一个[.test域](https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-FIFS-registrar)。任何人都可以随时注册这些域名，但他们会在28天后自动过期。
+
+我们将在Ropsten上发送一笔交易，所以如果您还没有这样做，先让自己获得一些ropsten测试网以太币。你可以[在这里免费得到一些](http://faucet.ropsten.be:3001/)。
+
+在发送交易之前，您需要使用`personal.unlockAccount(account)` 解锁您的账户，也就是
 
 ```
-geth --exec 'admin.nodeInfo' attach ipc:$DATADIR/geth.ipc | grep difficulty
+personal.unlockAccount(eth.accounts[0])
 ```
 
-## 配置
+然后，仍然在geth控制台（加载ensutils.js后）中键入以下内容（用您希望注册的名称替换MYNAME）：
 
-## swarm的命令行选项
-
-Swarm可执行文件支持以下配置选项：
-
-- 配置文件
-- 环境变量
-- 命令行
-
-通过命令行提供的选项将覆盖环境变量中的选项，而环境变量会将覆盖配置文件中的选项。如果没有明确提供选项，则会选择默认值。
-
-为了保持标志和变量集合的可管理性，通过命令行和环境变量只有一部分的配置选项可用。有些仅可以通过TOML配置文件提供。
+```
+testRegistrar.register(web3.sha3('MYNAME'), eth.accounts[0], {from: eth.accounts[0]});
+```
 
 注意
 
-Swarm重用了以太坊的代码，特别是一些p2p网络协议和其他常见部分。为此，它接受许多实际来自`geth`环境的环境变量。请参阅geth文档以获取有关这些标志的参考信息。
+警告：请勿使用大写字母注册名称。ENS会让你注册它们，但你的浏览器永远不会解析它们。
 
-这是继承自`geth`以下标志的列表：
+输出将是一个交易哈希。一旦这个交易在测试网络上被确认（通过挖矿），您可以验证名称MYNAME.test属于您：
 
 ```
---identity
---bootnodes
---datadir
---keystore
---nodiscover
---v5disc
---netrestrict
---nodekey
---nodekeyhex
---maxpeers
---nat
---ipcdisable
---ipcpath
---password
+eth.accounts[0] == ens.owner(namehash('MYNAME.test'))
 ```
 
-下表列出了所有配置选项以及如何提供它们。
+#### 注册.eth域
 
-## 配置选项
+注册.eth域涉及更多工作。如果您只想快速测试，请从.test域开始。.eth域名需要一段时间才能注册，因为他们使用的是拍卖系统（而.test域名可以立即注册，但只能持续28天）。此外，.eth域也被限制为至少7个字符长。有关完整文档[在这里看到](https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-auction-registrar)。
+
+就像注册.test域一样，您需要测试网以太币，并且您必须解锁您的帐户。然后，您可以[开始在一个域名上出价](https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-auction-registrar)。
+
+快速参考：
+
+1. 准备：
+
+```
+personal.unlockAccount(eth.accounts[0])
+loadScript('/path/to/ensutils.js')
+```
+
+2. 出价：
+
+```
+bid = ethRegistrar.shaBid(web3.sha3('myname'), eth.accounts[0], web3.toWei(1, 'ether'), web3.sha3('secret'));
+```
+3. 显示您的出价：
+
+```
+ethRegistrar.unsealBid(web3.sha3('myname'), eth.accounts[0], web3.toWei(1, 'ether'), web3.sha3('secret'), {from: eth.accounts[0], gas: 500000});
+```
+
+4. 最终确定：
+
+```
+ethRegistrar.finalizeAuction(web3.sha3('myname'), {from: eth.accounts[0], gas: 500000});
+```
+
+有关如何提高出价的信息，请查看当前最高出价，查看拍卖结束时间，检查名称是否可用，请参阅[官方文档](https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-auction-registrar)。
+
+#### 设置一个解析器
+
+下一步是为您的新域名设置一个解析器。尽管可以编写和部署您自己的自定义解析器，但对于Swarm的日常使用，可以提供通用的解析器，并且已经部署在testnet上。
+
+在geth（testnet）控制台上：
+
+```
+loadScript('/path/to/ensutils.js')
+personal.unlockAccount(eth.accounts[0], "")
+ens.setResolver(namehash('MYNAME.test'), publicResolver.address, {from: eth.accounts[0], gas: 100000});
+```
+
+#### 在publicResolver上注册一个swarm哈希
+
+最后，如上所述，将您的内容上传到Swarm之后，您可以使用以下命令更新您的网站：
+
+```
+publicResolver.setContent(namehash('MYNAME.test'), 'HASH', {from: eth.accounts[0], gas: 100000})
+```
+
+再次，用您注册的名称替换“MYNAME.test”，并用上传内容时获得的哈希（以0x开头）替换“HASH”。
+
+在成功执行后，运行正确配置和同步的Swarm客户端的任何人都可以通过 *bzz://MYNAME.test/* 访问当前版本的网站。
+
+```
+http://localhost:8500/bzz:/MYNAME.test
+```
+
+#### 手动在ENS中查找名称
+
+在注册你的名字和swarm哈希之后，你可以通过手动查找名字来检查是否所有内容都能正确更新。
+
+连接到geth控制台并像以前一样加载ensutils.js。然后键入
+
+```
+getContent('MYNAME.test')
+```
+
+您也可以在swarm控制台中使用以下选项来检查它：
+
+```
+bzz.resolve('MYNAME.test')
+```
+
+如果一切正常，它会返回你之前调用setContent时指定的哈希。
+
+#### 更新您的内容
+
+之后每次更新网站内容时，您只需重复最后一步即可更新您拥有的名称与您希望它指向的内容之间的映射。任何通过名称访问站点的人都会看到最近使用setHash更新过的版本。
+
+```
+publicResolver.setContent(namehash('MYNAME.test'), 'NEWHASH', {from: eth.accounts[0], gas: 100000})
+```
+
+## HTTP API
+
+- GET <http://localhost:8500/bzz:/domain/some/path>
+
+  检索 domain/some/path 中的文档，允许域通过[以太坊名称服务](http://swarm-guide.readthedocs.io/en/latest/usage.html#ethereum-name-service)进行解析
+
+- GET <http://localhost:8500/bzz-immutable:/HASH/some/path>
+
+  在HASH/some/path处检索文件，其中HASH是有效的swarm哈希
+
+- GET <http://localhost:8500/bzz-raw:/domain/some/path>
+
+  检索domain/some/path中的原始内容，允许域通过[以太坊名称服务](http://swarm-guide.readthedocs.io/en/latest/usage.html#ethereum-name-service)进行解析
+
+- POST <http://localhost:8500/bzz-raw>:
+
+  post请求是最简单的上传方法。直接上传文件 - 不创建清单。它返回上传文件的哈希
+
+- PUT <http://localhost:8500/bzz>:/HASH|domain/some/path
+
+  PUT请求将上传的资产发布到清单。它按域或哈希查找清单，制作它的副本并使用新资产更新其集合。它返回新创建的清单的哈希。
+
+## Swarm IPC API
+
+Swarm在`bzz`命名空间下暴露一个RPC API 。
 
 注意
 
-swarm可以使用*dumpconfig*命令执行，该命令将默认配置打印到STDOUT，从而可以将其重定向到一个文件，该文件可以作为配置文件模板。
+请注意，这不是用户或dapps与swarm交互的推荐方式，仅用于调试广告测试目的。鉴于此模块提供本地文件系统访问权限，允许dapps使用此模块或通过远程连接暴露它会造成重大安全风险。出于这个原因，`swarm`只通过本地ipc暴露这个API（不像geth不允许websockets或http）。
 
-TOML配置文件按章节(section)组织。下面按章节列出了可用配置选项。这些章节对应于Go模块，因此需要遵守以使文件配置正常工作。有关Golang的TOML解析器和编码器库参阅<https://github.com/naoina/toml>，更多关于TOML的信息参阅<https://github.com/toml-lang/toml>。
+该API提供了以下方法：
 
-### 一般配置参数
+- `bzz.upload(localfspath, defaultfile)`
 
-| Config file | Command-line flag | Environment variable  | Default value                              | Description                                                  |
-| ----------- | ----------------- | --------------------- | ------------------------------------------ | ------------------------------------------------------------ |
-| n/a         | –config           | n/a                   | n/a                                        | Path to config file in TOML format                           |
-| Contract    | –chequebook       | SWARM_CHEQUEBOOK_ADDR | 0x0000000000000000000000000000000000000000 | Swap chequebook contract address                             |
-| EnsRoot     | –ens-addr         | SWARM_ENS_ADDR        | ens.TestNetAddress                         | Ethereum Name Service contract address                       |
-| EnsApi      | –ens-api          | SWARM_ENS_API         | <$GETH_DATADIR>/geth.ipc                   | Ethereum Name Service API address                            |
-| Path        | –datadir          | GETH_DATADIR          | <$GETH_DATADIR>/swarm                      | Path to the geth configuration directory                     |
-| ListenAddr  | –httpaddr         | SWARM_LISTEN_ADDR     | 127.0.0.1                                  | Swarm listen address                                         |
-| Port        | –bzzport          | SWARM_PORT            | 8500                                       | Port to run the http proxy server                            |
-| PublicKey   | n/a               | n/a                   | n/a                                        | Public key of swarm base account                             |
-| BzzKey      | n/a               | n/a                   | n/a                                        | Swarm node base address (hash(PublicKey)hash(PublicKey)). This is used to decide storage based on radius and routing by kademlia. |
-| NetworkId   | –bzznetworkid     | SWARM_NETWORK_ID      | 3                                          | Network ID                                                   |
-| SwapEnabled | –swap             | SWARM_SWAP_ENABLE     | false                                      | Enable SWAP                                                  |
-| SyncEnabled | –sync             | SWARM_SYNC_ENABLE     | true                                       | Disable swarm node synchronization. This option will be deprecated. It is only for testing. |
-| SwapApi     | –swap-api         | SWARM_SWAP_API        |                                            | URL of the Ethereum API provider to use to settle SWAP payments |
-| Cors        | –corsdomain       | SWARM_CORS            |                                            | Domain on which to send Access-Control-Allow-Origin header (multiple domains can be supplied separated by a ‘,’) |
-| BzzAccount  | –bzzaccount       | SWARM_ACCOUNT         |                                            | Swarm account key                                            |
-| BootNodes   | –boot-nodes       | SWARM_BOOTNODES       |                                            | Boot nodes                                                   |
+  上传文件或目录`localfspath`。第二个可选参数指定当空路径匹配时将被提供的文件的路径。匹配空路径通常很常见`index.html`它返回清单的内容哈希，然后可以用它来下载它。
 
-### 存储参数
+- `bzz.download(bzzpath, localdirpath)`
 
-| Config file   | Command-line flag | Environment variable | Default value                               | Description                                                  |
-| ------------- | ----------------- | -------------------- | ------------------------------------------- | ------------------------------------------------------------ |
-| ChunkDbPath   | n/a               | n/a                  | <$GETH_ENV_DIR>/swarm/bzz-<$BZZ_KEY>/chunks | Path to leveldb chunk DB                                     |
-| DbCapacity    | n/a               | n/a                  | 5000000                                     | DB capacity, number of chunks (5M is roughly 20-25GB)        |
-| CacheCapacity | n/a               | n/a                  | 5000                                        | Cache capacity, number of recent chunks cached in memory     |
-| Radius        | n/a               | n/a                  | 0                                           | Storage Radius: minimum proximity order (number of identical prefix bits of address key) for chunks to warrant storage. Given a storage radius r and total number of chunks in the network n, the node stores n∗2<sup>−r</sup> chunks minimum. If you allow b bytes for guaranteed storage and the chunk storage size is c, your radius should be set to int(log<sub>2</sub>(nc/b)) |
+  它递归地下载从manifest清单开始的所有路径，`bzzpath`并在`localdirpath`使用路径中的斜杠指示子目录下将它们下载到相应的目录结构中。假设`dirpath.orig`任何目录树的根目录不包含软链接或特殊文件，上传和下载将导致文件系统中的数据相同：bzz.download（bzz.upload（dirpath.orig），dirpath.replica）diff -r dirpath.orig dirpath.replica || 回声“相同”
 
-### Chunker参数
+- `bzz.put(content, contentType)`
 
-| Config file | Command-line flag | Environment variable | Default value | Description                                                  |
-| ----------- | ----------------- | -------------------- | ------------- | ------------------------------------------------------------ |
-| Branches    | n/a               | n/a                  | 128           | Number of branches in bzzhash merkle tree. Branches∗ByteSize(Hash) gives the datasize of chunks |
-| Hash        | n/a               | n/a                  | SHA3          | Hash: The hash function used by the chunker (base hash algo of bzzhash): SHA3 or SHA256.This option will be removed in a later release. |
+  可用于将原始数据blob推送到swarm中。使用条目创建清单。此条目具有空路径并指定作为第二个参数给出的内容类型。它返回此清单的内容哈希。
 
-### Hive参数
+- `bzz.get(bzzpath)`
 
-| Config file  | Command-line flag | Environment variable | Default value                         | Description                                                  |
-| ------------ | ----------------- | -------------------- | ------------------------------------- | ------------------------------------------------------------ |
-| CallInterval | n/a               | n/a                  | 3000000000                            | Time elapsed before attempting to connect to the most needed peer |
-| KadDbPath    | n/a               | n/a                  | <$GETH_ENV_DIR>/swarm/bzz-<$BZZ_KEY>/ | Kademblia DB path, json file path storing the known bzz peers used to bootstrap kademlia table. |
+  它下载清单`bzzpath`并返回一个包含内容，MIME类型，状态码和内容大小的响应json对象。这应该只用于小块数据，因为内容在内存中被实例化。
 
-### Kademlia参数
+- `bzz.resolve(domain)`
 
-| Config file          | Command-line flag | Environment variable | Default value   | Description                                                  |
-| -------------------- | ----------------- | -------------------- | --------------- | ------------------------------------------------------------ |
-| MaxProx              | n/a               | n/a                  | 8               | highest Proximity order (i.e., Maximum number of identical prefix bits of address key) considered distinct. Given the total number of nodes in the network NN, MaxProx should be larger than log<sub>2</sub>(N/ProxBinSize)), safely log<sub>2</sub>(N). |
-| ProxBinSize          | n/a               | n/a                  | 2               | Number of most proximate nodes lumped together in the most proximate kademlia bin |
-| BuckerSize           | n/a               | n/a                  | 4               | maximum number of active peers in a kademlia proximity bin. If new peer is added, the worst peer in the bin is dropped. |
-| PurgeInterval        | n/a               | n/a                  | 151200000000000 |                                                              |
-| InitialRetryInterval | n/a               | n/a                  | 42000000        |                                                              |
-| MaxIdleInterval      | n/a               | n/a                  | 42000000000     |                                                              |
-| ConnRetryExp         | n/a               | n/a                  | 2               |                                                              |
+  使用ENS将域名解析为内容哈希并返回。如果swarm没有连接到区块链，它会返回一个错误。请注意，您的eth后端需要同步以获得最新的域名解析。
 
-### SWAP配置文件参数
+- `bzz.info()`
 
-这些参数可能会在POC 0.3中发生变化
+  返回关于swarm节点的信息
 
-| Config file   | Command-line flag | Environment variable | Default value | Description                                                  |
-| ------------- | ----------------- | -------------------- | ------------- | ------------------------------------------------------------ |
-| BuyAt         | n/a               | n/a                  | 20000000000   | (2∗10<sup>10</sup> wei), highest accepted price per chunk in wei  |
-| SellAt        | n/a               | n/a                  | 20000000000   | (2∗10<sup>10</sup> wei) offered price per chunk in wei            |
-| PayAt         | n/a               | n/a                  | 100           | Maximum number of chunks served without receiving a cheque. Debt tolerance. |
-| DropAtMaximum | n/a               | n/a                  | 10000         | Number of chunks served without receiving a cheque. Debt tolerance. |
+- `bzz.hive()`
 
-### SWAP策略参数
-这些参数可能会在POC 0.3中发生变化
+  以人性化的表格格式输出kademlia表格
 
-| Config file          | Command-line flag | Environment variable | Default value   | Description                                                  |
-| -------------------- | ----------------- | -------------------- | --------------- | ------------------------------------------------------------ |
-| AutoCashInterval     | n/a               | n/a                  | 300000000000    | (3∗10<sup>11</sup>, 5 minutes) Maximum Time before any outstanding cheques are cashed |
-| AutoCashThreshold    | n/a               | n/a                  | 50000000000000  | (5∗10<sup>13</sup>) Maximum total amount of uncashed cheques in Wei |
-| AutoDepositInterval  | n/a               | n/a                  | 300000000000    | (3∗10<sup>11</sup>, 5 minutes) Maximum time before cheque book is replenished if necessary by sending funds from the baseaccount |
-| AutoDepositThreshold | n/a               | n/a                  | 50000000000000  | (5∗10<sup>13</sup>) Minimum balance in Wei required before replenishing the cheque book |
-| AutoDepositBuffer    | n/a               | n/a                  | 100000000000000 | (10<sup>14</sup>) Maximum amount of Wei expected as a safety credit buffer on the cheque book |
+### 安装群
 
-### SWAP支付配置文件参数
-这些参数可能会在POC 0.3中发生变化
-
-| Config file | Command-line flag | Environment variable | Default value                              | Description                                                  |
-| ----------- | ----------------- | -------------------- | ------------------------------------------ | ------------------------------------------------------------ |
-| PublicKey   | n/a               | n/a                  |                                            | Public key of your swarm base account use                    |
-| Contract    | n/a               | n/a                  | 0x0000000000000000000000000000000000000000 | Address of the cheque book contract deployed on the Ethereum blockchain. If blank, a new chequebook contract will be deployed. |
-| Beneficiary | n/a               | n/a                  | 0x0000000000000000000000000000000000000000 | Ethereum account address serving as beneficiary of incoming cheques |
-
-### 同步参数
-
-| Config file        | Command-line flag | Environment variable | Default value                                 | Description                                                  |
-| ------------------ | ----------------- | -------------------- | --------------------------------------------- | ------------------------------------------------------------ |
-| RequestDbPath      | n/a               | n/a                  | <$GETH_ENV_DIR>/swarm/bzz-<$BZZ_KEY>/requests | Path to request DB                                           |
-| RequestDbBatchSize | n/a               | n/a                  | 512                                           | Request DB Batch size                                        |
-| KeyBufferSize      | n/a               | n/a                  | 1024                                          | In-memory cache for unsynced keys                            |
-| SyncBatchSize      | n/a               | n/a                  | 128                                           | In-memory cache for unsynced keys                            |
-| SyncBufferSize     | n/a               | n/a                  | 128                                           | In-memory cache for outgoing deliveries                      |
-| SyncCacheSize      | n/a               | n/a                  | 1024                                          | Maximum number of unsynced keys sent in one batch            |
-| Sync priorities    | n/a               | n/a                  | [2, 1, 1, 0, 0]                               | Array of 5 priorities corresponding to 5 delivery types:<delivery, propagation, deletion, history, backlog>.Specifying a monotonically decreasing list of priorities is highly recommended. |
-| SyncModes          | n/a               | n/a                  | [true, true, true, true, false]               | A boolean array specifying confirmation mode ON corresponding to 5 delivery types:<delivery, propagation, deletion, history, backlog>. Specifying true for a type means all deliveries will be preceeded by a confirmation roundtrip: the hash key is sent first in an unsyncedKeysMsg and delivered only if confirmed in a deliveryRequestMsg. |
+另一种使用Swarm的方法是使用Fuse（aka swarmfs）将其作为本地文件系统。有三个IPC api可以帮助你做到这一点。
 
 注意
 
-这个项目的状态使得这些选项可能会有很多变化。
+需要在操作系统上安装保险丝才能使这些命令正常工作。Windows不支持Fuse，所以这些命令只能在Linux，Mac OS和FreeBSD上运行。有关操作系统的安装说明，请参阅下面的“安装FUSE”部分。
 
-如果`config.Contract`为空（零地址），则部署新的支票簿合约。在区块链上确认合约之前，不允许传出检索请求。
+- `swarmfs.mount(HASH|domain, mountpoint))`
 
-### 设置SWAP
+  将swarm或ens域名表示的swarm内容挂载到指定的本地目录。本地目录必须是可写的，并且应该是空的。一旦这个命令成功，你应该看到本地目录中的内容。HASH以rw模式安装，这意味着目录中的任何更改都会自动反映在swarm中。例如：如果您将某个文件从其他位置复制到挂载点，则等同于使用“swarm up <file>”命令。
 
-SWAP（Swarm计费协议）是允许公平使用带宽的系统（请参见[Incentivisation](http://swarm-guide.readthedocs.io/en/latest/architecture.html#incentivisation)，特别是[SWAP - Swarm Accounting Protocol](http://swarm-guide.readthedocs.io/en/latest/architecture.html#swap)）。为了使用SWAP，必须已经部署支票簿合约。如果启动客户端时支票簿合约不存在或者如果在配置文件中指定的合约无效，则客户端将尝试自动部署支票簿：
+- `swarmfs.unmount(mountpoint)`
 
-> [BZZ] SWAP部署新支票簿（所有者：0xe10536 .. 5e491）
+  该命令卸载挂载在指定挂载点中的HASH |域。如果设备忙，卸载失败。在这种情况下，请确保退出正在使用该目录的进程并尝试再次卸载。
 
-如果您已经在区块链上拥有有效的支票簿，只需将其输入到配置文件`Contract`字段即可。
+- `swarmfs.listmounts()`
 
-您可以设置一个单独的账户作为您的服务兑现支票付款的受益人。将其设置在配置文件的`Beneficiary`字段中。
+  对于每个活动挂载，此命令显示三件事情。挂载点，提供启动HASH和最新的HASH。由于HASH以rw模式安装，因此当文件系统发生更改（添加文件，删除文件等）时，会计算新的HASH。这个哈希称为最新的HASH。
 
-如果基本账户没有资金并且无法支付交易费用，自动部署支票簿可能会失败。请注意，如果您的区块链不同步，也会发生这种情况。在这种情况下，您将看到日志消息：
+#### 安装FUSE
 
-```
-[ BZZ ] SWAP无法部署新支票簿：无法发送支票簿创建交易：账户
- 不存在或账户余额太低..在10秒内重新开始
-
-[ BZZ ] SWAP安排与<enode：// 23ae0e62 .. .. .. 8a4c6bc93b7d2aa4fb@195.228.155.76：30301>：从peer购买禁用; 卖给peer禁用）
-```
-
-由于这里没有业务可能，所以在至少一方签署合约之前，连接处于闲置状态。实际上，这仅适用于测试阶段。如果我们不被允许购买块(chunk)，那么不允许传出请求。如果我们仍然尝试下载我们本地没有的内容，则请求将失败（除非我们与其他peer相信）。
+1. Linux（Ubuntu）
 
 ```
-[ BZZ ] netStore.startSearch：无法发送retrieveRequest到对方[ <addr> ]：[ SWAP ] <enode：// 23ae0e62 .. .. .. 8a4c6bc93b7d2aa4fb@195.228.155.76：30301>我们不能有债务（无法购买）
-```
-
-一旦有一个节点有资金（比如挖矿之后），并且网络上的某个人正在挖矿，那么自动部署将最终成功：
-
-```
-[支票簿]支票簿部署在0x77de9813e52e3a .. .c8835ea7 （所有者：0xe10536ae628f7d6e319435ef9b429dcdc085e491 ）
-[支票簿]从0x77de9813e52e3a .. .c8835ea7初始化新支票簿（所有者：0xe10536ae628f7d6e319435ef9b429dcdc085e491 ）
-[ BZZ ] SWAP自动存款ON 为 0xe10536 - > 0x77de98：间隔 = 5m0s，阈值 =  50000000000000，缓冲区 =  100000000000000 ）
-[ BZZ ]Swarm：新支票簿集：保存配置文件，重置蜂巢中的所有连接
- [ KΛÐ ]：从表中删除节点enode：// 23ae0e6 .. .aa4fb @ 195.228.155.76：30301
-```
-
-一旦节点部署了新的支票簿，其地址就会在配置文件中设置，并且所有连接都将重置为新条件。应该启用一个方向的购买。从没有有效支票簿的peer的角度来看日志：
-
-```
-[ CHECKBOOK ]初始化的收件箱（ 0x9585 .. .3bceee6c  - > 0xa5df94be .. .bbef1e5 ）期望的签名者：041e18592 .. .. 702cf5e73cf8d618
- [ SWAP ] <enode：// 23ae0e62 .. .. .. 8a4c6bc93b7d2aa4fb@195.228.155.76 ：30301>     set autocash to every 5m0s，maximum uncashed limit：50000000000000 
-[ SWAP ] <enode：// 23ae0e62 .. .. .. 8a4c6bc93b7d2aa4fb@195.228.155.76：30301> autodeposit off （ not buying ）
-[ SWAP ] <enode：/ / 23ae0e62 .. .. 8a4c6bc93b7d2aa4fb@195.228.155.76：30301>远程配置文件集：支付：100，降至：10000，买入：20000000000，卖出：20000000000 
-[ BZZ ] SWAP安排与<enode：// 23ae0e62 .. .. .. 8a4c6bc93b7d2aa4fb@195.228.155.76：30301>：从同伴购买禁用;    以20000000000 wei / chunk 销售给peer）
-```
-
-根据自动存款设置，支票簿将定期补充：
-
-```
-[ BZZ ] SWAP自动存入ON 为 0x6d2c5b  - > 0xefbb0c：
-  interval  = 5m0s，threshold  =  50000000000000，
-  buffer  =  100000000000000 ） 
- 将100000000000000 wei 存入支票簿（ 0xefbb0c0 .. .16dea，余额：100000000000000，目标：100000000000000 ）
-```
-
-没有支票簿（尚未）的peer(peerA)不被允许下载，因此会发出检索请求。然而，另一个peer(peerB)能够支付，因此这个peer(peerB)可以从第一个peer(peerA)中检索块并为它们付钱。这反过来又使第一个peer(peerA)积极，他们可以同时使用它们（自动）部署自己的支票簿并支付检索数据。如果他们出于某种原因没有部署支票簿，他们可以使用自己的余额来支付检索数据，但只能达到0余额; 在此之后，不再有任何请求被允许出去。你会再次看到：
-
-```
-[ BZZ ] netStore.startSearch：无法向[ peer89da0c6 ... 623e5671c01 ]发送retrieveRequest ：[ SWAP ]   <enode：//23ae0e62...8a4c6bc93b7d2aa4fb@195.228.155.76：30301>我们不能有债务（无法购买）
-```
-
-如果没有支票簿的peer尝试发送请求而没有支付，那么远程peer（它可以看到他们没有支票簿合约）将其解释为导致peer被丢弃的恶意行为。
-
-在本例中，我们开始挖矿，然后重新启动节点。第二本支票簿自动部署，peer同步他们的链和重新连接，然后如果一切顺利日志将显示如下所示：
-
-```
-初始化的收件箱（ 0x95850c6 .. .bceee6c - > 0xa5df94b .. .bef1e5 ）预期签名者：041e185925bb .. .. .. 702cf5e73cf8d618
- [ SWAP ] <e节点：// 23ae0e62 .. .. .. 8a4c6bc93b7d2aa4fb@195.228.155.76：30301> 设置自动收到每5m0s，最大未兑现限制：500000亿
-[ SWAP ] <e节点：// 23ae0e62 .. .. .. 8a4c6bc93b7d2aa4fb@195.228.155.76：30301> 设置 autodeposit每5m0s，付于：500000亿，缓冲液：百万亿
-[ SWAP ] <enode：// 23ae0e62 .. .. .. 8a4c6bc93b7d2aa4fb@195.228.155.76：30301>远程配置文件集：支付在：100，降在：10000，买入：20000000000，卖出：20000000000 
-[ SWAP ] <enode：// 23ae0e62 .. .. .. 8a4c6bc93b7d2aa4fb@195.228.155.76：30301>远程配置文件集：支付在：100，降到：10000，买入：20000000000，卖出：20000000000 
-[ BZZ ] SWAP安排与<node：//23ae0e62...8a4c6bc93b7d2aa4fb@195.228.155.76：30301>：以20000000000 wei / chunk 启用同级购买; 以20000000000 wei / chunk 销售给peer）
-```
-
-作为正常操作的一部分，在peer达到`PayAt`（块数）余额后，通过协议发送支票付款。登录接收端：
-
-```
-[支票簿]校验检查：合约：0x95850 .. .eee6c，受益：0xe10536ae628 .. .cdc085e491，量：8680200亿，签名：a7d52dc744b8 .. .. .. f1fe2001 -总和：8660200亿
-[支票簿]接收的校验二万亿伟在收件箱中（ 0x95850 .. .eee6c，未兑现：420000亿）
+sudo apt-get安装保险丝
+sudo modprobe保险丝
+sudo chown <用户名>：<组名> /etc/fuse.conf
+sudo chown <用户名>：<组名> / dev / fuse
 
 ```
 
-支票被验证。如果未兑现的支票余额超过`AutoCashThreshold`，则最后一张支票（累计金额）兑现。这是通过发送一个包含支票的交易给远程peer的支票簿(cheuebook)合约来完成的。因此，为了兑现付款，您的发件人账户（baseaddress）需要有资金，网络应该挖矿。
+1. 苹果系统
+
+   从<https://osxfuse.github.io/>安装最新的软件包，或使用brew如下
 
 ```
-[支票簿]兑现支票（总：1040000亿）上支票簿（ 0x95850c6 .. .eee6c ）发送到0xa5df94be .. .e5aaz
+酿造更新
+brew安装caskroom / cask / brew-cask
+酿造木桶安装osxfuse
+
 ```
 
-要进一步细调SWAP，请参阅[SWAP配置文件参数](http://swarm-guide.readthedocs.io/en/latest/runninganode.html#swap-params)。
+### 支票簿RPC API
+
+Swarm还为支票簿提供了一个RPC API，提供了followng方法：
+
+- `chequebook.balance()`
+
+  返回wei中交换支票簿合约的余额。如果没有设置支票簿，则会出错。
+
+- `chequebook.issue(beneficiary, value)`
+
+  向受益人发送支票（以太坊地址），金额为价值（以wei为单位）。返回的json结构可以被复制并发送给受益人，受益人可以使用它兑现`chequebook.cash(cheque)`。如果没有设置支票簿，则会出错。
+
+- `chequebook.cash(cheque)`
+
+  兑现发行的支票。请注意，任何人都可以兑现支票。其成功与否仅取决于支票的有效性和发行人的偿付能力，支票合约最多可达支票中指定的金额。这个tranasction是从你的bzz基础账户中支付的。返回交易哈希。如果没有设置支票簿，或者您的帐户没有足够的资金发送交易，则会发生错误。
+
+- `chequebook.deposit(amount)`
+
+  将金额从您的bzz基本账户转入您的掉期支票簿合约。如果没有设置支票簿或者您的账户资金不足，则会发生错误。
+
+### 例如：使用控制台
+
+#### 上传内容
+
+可以从swarm控制台上传文件（不需要swarm命令或http代理）。控制台命令是
+
+```
+bzz.upload（“/ path / to / file /或/ directory”，“filename”）
+
+```
+
+该命令返回清单的根哈希。第二个参数是可选的; 它指定了空路径应该解决什么（通常这是`index.html`）。按照上述示例进行操作（[例如：上传目录](http://swarm-guide.readthedocs.io/en/latest/usage.html#example-uploading-a-directory)）。准备一些文件：
+
+```
+mkdir upload-test
+echo“one”> upload-test / one.txt
+echo“two”> upload-test / two
+mkdir upload-test / three
+回声“四”>上传测试/三/四
+
+```
+
+然后`bzz.upload`在swarm控制台上执行该命令:(注意`bzzd.ipc`不是`geth.ipc`）
+
+```
+./geth --exec'bzz.upload（“upload-test /”，“one.txt”）'attach ipc：$ DATADIR / bzzd.ipc
+
+```
+
+我们得到的结果是：
+
+```
+dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440
+
+```
+
+如果我们在浏览器中打开这个HASH
+
+```
+HTTP：//本地主机：8500 / BZZ：/ dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440 /
+
+```
+
+我们看到“one”，因为空路径解析为“one.txt”。其他有效的网址是
+
+```
+HTTP：//本地主机：8500 / BZZ：/dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440/one.txt
+HTTP：//本地主机：8500 / BZZ：/ dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440 /两
+HTTP：//本地主机：8500 / BZZ：/ dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440 /三/四
+
+```
+
+我们只建议将此API用于测试目的或命令行脚本。由于它们节省了http文件上传的时间，因此它们的性能比使用http API要好一些。
+
+#### 下载内容
+
+作为替代HTTP来获取内容，您可以使用`bzz.get(HASH)`或在群控制台上（注意不是）`bzz.download(HASH, /path/to/download/to)``bzzd.ipc``geth.ipc`
+
+```
+./geth --exec'bzz.get（HASH）'attach ipc：$ DATADIR / bzzd.ipc
+./geth --exec'bzz.download（HASH，“/ path / to / download / to”）'attach ipc：$ DATADIR / bzzd.ipc
+
+```
+
+[下一个 ](http://swarm-guide.readthedocs.io/en/latest/architecture.html)[ 以前](http://swarm-guide.readthedocs.io/en/latest/runninganode.html)
