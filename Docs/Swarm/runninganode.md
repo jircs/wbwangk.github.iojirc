@@ -1,3 +1,5 @@
+[原文](http://swarm-guide.readthedocs.io/en/latest/usage.html)
+
 # 用法
 
 ## 从命令行使用swarm
@@ -493,29 +495,33 @@ publicResolver.setContent(namehash('MYNAME.test'), 'NEWHASH', {from: eth.account
 
 ## Swarm IPC API
 
-Swarm在`bzz`命名空间下暴露一个RPC API 。
+Swarm在`bzz`命名空间下暴露了一个RPC API 。
 
 注意
 
-请注意，这不是用户或dapps与swarm交互的推荐方式，仅用于调试广告测试目的。鉴于此模块提供本地文件系统访问权限，允许dapps使用此模块或通过远程连接暴露它会造成重大安全风险。出于这个原因，`swarm`只通过本地ipc暴露这个API（不像geth不允许websockets或http）。
+请注意，这不是用户或dapps与swarm交互的推荐方式，仅用于调试和测试目的。鉴于此模块提供本地文件系统访问权限，允许dapps使用此模块或通过远程连接暴露它会造成重大安全风险。出于这个原因，`swarm`只通过本地ipc暴露这个API（不像geth不允许websockets或http）。
 
 该API提供了以下方法：
 
 - `bzz.upload(localfspath, defaultfile)`
 
-  上传文件或目录`localfspath`。第二个可选参数指定当空路径匹配时将被提供的文件的路径。匹配空路径通常很常见`index.html`它返回清单的内容哈希，然后可以用它来下载它。
+  在`localfspath`处上传文件或目录。第二个可选参数指定当空路径匹配时将被提供的文件的路径。它返回清单的内容哈希，然后可以用它来下载。匹配空路径到`index.html`很常见。
 
 - `bzz.download(bzzpath, localdirpath)`
 
-  它递归地下载从manifest清单开始的所有路径，`bzzpath`并在`localdirpath`使用路径中的斜杠指示子目录下将它们下载到相应的目录结构中。假设`dirpath.orig`任何目录树的根目录不包含软链接或特殊文件，上传和下载将导致文件系统中的数据相同：bzz.download（bzz.upload（dirpath.orig），dirpath.replica）diff -r dirpath.orig dirpath.replica || 回声“相同”
+  它递归地下载从`bzzpath`处的manifest清单开始的所有路径，并在使用路径中的斜杠指示的子目录下将它们下载到`localdirpath`下相应的目录结构中。
+  
+  假设`dirpath.orig`是一个不包含软链接或特殊文件的任意根目录，上传和下载将导致文件系统中的数据相同：
+
+bzz.download(bzz.upload(dirpath.orig), dirpath.replica) diff -r dirpath.orig dirpath.replica || echo “identical”
 
 - `bzz.put(content, contentType)`
 
-  可用于将原始数据blob推送到swarm中。使用条目创建清单。此条目具有空路径并指定作为第二个参数给出的内容类型。它返回此清单的内容哈希。
+  可用于将一个原始数据blob推送到swarm中。使用条目创建清单。此条目具有空路径并使用第二个参数给出的内容类型。它返回此清单的内容哈希。
 
 - `bzz.get(bzzpath)`
 
-  它下载清单`bzzpath`并返回一个包含内容，MIME类型，状态码和内容大小的响应json对象。这应该只用于小块数据，因为内容在内存中被实例化。
+  它下载清单`bzzpath`并返回一个包含内容、MIME类型、状态码和内容大小的响应json对象。这应该只用于小块数据，因为内容在内存中被实例化。
 
 - `bzz.resolve(domain)`
 
@@ -529,13 +535,13 @@ Swarm在`bzz`命名空间下暴露一个RPC API 。
 
   以人性化的表格格式输出kademlia表格
 
-### 安装群
+### 挂载swarm
 
-另一种使用Swarm的方法是使用Fuse（aka swarmfs）将其作为本地文件系统。有三个IPC api可以帮助你做到这一点。
+另一种使用Swarm的方法是使用Fuse（又称为swarmfs）将其作为本地文件系统。有三个IPC api可以帮助你做到这一点。
 
 注意
 
-需要在操作系统上安装保险丝才能使这些命令正常工作。Windows不支持Fuse，所以这些命令只能在Linux，Mac OS和FreeBSD上运行。有关操作系统的安装说明，请参阅下面的“安装FUSE”部分。
+需要在操作系统上安装Fuse才能使这些命令正常工作。Windows不支持Fuse，所以这些命令只能在Linux、Mac OS和FreeBSD上运行。有关操作系统的安装说明，请参阅下面的“安装FUSE”部分。
 
 - `swarmfs.mount(HASH|domain, mountpoint))`
 
@@ -543,42 +549,40 @@ Swarm在`bzz`命名空间下暴露一个RPC API 。
 
 - `swarmfs.unmount(mountpoint)`
 
-  该命令卸载挂载在指定挂载点中的HASH |域。如果设备忙，卸载失败。在这种情况下，请确保退出正在使用该目录的进程并尝试再次卸载。
+  该命令卸载挂载在指定挂载点中的HASH|domain。如果设备忙，卸载失败。在这种情况下，请确保退出正在使用该目录的进程并尝试再次卸载。
 
 - `swarmfs.listmounts()`
 
-  对于每个活动挂载，此命令显示三件事情。挂载点，提供启动HASH和最新的HASH。由于HASH以rw模式安装，因此当文件系统发生更改（添加文件，删除文件等）时，会计算新的HASH。这个哈希称为最新的HASH。
+  对于每个活动挂载，此命令显示三件事情。挂载点、提供启动HASH和最新的HASH。由于HASH以rw模式安装，因此当文件系统发生更改（添加文件、删除文件等）时，会计算新的HASH。这个哈希称为最新的HASH。
 
 #### 安装FUSE
 
 1. Linux（Ubuntu）
 
 ```
-sudo apt-get安装保险丝
-sudo modprobe保险丝
-sudo chown <用户名>：<组名> /etc/fuse.conf
-sudo chown <用户名>：<组名> / dev / fuse
-
+sudo apt-get install fuse
+sudo modprobe fuse
+sudo chown <username>:<groupname> /etc/fuse.conf
+sudo chown <username>:<groupname> /dev/fuse
 ```
 
-1. 苹果系统
+1. Mac OS
 
    从<https://osxfuse.github.io/>安装最新的软件包，或使用brew如下
 
 ```
-酿造更新
-brew安装caskroom / cask / brew-cask
-酿造木桶安装osxfuse
-
+brew update
+brew install caskroom/cask/brew-cask
+brew cask install osxfuse
 ```
 
 ### 支票簿RPC API
 
-Swarm还为支票簿提供了一个RPC API，提供了followng方法：
+Swarm还为支票簿提供了一个RPC API，提供了下列方法：
 
 - `chequebook.balance()`
 
-  返回wei中交换支票簿合约的余额。如果没有设置支票簿，则会出错。
+  以wei为单位返回中交换支票簿合约的余额。如果没有设置支票簿，则会出错。
 
 - `chequebook.issue(beneficiary, value)`
 
@@ -586,74 +590,67 @@ Swarm还为支票簿提供了一个RPC API，提供了followng方法：
 
 - `chequebook.cash(cheque)`
 
-  兑现发行的支票。请注意，任何人都可以兑现支票。其成功与否仅取决于支票的有效性和发行人的偿付能力，支票合约最多可达支票中指定的金额。这个tranasction是从你的bzz基础账户中支付的。返回交易哈希。如果没有设置支票簿，或者您的帐户没有足够的资金发送交易，则会发生错误。
+  兑现发行的支票。请注意，任何人都可以兑现支票。其成功与否仅取决于支票的有效性和发行人的偿付能力，支票合约最多可达支票中指定的金额。这个交易是从你的bzz基础账户中支付的。返回交易哈希。如果没有设置支票簿，或者您的帐户没有足够的资金发送交易，则会发生错误。
 
 - `chequebook.deposit(amount)`
 
-  将金额从您的bzz基本账户转入您的掉期支票簿合约。如果没有设置支票簿或者您的账户资金不足，则会发生错误。
+  将金额从您的bzz基本账户转入您的swap支票簿合约。如果没有设置支票簿或者您的账户资金不足，则会发生错误。
 
-### 例如：使用控制台
+### 示例：使用控制台
 
 #### 上传内容
 
 可以从swarm控制台上传文件（不需要swarm命令或http代理）。控制台命令是
 
 ```
-bzz.upload（“/ path / to / file /或/ directory”，“filename”）
-
+bzz.upload("/path/to/file/or/directory", "filename")
 ```
 
-该命令返回清单的根哈希。第二个参数是可选的; 它指定了空路径应该解决什么（通常这是`index.html`）。按照上述示例进行操作（[例如：上传目录](http://swarm-guide.readthedocs.io/en/latest/usage.html#example-uploading-a-directory)）。准备一些文件：
+该命令返回清单的根哈希。第二个参数是可选的; 它指定了空路径应该解析为什么（通常这是`index.html`）。按照上述示例进行操作（[例如：上传目录](http://swarm-guide.readthedocs.io/en/latest/usage.html#example-uploading-a-directory)）。准备一些文件：
 
 ```
 mkdir upload-test
-echo“one”> upload-test / one.txt
-echo“two”> upload-test / two
-mkdir upload-test / three
-回声“四”>上传测试/三/四
-
+echo "one" > upload-test/one.txt
+echo "two" > upload-test/two
+mkdir upload-test/three
+echo "four" > upload-test/three/four
 ```
 
-然后`bzz.upload`在swarm控制台上执行该命令:(注意`bzzd.ipc`不是`geth.ipc`）
+然后在swarm控制台上执行`bzz.upload`命令:(注意`bzzd.ipc`不是`geth.ipc`）
 
 ```
-./geth --exec'bzz.upload（“upload-test /”，“one.txt”）'attach ipc：$ DATADIR / bzzd.ipc
-
+./geth --exec 'bzz.upload("upload-test/", "one.txt")' attach ipc:$DATADIR/bzzd.ipc
 ```
 
 我们得到的结果是：
 
 ```
 dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440
-
 ```
 
 如果我们在浏览器中打开这个HASH
 
 ```
-HTTP：//本地主机：8500 / BZZ：/ dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440 /
-
+http://localhost:8500/bzz:/dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440/
 ```
 
 我们看到“one”，因为空路径解析为“one.txt”。其他有效的网址是
 
 ```
-HTTP：//本地主机：8500 / BZZ：/dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440/one.txt
-HTTP：//本地主机：8500 / BZZ：/ dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440 /两
-HTTP：//本地主机：8500 / BZZ：/ dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440 /三/四
-
+http://localhost:8500/bzz:/dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440/one.txt
+http://localhost:8500/bzz:/dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440/two
+http://localhost:8500/bzz:/dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440/three/four
 ```
 
 我们只建议将此API用于测试目的或命令行脚本。由于它们节省了http文件上传的时间，因此它们的性能比使用http API要好一些。
 
 #### 下载内容
 
-作为替代HTTP来获取内容，您可以使用`bzz.get(HASH)`或在群控制台上（注意不是）`bzz.download(HASH, /path/to/download/to)``bzzd.ipc``geth.ipc`
+作为替代HTTP来获取内容，您可以使用`bzz.get(HASH)`或在群控制台上执行`bzz.download(HASH, /path/to/download/to)`（注意`bzzd.ipc`不是`geth.ipc`）
 
 ```
-./geth --exec'bzz.get（HASH）'attach ipc：$ DATADIR / bzzd.ipc
-./geth --exec'bzz.download（HASH，“/ path / to / download / to”）'attach ipc：$ DATADIR / bzzd.ipc
-
+./geth --exec 'bzz.get(HASH)' attach ipc:$DATADIR/bzzd.ipc
+./geth --exec 'bzz.download(HASH, "/path/to/download/to")' attach ipc:$DATADIR/bzzd.ipc
 ```
 
 [下一个 ](http://swarm-guide.readthedocs.io/en/latest/architecture.html)[ 以前](http://swarm-guide.readthedocs.io/en/latest/runninganode.html)
