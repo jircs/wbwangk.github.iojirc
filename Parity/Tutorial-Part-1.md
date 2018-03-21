@@ -94,6 +94,7 @@ ln -s $PWD/dist $HOME/Library/Application\ Support/io.parity.ethereum/dapps/myda
 # For Linux systems
 ln -s $PWD/dist $HOME/.local/share/io.parity.ethereum/dapps/mydapp
 ```
+(ln -s $PWD/dist $HOME/parity/dapps/mydapp)
 
 对于Windows，它在`%APPDATA%/Parity/Ethereum/dapps`- 你要输入：
 
