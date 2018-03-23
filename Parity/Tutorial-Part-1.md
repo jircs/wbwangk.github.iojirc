@@ -46,6 +46,8 @@ webpack
 
 你现在已经建立了一个基本的dapp。做得好！
 
+> (经测试,这个项目`paritytech/skeleton`需要旧版本的依赖才可以。打开init.sh，修改到指定版本：webpack@2.1.0-beta.22、babel-loader@6.2.5。全局安装时也是这样：`npm i webpack@2.1.0-beta.22 -g`)
+
 ### 2.配置它的外观
 
 虽然你的dapp可能很好建造，但它不容易被发现。你将不得不将它托管在某个地方。这可以通过传统的Web服务器完成，但为了开发，我们将使用Parity的内置主机。
