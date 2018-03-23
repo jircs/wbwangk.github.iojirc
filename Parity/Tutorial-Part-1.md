@@ -36,7 +36,7 @@ git remote rm origin
 ```
 ./init.sh
 ```
-(执行init.sh出错,不得不手工执行`npm i --save babel-core webpack webpack-dev-server`后再执行init.sh成功)
+> (执行init.sh出错,不得不手工执行`npm i --save babel-core webpack webpack-dev-server`后再执行init.sh成功)
 
 这会抓取并安装所需的所有东西。接下来要做的是构建基础dapp的web可用版本。我们为此使用[webpack](https://webpack.js.org/) ; 它会把所有东西都粉碎在一起，并为你提供一个单独`bundle.js`（放在`dist`路径下），`index.html`（已经在那里）会加载它。
 
@@ -96,7 +96,7 @@ ln -s $PWD/dist $HOME/Library/Application\ Support/io.parity.ethereum/dapps/myda
 # For Linux systems
 ln -s $PWD/dist $HOME/.local/share/io.parity.ethereum/dapps/mydapp
 ```
-(ln -s $PWD/dist $HOME/parity/dapps/mydapp)
+> (测试时使用了定制的parity路径，所以：`ln -s $PWD/dist $HOME/parity/dapps/mydapp`)
 
 对于Windows，它在`%APPDATA%/Parity/Ethereum/dapps`- 你要输入：
 
