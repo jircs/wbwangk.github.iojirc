@@ -84,13 +84,8 @@ export class App extends React.Component {
 运行Webpack并让它监视你的文件，以确保你的dapp不断重建。我们为您定义了一个别名来执行此操作：
 
 ```
-npm start
-```
-
-如果由于端口冲突而无法正常工作，请尝试：
-
-```
-webpack --watch
+npm build    (即npx webpack)
+npm start    (即npx http-server dist)
 ```
 
 在Parity钱包中重新加载我们的dapp页面将提供一个简单的表单; 选择文本框并键入内容。无论您键入什么，您都会看到它反映在旁边的`<Rspan>`元素上：
