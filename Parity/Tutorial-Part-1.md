@@ -1,5 +1,5 @@
 # DApp教程
-
+[英文原文](https://wiki.parity.io/Tutorial-Part-1.html)
 **这是Dapp教程的第一部分**。
 
 [第二部分⟶](https://github.com/paritytech/parity/wiki/Tutorial-Part-2)
@@ -19,7 +19,7 @@
 接下来，克隆我们准备的`skeleton`库：
 
 ```
-git clone https://github.com/paritytech/skeleton mydapp
+git clone https://github.com/wbwangk/skeleton mydapp
 ```
 
 这将给您一个全新的库`mydapp`，准备好就可以运行。我们用`cd`进入它，删除原始库，以免混淆Git：
@@ -34,19 +34,23 @@ git remote rm origin
 下一个阶段是安装所有的依赖关系。NPM使这很容易，但捆绑的脚本使它更容易！只要运行：
 
 ```
-./init.sh
+$ ./init.sh
 ```
-> (执行init.sh出错,不得不手工执行`npm i --save babel-core webpack webpack-dev-server`后再执行init.sh成功)
 
 这会抓取并安装所需的所有东西。接下来要做的是构建基础dapp的web可用版本。我们为此使用[webpack](https://webpack.js.org/) ; 它会把所有东西都粉碎在一起，并为你提供一个单独`bundle.js`（放在`dist`路径下），`index.html`（已经在那里）会加载它。
 
 ```
-webpack
+$ npx webpack
 ```
+或者执行：
+```
+$ npm run build
+```
+如果你注意到package.json中的scripts是部分就知道上面两者是一样的。
 
 你现在已经建立了一个基本的dapp。做得好！
 
-> (经测试,这个项目`paritytech/skeleton`需要旧版本的依赖才可以。打开init.sh，修改到指定版本：webpack@2.1.0-beta.22、babel-loader@6.2.5。全局安装时也是这样：`npm i webpack@2.1.0-beta.22 -g`)
+> (`wbwangk/skeleton`是从`paritytech/skeleton`分叉后对配置文件进行了迁移以适应webpack@4。 如果一定要使用旧版本的webpack，则需要打开init.sh，修改到指定版本：webpack@2.1.0-beta.22、babel-loader@6.2.5)
 
 ### 2.配置它的外观
 
@@ -107,7 +111,7 @@ mklink /D "%APPDATA%/Parity/Ethereum/dapps/mydapp" "%cd%/dist"
 
 创建符号链接后，您应该启动（或重新启动，如果已经运行）Parity并转到Parity钱包的Applications页面。你会看到你的新的dapp：
 
-*注意：如果你没有在parity / src / js中运行`npm start`来启动一个开发实例，你的URL可能类似于**localhost：8180**而不是3000端口。*
+*注意：如果你运行`npm start`来启动一个开发实例，你的URL可能类似于**localhost：8080**而不是3000端口。*
 
 *注意：它可能发生在旧版Parity版本上，由于X-Frame-Options，Firefox会阻止你的dApp。您将在开发控制台中看到警告。我们建议继续使用**127.0.0.1:8180**来解决问题。*
 
