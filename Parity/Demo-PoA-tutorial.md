@@ -1,4 +1,5 @@
 # 笔记
+[这里](https://github.com/wbwangk/wbwangk.github.io/wiki/Ethereum%E8%BF%9B%E9%98%B6#%E9%83%A8%E7%BD%B2%E5%A4%9A%E8%8A%82%E7%82%B9parity-poa%E5%8C%BA%E5%9D%97%E9%93%BE)是一个部署多节点PoA的教程。  
 
 **Parity**是一个快速、轻量、健壮的以太坊实现（自称）。[https://parity.io](https://parity.io/)
 
