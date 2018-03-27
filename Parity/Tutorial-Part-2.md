@@ -84,7 +84,7 @@ export class App extends React.Component {
 运行Webpack并让它监视你的文件，以确保你的dapp不断重建。我们为您定义了一个别名来执行此操作：
 
 ```
-npm build    (即npx webpack)
+npm run build    (即npx webpack)
 npm start    (即npx http-server dist)
 ```
 
