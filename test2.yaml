@@ -1,0 +1,33 @@
+swagger: '2.0'
+info: {}
+tags:
+  - name: 追溯码
+    description: ''
+    sortWeight: 0
+schemes: []
+consumes: []
+produces: []
+paths:
+  test:
+    get:
+      tags:
+        - 追溯码
+      summary: 测试
+      description: 测试描述信息
+      schemes:
+        - http
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Auth
+          in: header
+          description: ''
+          required: true
+          type: string
+          default: ''
+          format: ''
+      responses: {}
+      sortWeight: 0
+definitions: {}
