@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<labelshopdocument version="1.2" tag="Oem" docid="3e0b7de4-2978-4b7e-89c7-9974d15cb156">
+	<labelform version="1.1">
+		<paper name="未命名" code="0" brand="0" cate="0" syslabel="0" type="0" maxid="15">
+			<paper size="256" atuoset="0" width="4200" height="3000" orientation="1" color="255,255,255" leftoffect="0" topoffect="0"/>
+			<printer name="Gprinter  GP-3120TU" dev="" dpix="203" dpiy="203" lang="20" set="536870913" total="1" repeat="1" copy="1" startrecord="2" gcopy="1" amount="1" script="RnVuY3Rpb24gT25CZWdpblByaW50KFN0YXRlKQ0KJ1N0YXRlID0gMCA6IFZhcmlhYmxlIFVwZGF0ZURhdGENCidTdGF0ZSA9IDEgOiBMYWJlbCBQcmV2aWV3DQonU3RhdGUgPSAyIDogTGFiZWwgUHJpbnQNCkVuZCBGdW5jdGlvbg0KDQpGdW5jdGlvbiBPbkJlZ2luTGFiZWwoKQ0KRW5kIEZ1bmN0aW9uDQoNCkZ1bmN0aW9uIE9uRW5kTGFiZWwoKQ0KRW5kIEZ1bmN0aW9uDQoNCkZ1bmN0aW9uIE9uRW5kUHJpbnQoKQ0KRW5kIEZ1bmN0aW9u">RwBwAHIAaQBuAHQAZQByACAAIABHAFAALQAzADEAMgAwAFQAVQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEEAATcAP0FD28FAAEAAAEsAaQBAAABAAQAywABAAEAywABAAAAVQBzAGUAcgAgAGQAZQBmAGkAbgBlAGQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFBSTlAAAAAAAAABAAQA//8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANoAAAAAAJBSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACQAQAALAEAAMsAAADLAAAAAgAAAAEAAAAAAAAAAAAAAAgAAACWAAAAAAAAAB4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdgAEAFAAngJHcHJpbnRlciBHUC0zMTIwVFUAAAAAAAAAAAAAAAAAAAEAVFBNUgAA/QFkAE5JQ0VMYmw2NA==</printer>
+		</paper>
+		<labellayer>
+			<labelformat name="未命名" uint="0">
+				<page left="100" top="0" right="100" bottom="0" viewrotate="0"/>
+				<label width="4000" height="3000" rows="1" cols="1" rowgap="200" colgap="200" rotation="0"/>
+				<form corner="1" hole="0" holesize="0" order="LTH"/>
+			</labelformat>
+			<labelobjects>
+				<drawobj type="drawbarcode" id="2" name="" left="1952" top="600" right="3604" bottom="2252" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
+					<barcode btype="11" barwidth="1970" charextra="0" gapwidth="0" radio="300" wide="300" reduction="0" high="1652" readable="3" ralign="2" rcolgap="0" readx="0" ready="100" templet="0" templtestr=""/>
+					<font facename="Arial" style="0" charset="0" height="788" width="10000" italic="0" steikeout="0" underline="0" family="34" color="0,0,0" bkcolor="255,255,255"/>
+					<baroption check="0" stchar="1" fullascii="0" c128codeset="0" c128ean="0" codabarschar="0" codabarechar="0" c25schar="0" c25echar="0" eanaddon="0" itf14bar="1" itf14barwidth="5" itf14barspace="10" itf14check="1" rsstype="0" rssseph="1" rsssegr="11" rsshold="0"/>
+					<baroption2 p417cols="0" p4172rows="0" p417ecc="0" p417t="0" qrecc="0" dmbw="0" mxsize="0" mxmode="0" hsecc="0" hsencrypt="0" hskey="" hsver="0" codepage="0"/>
+				</drawobj>
+				<drawobj type="drawtext" id="4" name="" left="2453" top="2262" right="3454" bottom="2475" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
+					<text type="1" width="0" align="0" cut="0" spactype="0" spacing="0" charextra="0" template="0" templtestr="" circr="0" circradian="0" circstart="0" circtw="0" circway="0"/>
+					<font facename="Arial" style="0" charset="1" height="557" width="10000" italic="0" steikeout="0" underline="0" family="0" color="0,0,0" bkcolor="255,255,255"/>
+				</drawobj>
+				<drawobj type="drawtext" id="6" name="" left="2049" top="2285" right="2499" bottom="2460" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
+					<text type="1" width="0" align="0" cut="0" spactype="0" spacing="0" charextra="0" template="0" templtestr="" circr="0" circradian="0" circstart="0" circtw="0" circway="0"/>
+					<font facename="Arial" style="0" charset="1" height="423" width="10000" italic="0" steikeout="0" underline="0" family="0" color="0,0,0" bkcolor="255,255,255"/>
+				</drawobj>
+				<drawobj type="drawpicture" id="8" name="" left="1926" top="305" right="3594" bottom="563" rotation="none" style="256" halign="0" valign="0" tpalign="0" tvalign="0">
+					<picture type="1" scale="1" keep="1" srcwidth="6773" srcheight="1050" change="0" onerr="3" dbscale="0" dbalign="0" file="E:\chrome-downloads\1footer.jpg"/>
+				</drawobj>
+				<drawobj type="drawtext" id="10" name="" left="279" top="1347" right="1680" bottom="1622" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
+					<text type="1" width="0" align="0" cut="0" spactype="0" spacing="0" charextra="0" template="0" templtestr="" circr="0" circradian="0" circstart="0" circtw="0" circway="0"/>
+					<font facename="微软雅黑" style="1" charset="1" height="575" width="10000" italic="0" steikeout="0" underline="0" family="34" color="0,0,0" bkcolor="255,255,255"/>
+				</drawobj>
+				<drawobj type="drawtext" id="12" name="" left="189" top="555" right="1691" bottom="743" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
+					<text type="1" width="0" align="0" cut="0" spactype="0" spacing="0" charextra="0" template="0" templtestr="" circr="0" circradian="0" circstart="0" circtw="0" circway="0"/>
+					<font facename="宋体" style="0" charset="1" height="540" width="10000" italic="0" steikeout="0" underline="0" family="2" color="0,0,0" bkcolor="255,255,255"/>
+				</drawobj>
+				<drawobj type="drawtext" id="14" name="" left="964" top="785" right="1665" bottom="960" rotation="none" style="0" halign="0" valign="0" tpalign="0" tvalign="0">
+					<text type="1" width="0" align="0" cut="0" spactype="0" spacing="0" charextra="0" template="0" templtestr="" circr="0" circradian="0" circstart="0" circtw="0" circway="0"/>
+					<font facename="宋体" style="0" charset="1" height="515" width="10000" italic="0" steikeout="0" underline="0" family="2" color="0,0,0" bkcolor="255,255,255"/>
+				</drawobj>
+			</labelobjects>
+			<objvarlink link=":2,1:4,3:6,5:8,7:10,9:12,11:14,13"/>
+		</labellayer>
+		<variables>
+			<variable type="database" id="1" name="" shareid="" value="https://m.cloudchain.cn/tracex.html#/block/0/6937671717293/00000226080A" data="aHR0cHM6Ly9tLmNsb3VkY2hhaW4uY24vdHJhY2V4Lmh0bWwjL2Jsb2NrLzAvNjkzNzY3MTcxNzI5My8wMDAwMDIyNjA4MEE=" serialtype="0" serialstep="1" serialrepeat="1" serealreptype="0" serealreset="0" serealchars="" serealupper="" sereallower="" serealfield="" serealsrc="0" databasefield="2|地址" keyboardprompt="" datatimetype="0" datatimeoffect="0" datatimeformat="" usertc="0" rtctype="0" scripttext="" scriptpriv="RnVuY3Rpb24gT25HZXREYXRhKCkNCiAgICBPbkdldERhdGEgPSAiMTIzNDU2NzgiDQpFbmQgRnVuY3Rpb24=">
+				<limit filled="left" fillchar="0" cutout="right"/>
+				<cut/>
+			</variable>
+			<variable type="database" id="3" name="" shareid="" value="0000022608" data="MDAwMDAyMjYwOA==" serialtype="0" serialstep="1" serialrepeat="1" serealreptype="0" serealreset="0" serealchars="" serealupper="" sereallower="" serealfield="" serealsrc="0" databasefield="0|质量码" keyboardprompt="" datatimetype="0" datatimeoffect="0" datatimeformat="" usertc="0" rtctype="0" scripttext="" scriptpriv="RnVuY3Rpb24gT25HZXREYXRhKCkNCiAgICBPbkdldERhdGEgPSAiMTIzNDU2NzgiDQpFbmQgRnVuY3Rpb24=">
+				<limit filled="left" fillchar="0" cutout="right"/>
+				<cut/>
+			</variable>
+			<variable type="constant" id="5" name="" shareid="" value="序号：" data="5bqP5Y+377ya" serialtype="0" serialstep="1" serialrepeat="1" serealreptype="0" serealreset="0" serealchars="" serealupper="" sereallower="" serealfield="" serealsrc="0" databasefield="" keyboardprompt="" datatimetype="0" datatimeoffect="0" datatimeformat="" usertc="0" rtctype="0" scripttext="" scriptpriv="RnVuY3Rpb24gT25HZXREYXRhKCkNCiAgICBPbkdldERhdGEgPSAiMTIzNDU2NzgiDQpFbmQgRnVuY3Rpb24=">
+				<limit filled="left" fillchar="0" cutout="right"/>
+				<cut/>
+			</variable>
+			<variable type="constant" id="7" name="" shareid="" value="" data="" serialtype="0" serialstep="1" serialrepeat="1" serealreptype="0" serealreset="0" serealchars="" serealupper="" sereallower="" serealfield="" serealsrc="0" databasefield="" keyboardprompt="" datatimetype="0" datatimeoffect="0" datatimeformat="" usertc="0" rtctype="0" scripttext="" scriptpriv="RnVuY3Rpb24gT25HZXREYXRhKCkNCiAgICBPbkdldERhdGEgPSAiMTIzNDU2NzgiDQpFbmQgRnVuY3Rpb24=">
+				<limit filled="left" fillchar="0" cutout="right"/>
+				<cut/>
+			</variable>
+			<variable type="constant" id="9" name="" shareid="" value="悦人茶萃压片糖" data="5oKm5Lq66Iy26JCD5Y6L54mH57OW" serialtype="0" serialstep="1" serialrepeat="1" serealreptype="0" serealreset="0" serealchars="" serealupper="" sereallower="" serealfield="" serealsrc="0" databasefield="" keyboardprompt="" datatimetype="0" datatimeoffect="0" datatimeformat="" usertc="0" rtctype="0" scripttext="" scriptpriv="RnVuY3Rpb24gT25HZXREYXRhKCkNCiAgICBPbkdldERhdGEgPSAiMTIzNDU2NzgiDQpFbmQgRnVuY3Rpb24=">
+				<limit filled="left" fillchar="0" cutout="right"/>
+				<cut/>
+			</variable>
+			<variable type="constant" id="11" name="" shareid="" value="济南康妆大道经贸" data="5rWO5Y2X5bq35aaG5aSn6YGT57uP6LS4" serialtype="0" serialstep="1" serialrepeat="1" serealreptype="0" serealreset="0" serealchars="" serealupper="" sereallower="" serealfield="" serealsrc="0" databasefield="" keyboardprompt="" datatimetype="0" datatimeoffect="0" datatimeformat="" usertc="0" rtctype="0" scripttext="" scriptpriv="RnVuY3Rpb24gT25HZXREYXRhKCkNCiAgICBPbkdldERhdGEgPSAiMTIzNDU2NzgiDQpFbmQgRnVuY3Rpb24=">
+				<limit filled="left" fillchar="0" cutout="right"/>
+				<cut/>
+			</variable>
+			<variable type="constant" id="13" name="" shareid="" value="有限公司" data="5pyJ6ZmQ5YWs5Y+4" serialtype="0" serialstep="1" serialrepeat="1" serealreptype="0" serealreset="0" serealchars="" serealupper="" sereallower="" serealfield="" serealsrc="0" databasefield="" keyboardprompt="" datatimetype="0" datatimeoffect="0" datatimeformat="" usertc="0" rtctype="0" scripttext="" scriptpriv="RnVuY3Rpb24gT25HZXREYXRhKCkNCiAgICBPbkdldERhdGEgPSAiMTIzNDU2NzgiDQpFbmQgRnVuY3Rpb24=">
+				<limit filled="left" fillchar="0" cutout="right"/>
+				<cut/>
+			</variable>
+		</variables>
+	</labelform>
+	<database version="1.0">
+		<Connection type="2" table="质量码导出" colout="" config="" file="E:\Disk\标签打印机\1531719087712.xls" parameter="0">
+			<fields>
+				<field id="0" name="质量码"/>
+				<field id="1" name="校验码"/>
+				<field id="2" name="地址"/>
+				<field id="3" name="二维码"/>
+			</fields>
+		</Connection>
+	</database>
+	<pictures/>
+</labelshopdocument>
