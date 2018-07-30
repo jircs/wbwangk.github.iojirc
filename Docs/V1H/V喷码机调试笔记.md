@@ -87,9 +87,83 @@ Escape character is '^]'.
 ```
 
 ### 用 Mircrosoft Network Monitor 3.4 工具监控SDKTest与V1H喷码机的通讯
-忽略看不懂的二进制通讯。
+忽略看不懂的二进制通讯，如下面的Frame Number 46。
+CreateConnect:
 ```
 Frame Number  Source        Details
-45        192.168.43.198    >BON>|6|0|1^CMD_BASEINFO`DEVSN|=EOC=
-47        192.168.43.134    <BON<|1|0|1^CMD_OK`CMD_PRINTSTATUS`ISPRINTING`FALSE`PRINTINGMSG`NULL|=EOC=
+45  192.168.43.198  >BON>|6|0|1^CMD_BASEINFO`DEVSN|=EOC=
+47  192.168.43.134  <BON<|1|0|1^CMD_OK`CMD_PRINTSTATUS`ISPRINTING`FALSE`PRINTINGMSG`NULL|=EOC=
 ```
+另一次CreateConnect：
+```
+>BON>|1|0|1^CMD_PRINTSTATUS`ISPRINTING`PRINTINGMSG|=EOC=
+<BON<|1|0|1^CMD_OK`CMD_PRINTSTATUS`ISPRINTING`FALSE`PRINTINGMSG`NULL|=EOC=
+```
+断开连接，重新CreateConnect，仍是上面的信息。  
+
+GetDeviceSN(SN: 730288)：
+```
+>BON>|2|0|1^CMD_BASEINFO`DEVSN|=EOC=
+<BON<|2|0|1^CMD_OK`CMD_BASEINFO`DEVSN`730288|=EOC=
+```
+断开连接，重新GetDevicesSN，仍是上面的信息。  
+
+GetDeviceIP：(IP:192.168.43.234)
+点击这个按钮没有发出任何网络请求。  
+
+GetPrintCounter(Counter: 22):
+```
+2522  <BON<|2|0|1^CMD_OK`CMD_BASEINFO`DEVSN`730288|=EOC=
+2524  <BON<|3|0|1^CMD_OK`CMD_PRINTSTATUS`PRODUCTCOUNTER`22|=EOC=
+```
+还陆续收到了下列响应，不知有啥用：
+```
+2533  <BON<|3|0|1^CMD_OK`CMD_PRINTSTATUS`PRODUCTCOUNTER`22|=EOC=
+2534  <BON<|4|0|1^CMD_OK`CMD_PRINTSTATUS`PRODUCTCOUNTER`22|=EOC=
+2537  <BON<|5|0|1^CMD_OK`CMD_PRINTSTATUS`PRODUCTCOUNTER`22|=EOC=
+```
+GetPrintStatus：(Status: Device No Printing!)
+```
+>BON>|6|0|1^CMD_PRINTSTATUS`ISPRINTING`PRINTINGMSG|=EOC=
+```
+#### 动态数据测试
+Message Name: MSG003  
+Source Name: BAR1_DYT1  
+点击AppendlocalDynTest按钮后，提示Append Local Dynamic Test Succeed!  （没有发出任何网络请求）  
+
+在Dynamic Test输入：`bing`，点击SendLocalDynText按钮。显示Device No Printing!  
+```
+>BON>|2|0|1^CMD_DYNTEXT`1`BAR1_DYT1`|=EOC=
+<BON<|2|0|1^CMD_ERROR`CMD_DYNTEXT`NOPRINTING|=EOC=
+```
+
+关闭V1H喷码机，安装墨盒，检查V1H的wifi连接。
+在V1H的首页进入“喷印管理”，选择MSG003，点“开启喷印”。屏幕切换为空白，等待SDKTest.exe向它发送动态文本。  
+（由于发生了V1H的关机重启，实测时需要重新CreateConnet）  
+
+在Dynamic Text中输入`bing`，然后点击“SendLocalDynTest”，显示Send Local Dynamic Text Succeed!
+
+在V1H的屏幕上显示了`bing`的字样。扣动V1H的橙色扳机键，然后喷印二维码到纸上。V1H屏幕上显示的`bing`消失，等待SDKTest.exe再次向它发送动态文本。
+
+用二维码扫码器检查喷印出的二维码内容，发现是`bing`。
+
+通过Mircrosoft Network Monitor查看网络通讯：
+```
+>BON>|3|0|1^CMD_DYNTEXT`1`BAR1_DYT1`bing|=EOC=
+<BON<|3|0|1^CMD_OK`CMD_DYNTEXT|=EOC=
+```
+
+#### 用telnet模仿上述网络通讯
+```
+telnet 192.168.43.134 18885
+Trying 192.168.43.134...
+Connected to 192.168.43.134.
+Escape character is '^]'.
+>BON>|3|0|1^CMD_DYNTEXT`1`BAR1_DYT1`https://bing.com|=EOC=
+<BON<|3|0|1^CMD_OK`CMD_DYNTEXT|=EOC=
+```
+V1H喷码机屏幕上显示：
+```
+BAR_DYT1:https://bing.com
+```
+可以再次扣动V1H的扳机键喷印出上述内容的二维码，喷印后屏幕上的上述内容消失。
