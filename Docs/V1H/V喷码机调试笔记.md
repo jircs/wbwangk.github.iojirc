@@ -175,3 +175,18 @@ V1H喷码机屏幕上显示：
 BAR_DYT1:https://bing.com
 ```
 可以再次扣动V1H的扳机键喷印出上述内容的二维码，喷印后屏幕上的上述内容消失。
+
+#### 用telnet完整模仿整个V1H开机和喷印过程
+```
+$ telnet 192.168.43.134 18885
+Trying 192.168.43.134...
+Connected to 192.168.43.134.
+Escape character is '^]'.
+>BON>|1|0|1^CMD_PRINTSTATUS`ISPRINTING`PRINTINGMSG|=EOC=
+<BON<|1|0|1^CMD_OK`CMD_PRINTSTATUS`ISPRINTING`FALSE`PRINTINGMSG`NULL|=EOC=
+>BON>|1|0|1^CMD_DYNTEXT`1`BAR1_DYT1`http://baidi.com|=EOC=
+<BON<|1|0|1^CMD_ERROR`CMD_DYNTEXT`NOPRINTING|=EOC=
+>BON>|1|0|1^CMD_DYNTEXT`1`BAR1_DYT1`http://baidi.com|=EOC=
+<BON<|1|0|1^CMD_OK`CMD_DYNTEXT|=EOC=
+```
+上面显示`CMD_ERROR`是因为V1H没有“启动喷印”。
