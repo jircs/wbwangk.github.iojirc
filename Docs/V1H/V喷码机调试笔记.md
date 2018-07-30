@@ -40,4 +40,57 @@ BAR1_DYT1: 520
 ## 笔记
 资料位置超出画布范围，对象在预览界面变黄显示，点击保存仍可正常保存，但只能喷印正常范围内癿内容。  
 
+#### 询问济南安固捷技术人员的反馈
+```
+>BON>|0|1234567|1^CMD_BASEINFO`DEVSN`IPADR|=EOC=
+```
+把`1234567`替换为实际的设备id后用telnet尝试与V1H通讯，成功获得响应：
+```
+telnet 192.168.43.134 18885
+Trying 192.168.43.134...
+Connected to 192.168.43.134.
+Escape character is '^]'.
+>BON>|0|730288|1^CMD_BASEINFO`DEVSN`IPADR|=EOC=
+<BON<|0|730288|1^CMD_OK`CMD_BASEINFO`DEVSN`730288`IPADR`192.168.43.134|=EOC=
+```
+#### 使用SDK DOEMO工具链接V1H，创建网络连接，用Mircrosoft Network Monitor 3.4 网络监控工具观察到
+```
+>BON>|6|0|1^CMD_BASEINFO`DEVSN|=EOC=
+<BON<|1|0|1^CMD_OK`CMD_PRINTSTATUS`ISPRINTING`FALSE`PRINTINGMSG`NULL|=EOC=
+```
+（本机地址是192.168.43.198）上面的前者是本机发送到请求到V1H(192.168.43.134)，后者是V1H返回的响应。
+
+用telnet工具手工发出上述信息（前者），得到的反馈有所不同：
+```
+>BON>|6|0|1^CMD_BASEINFO`DEVSN|=EOC=
+<BON<|6|0|1^CMD_OK`CMD_BASEINFO`DEVSN`730288|=EOC=
+```
+### Mircrosoft Network Monitor 3.4 网络监控工具
+下载地址：[Mircrosoft Network Monitor 3.4(]https://www.microsoft.com/en-us/download/details.aspx?id=4865)
+
+安装后，需要重新启动windows才能完成对网络的监控！
+
+进入工具后，在“Start Page”标签页可以选择网络。我仅选中了“WLAN”网卡。因为我用电脑wifi连接到V1H，我想监控电脑与V1H喷码机的通讯。
+
+点击工具栏的“New Capture”，打开一个新的监控窗口“Capture1”。
+
+打开“SDK DOEMO工具”（可执行文件叫SDKTest.exe）。在窗口的`IP`输入域中输入V1H的IP地址：192.168.43.134，然后点击“CreateConnet”按钮。
+
+这时Mircrosoft Network Monitor网络监控工具的左侧窗口“Network Conversations”中应该显示了`SDKTest.exe`，点击`SDKTest.exe`，以便在右侧监控窗口中显示`SDKTest.exe`发出的网络信息。
+
+在右侧Frame Summary中会显示`SDKTest.exe`发出或收到的网络信息。
+
+多条信息是二进制的，但有两条含文本信息：
+```
+>BON>|6|0|1^CMD_BASEINFO`DEVSN|=EOC=
+<BON<|1|0|1^CMD_OK`CMD_PRINTSTATUS`ISPRINTING`FALSE`PRINTINGMSG`NULL|=EOC=
+```
+
+### 用 Mircrosoft Network Monitor 3.4 工具监控SDKTest与V1H喷码机的通讯
+忽略看不懂的二进制通讯。
+
+Frame Number | Source | Details
+------------ | ------ | -------
+45 | 192.168.43.198 | >BON>|6|0|1^CMD_BASEINFO`DEVSN|=EOC=
+47 | 192.168.43.134 | <BON<|1|0|1^CMD_OK`CMD_PRINTSTATUS`ISPRINTING`FALSE`PRINTINGMSG`NULL|=EOC=
 
