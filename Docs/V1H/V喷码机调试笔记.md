@@ -89,8 +89,8 @@ Escape character is '^]'.
 ### 用 Mircrosoft Network Monitor 3.4 工具监控SDKTest与V1H喷码机的通讯
 忽略看不懂的二进制通讯。
 
-Frame Number | Source | Details
------------- | ------ | -------
-45 | 192.168.43.198 | `>BON>|6|0|1^CMD_BASEINFO`DEVSN|=EOC=`
-47 | 192.168.43.134 | `<BON<|1|0|1^CMD_OK`CMD_PRINTSTATUS`ISPRINTING`FALSE`PRINTINGMSG`NULL|=EOC=`
+Frame Number  Source        Details
+
+45        192.168.43.198    >BON>|6|0|1^CMD_BASEINFO`DEVSN|=EOC=`
+47        192.168.43.134    <BON<|1|0|1^CMD_OK`CMD_PRINTSTATUS`ISPRINTING`FALSE`PRINTINGMSG`NULL|=EOC=`
 
