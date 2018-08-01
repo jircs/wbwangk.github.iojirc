@@ -134,6 +134,21 @@ GetPrintStatus：(Status: Device No Printing!)
 ```
 上述方式貌似可以更精准地把命令发送给wifi网络上的多个V1H喷码机（730288是设备号）。
 
+StartPrint:(Start Print Succeed!) 启动喷印
+```
+>BON>|4|0|1^CMD_PRINTON`MSG003|=EOC=
+<BON<|4|0|1^CMD_OK`CMD_PRINTON|=EOC=
+```
+StopPrint:(Stop Print Succeed!)  停止喷印
+```
+>BON>|3|0|1^CMD_PRINTOFF|=EOC=
+<BON<|3|0|1^CMD_OK`CMD_PRINTOFF|=EOC=
+```
+发送两个纯动态文本数据：
+```
+>BON>|6|0|1^CMD_DYNTEXT`2`DYT1`BAR1_DYT1`332`332|=EOC=
+<BON<|6|0|1^CMD_OK`CMD_DYNTEXT|=EOC=
+```
 #### 动态数据测试
 Message Name: MSG003  
 Source Name: BAR1_DYT1  
@@ -160,6 +175,7 @@ Source Name: BAR1_DYT1
 >BON>|3|0|1^CMD_DYNTEXT`1`BAR1_DYT1`bing|=EOC=
 <BON<|3|0|1^CMD_OK`CMD_DYNTEXT|=EOC=
 ```
+
 
 #### 用telnet模仿上述网络通讯
 ```
@@ -190,3 +206,17 @@ Escape character is '^]'.
 <BON<|1|0|1^CMD_OK`CMD_DYNTEXT|=EOC=
 ```
 上面显示`CMD_ERROR`是因为V1H没有“启动喷印”。
+
+#### 发送两个动态文本
+在V1H上定义资料MSG001，添加一个二维码，源是BAR1_DYT1，再添加一个动态文本，名称是DYT1。则同时发送两个动态文本到V1H的命令：
+```
+>BON>|4|0|1^CMD_PRINTON`MSG001|=EOC=
+>BON>|4|0|1^CMD_DYNTEXT`2`BAR1_DYT1`DYT1`333`444|=EOC=
+<BON<|4|0|1^CMD_OK`CMD_DYNTEXT|=EOC=
+>BON>|4|0|1^CMD_DYNTEXT`2`BAR1_DYT1`DYT1`555`666|=EOC=
+<BON<|4|0|1^CMD_OK`CMD_DYNTEXT|=EOC=
+>BON>|4|0|1^CMD_DYNTEXT`2`BAR1_DYT1`DYT1`777`888|=EOC=
+<BON<|4|0|1^CMD_OK`CMD_DYNTEXT|=EOC=
+```
+可以向V1H连续发送多个喷码命令，它会缓存起来，自动喷下一个标签。
+
