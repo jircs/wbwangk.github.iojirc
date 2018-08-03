@@ -220,3 +220,14 @@ Escape character is '^]'.
 ```
 可以向V1H连续发送多个喷码命令，它会缓存起来，自动喷下一个标签。
 
+#### 主动回馈指令
+主动回馈指令监听端口是19885。  
+另外启动一个linux终端窗口，执行：
+```
+telnet 192.168.43.134 19885
+Trying 192.168.43.134...
+Connected to 192.168.43.134.
+Escape character is '^]'.
+>BON>|100|730288|1^CMD_DEVICEPRINTONCE`PRODUCTCOUNTER`33`DATASOURCE`BAR1_DYT1`333`DYT1`444|=EOC=
+```
+喷印后就19885端口就接收到了喷码机的成功喷印消息，其中含有喷印计数（PRODUCTCOUNTER）。
