@@ -236,3 +236,14 @@ Escape character is '^]'.
 应用于V1H喷码机通讯需要使用TCP协议。而js不支持socket，所以只能用java应用来实现。
 
 先在pc上实现，之后再考虑移植到Android下。
+
+PC应用、V1H喷码机、质量链三者之间的关系：  
+![](https://github.com/wbwangk/wbwangk.github.io/raw/master/Docs/V1H/V1H-WIFI-%E5%96%B7%E7%A0%81%E6%9C%BA.png)  
+
+#### 基本工作流程
+1. PC应用调用质量链的“质量码下发”服务，将要喷印的多个质量码下载到本地；  
+2. PC应用利用18885端口向V1H发送“开启喷印”（CMD_PRINTON）命令；  
+3. PC应用利用18885端口向V1H发出“发送动态文本”（CMD_DYNTEXT）命令，参数是某一个质量码；  
+4. PC应用监听19885端口，直到接收到V1H发出的“喷印一笔后主动回馈”（CMD_ DEVICEPRINTONCE）命令；  
+5. PC应用在本地记录已经喷印的质量码，并向质量链企业服务平台发送“生产溯源”信息，报告本次喷印行为；  
+6. 质量链企业服务平台收到“生产溯源”信息，写入Fabric区块链。  
