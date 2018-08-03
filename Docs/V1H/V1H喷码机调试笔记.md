@@ -231,3 +231,8 @@ Escape character is '^]'.
 >BON>|100|730288|1^CMD_DEVICEPRINTONCE`PRODUCTCOUNTER`33`DATASOURCE`BAR1_DYT1`333`DYT1`444|=EOC=
 ```
 喷印后就19885端口就接收到了喷码机的成功喷印消息，其中含有喷印计数（PRODUCTCOUNTER）。
+
+## WIFI喷码机与质量链企业服务平台的集成
+应用于V1H喷码机通讯需要使用TCP协议。而js不支持socket，所以只能用java应用来实现。
+
+先在pc上实现，之后再考虑移植到Android下。
