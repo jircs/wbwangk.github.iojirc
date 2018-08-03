@@ -1,6 +1,6 @@
 供应商提供的调试工具[SDK Demo V1.0.1.10](https://github.com/wbwangk/wbwangk.github.io/blob/master/Docs/V1H/SDK%20Demo%20V1.0.1.10.zip)  
 [官方说明书](https://github.com/wbwangk/wbwangk.github.io/blob/master/Docs/V1H/V1H%E8%AF%B4%E6%98%8E%E4%B9%A6.pdf)  
-供应商提供的[V系列喷码机通讯协议.pdf](https://github.com/wbwangk/wbwangk.github.io/blob/master/Docs/V1H/V1H%E8%AF%B4%E6%98%8E%E4%B9%A6.pdf)  
+供应商提供的[V系列喷码机通讯协议.pdf](https://github.com/wbwangk/wbwangk.github.io/raw/master/Docs/V1H/V%E7%B3%BB%E5%88%97%E5%96%B7%E7%A0%81%E6%9C%BA%E9%80%9A%E8%AE%AF%E5%8D%8F%E8%AE%AE(1).pdf)  
 
 从设备的“关于”中查到设备名称“SOJET”，版本1.0.0.4291，网址：www.sojet-tech.com  公司：Sojet Electronics(Xiamen) Co.,Ltd.  客户编码：1208651001  
 
