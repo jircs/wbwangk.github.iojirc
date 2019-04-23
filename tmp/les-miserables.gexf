@@ -17,7 +17,7 @@
         <viz:position x="-266.82776" y="299.6904" z="0.0"></viz:position>
         <viz:color r="235" g="81" b="72"></viz:color>
       </node>
-      <node id="1" label="Napoleon">
+      <node id="1" label="webb">
         <attvalues>
           <attvalue for="modularity_class" value="0"></attvalue>
         </attvalues>
