@@ -1,5 +1,5 @@
 ![](https://img.shields.io/badge/github-xugaoyi-brightgreen.svg)
-![](https://github.com/wbwangk/wbwangk.github.io/blob/master/Docs/ironcore/guide-Encrypt%20Directly%20To%20Users.svg)
+![](https://raw.githubusercontent.com/wbwangk/wbwangk.github.io/master/Docs/ironcore/guide-Encrypt%20Directly%20To%20Users.svg)
 # Cryptographic Orthogonal Access Control
 
 > All problems in computer science can be solved by another level of indirection.
