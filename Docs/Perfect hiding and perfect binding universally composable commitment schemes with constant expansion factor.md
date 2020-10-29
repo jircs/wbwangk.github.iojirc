@@ -11,25 +11,25 @@
                               {ivan,buus}@brics.dk
 
 
-      Abstract.   Canetti and Fischlin have recently proposed the security no-
-      tion universal composability for commitment schemes and provided two
-      examples. This new notion is very strong. It guarantees that security is
-      maintained even when an unbounded number of copies of the scheme
-      are running concurrently, also it guarantees non-malleability and secu-
-      rity against adaptive adversaries. Both proposed schemes use Θ(k) bits
-      to commit to one bit and can be based on the existence of trapdoor
-      commitments and non-malleable encryption.
-      We present new   universally composable commitment (UCC) schemes
-      based on extractable  q one-way homomorphisms. These in turn exist
-      based on the Paillier cryptosystem, the Okamoto-Uchiyama cryptosys-
-      tem, or the DDH assumption. The schemes are eﬃcient: to commit to   k
-      bits, they use a constant number of modular exponentiations and commu-
-      nicates O(k) bits. Furthermore the scheme can be instantiated in either
-      perfectly hiding or perfectly binding versions. These are the ﬁrst schemes
-      to show that constant expansion factor, perfect hiding, and perfect bind-
-      ing can be obtained for universally composable commitments.
-      We also show   how  the schemes can be applied to do eﬃcient zero-
-      knowledge proofs of knowledge that are universally composable.
+Abstract.   Canetti and Fischlin have recently proposed the security no-
+tion universal composability for commitment schemes and provided two
+examples. This new notion is very strong. It guarantees that security is
+maintained even when an unbounded number of copies of the scheme
+are running concurrently, also it guarantees non-malleability and secu-
+rity against adaptive adversaries. Both proposed schemes use Θ(k) bits
+to commit to one bit and can be based on the existence of trapdoor
+commitments and non-malleable encryption.
+We present new   universally composable commitment (UCC) schemes
+based on extractable  q one-way homomorphisms. These in turn exist
+based on the Paillier cryptosystem, the Okamoto-Uchiyama cryptosys-
+tem, or the DDH assumption. The schemes are eﬃcient: to commit to   k
+bits, they use a constant number of modular exponentiations and commu-
+nicates O(k) bits. Furthermore the scheme can be instantiated in either
+perfectly hiding or perfectly binding versions. These are the ﬁrst schemes
+to show that constant expansion factor, perfect hiding, and perfect bind-
+ing can be obtained for universally composable commitments.
+We also show   how  the schemes can be applied to do eﬃcient zero-
+knowledge proofs of knowledge that are universally composable.
 
 1   Introduction
 
