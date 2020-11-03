@@ -1,9 +1,9 @@
  Demonstrating that a Public Predicate can be Satisfied Without Revealing Any Information About How 
 
-    David Chaum 
+David Chaum 
 
  Centre for Mathematics and Computer Science 
-    Kruislaan 413 1098 SJ Amsterdam  the Netherlands 
+Kruislaan 413 1098 SJ Amsterdam  the Netherlands 
 
 It’s not unlike a technique of probabilistic mathematical proof 
 in which you allow a receiver to select one of two cuses. 
@@ -37,29 +37,29 @@ A variation is Secure even if some known fraction of instances of the assumed ha
 
  A.M. Odlyzko (Ed.): Advances in Cryptology - CRYPT0 ’86, LNCS 263, pp. 195-199, 1987. 
  0 Springer-Verlag Berlin Heidelberg  1987 
-    196 
+196 
 
-    can be solved within the allotted time. 
+can be solved within the allotted time. 
 
-    If there are multiple solutions, no information about which one(s) the prover knows is 
-    released by the protocol, even to someone who actually has infinite computing power. 
+If there are multiple solutions, no information about which one(s) the prover knows is 
+released by the protocol, even to someone who actually has infinite computing power. 
 
-    The model is consistent with previous proposals of the author [Chaum 85b], where an in&- 
-    vidual may have to demonstrate something to an organization that has potentially Unkno~n 
-    resources or abilities. In fact, the result is a special case of a protocol previously presented 
-    by the author [Chaum SSa], whose properties are described in [Chaum 85b page 10391. But 
-    the underlying problem assumed hard in that work differs from those relied on here. 
-    Giving the verifier a chance to cheat of less than zs requires only an amount of computa- 
-    tion linear in s and the number of gates needed to represent the predicate. For s = 100 and 
-    say 200 digit composites, this requires for each gate only about as much computation as a 
-    single RSA decryption. 
+The model is consistent with previous proposals of the author [Chaum 85b], where an in&- 
+vidual may have to demonstrate something to an organization that has potentially Unkno~n 
+resources or abilities. In fact, the result is a special case of a protocol previously presented 
+by the author [Chaum SSa], whose properties are described in [Chaum 85b page 10391. But 
+the underlying problem assumed hard in that work differs from those relied on here. 
+Giving the verifier a chance to cheat of less than zs requires only an amount of computa- 
+tion linear in s and the number of gates needed to represent the predicate. For s = 100 and 
+say 200 digit composites, this requires for each gate only about as much computation as a 
+single RSA decryption. 
 
-    The protocol is easily adapted to the dual model. 
+The protocol is easily adapted to the dual model. 
 
 
 1. PROTOCOL 
 
-    In overview, the protocol presented  involvesy making known to z transformed and 
+In overview, the protocol presented  involvesy making known to z transformed and 
 encrypted copies of a truth table for each gate of a circuit representation of the predicate, after 
 which z is allowed to “select one of two cases”. The basic idea of getting exponential security by 
 one party first committing by revealing encrypted forms and then allowing the other party to 
@@ -83,7 +83,7 @@ gle gate, which is the output of the whole circuit.
 
 Consider a gate gk with I inputs and an output defined by a truth table Tk (subsequently 
 denoted without subscript) represented  in matrix form as T=(t,,,), with i E{1,  ..., 2‘) and j E Wk, 
-    197 
+197 
 
 where wk is the set of wires corresponding to the inputs and outputs of gate gk and (the cardi- 
 nality) # wk =I + 1, which is the total number of inputs and outputs of gate gk, and 
