@@ -37,7 +37,6 @@ us mention that formal de®nitions can be found in [GwMiRac85].
 ________________
  ² Supported in part by NSERC grant A4107.
  ³ Supported in part by an NSERC post-grade fellowship.
-- 2 -
 
 The early examples of ZKIP's were all number theoretic and restricted to prob-
  lems in NP ∩ co-NP [GwMiRac85, GaHaYu85]. It was conjectured by Silvio Micali,
@@ -53,6 +52,7 @@ NP-complete problem in order to get one for all problems in NP. Protocols very s
  existence of secure encryption schemes in the sense of [GwMi84]. In a further paper,
  we shall show that our number theoretic assumption can be traded for a graph
  theoretic assumption.
+ 
 ZKIP's are conceivable even if Alice does not have a proof to start with. Let us
  assume that she merely has a convincing argument that the theorem is true. In this
  case, she might wish to convince Bob of the theorem with a level of con®dence com-
@@ -60,6 +60,7 @@ ZKIP's are conceivable even if Alice does not have a proof to start with. Let us
  vide a polynomially-bounded Bob with any information on the argument itself, except
  for its existence. Our main result is that such protocols exists for a class of problems
  probably more extensive than NP.
+ 
 To illustrate the ideas, let us assume that Alice wishes to convince Bob that some
  integer m (of her choosing) is the product of exactly k distinct primes. Alice is con-
  vinced of the truth of her claim because she randomly selected k distinct integers
@@ -72,6 +73,7 @@ To illustrate the ideas, let us assume that Alice wishes to convince Bob that so
  the proof. Using our protocol, she can nonetheless convince Bob without compromis-
  ing the factorization of m in any way (except for the fact that Bob will know the
  number of factors).
+
 The above example illustrate the fact that our model does not assume that Alice
  has more computing power than Bob nor access to some oracle. Although she starts
  with one piece of additional knowledge (either a formal proof of some theorem or
@@ -84,6 +86,7 @@ The above example illustrate the fact that our model does not assume that Alice
 
  merely a convincing argument), this may be the result of her using trap-door informa-
 tion. The protocol itself can be carried out with polynomial time resources.
+
 The general technique allows Alice to guide Bob through the simulation of an
  arbitrary Boolean circuit without ever having to disclose its inputs or any intermediary
  results. At the end of the protocol, she can nonetheless convince Bob of the ®nal out-
@@ -198,11 +201,13 @@ Let u = b 1b 2 bk be a k -bit string of Alice. For each i , 1 ≤ i ≤ k , let 
 . . .    . . .
  Bob that the k -bit strings encrypted by z 1z 2 zk and zÃ1zÃ2 zÃk are identical
  without providing Bob with any additional information.
+
 String equality protocol: For each i , 1 ≤ i ≤ k , Alice gives Bob some
 xi ∈ ZZ n* such that zi zÃi ≡ xi2 (mod n ). Once again, this is a ZKIP because
 the encryptions were randomly chosen by Alice and not in¯uenced by Bob.
 ····
  . . .
+
 As above, let u = b 1b 2 bk and let zi encrypt bi for each i , 1 ≤ i ≤ k . Now,
 . . .
  let uÃ = bÃ1bÃ2 bÃk be some k -bit string different from u and let zÃi be an encryption
@@ -237,19 +242,22 @@ agreed upon between Alice and Bob. Alice randomly chooses s permutations
  . . .···
   string as v σj (1)v σj (2) v σj (k ) . ··
 Theorem________ (under QRA).
-   . . .
+
 (i) The only knowledge obtainable by Bob from this protocol is that z 1z 2 zk and
   . . .
     zÃ1zÃ2 zÃk encrypt distinct bit strings, and
+
 (ii) Alice only has a probability 2−s of convincing Bob of this when in fact the
     strings are identical.
+    
 Proof (sketch).
+
 (i) Observe that whenever j ∈ X , the protocol tells Bob that the original bit strings
     are distinct in at least one place, but it gives no clue as to any single i such that
     bi ≠ bÃi because the permutation σj is then kept secret. On the other hand, when-
     ever j ∈⁄ X , Bob gains no information whatsoever on the original strings or their
     exclusive-or.
-. . .
+
 (ii) If in fact v 1v 2 vk encrypts the identically zero string, the only thing Alice
     can do to hope convincing Bob of the contrary is to guess exactly which subset X
     will be chosen by Bob and to encrypt identically zero strings with
@@ -259,7 +267,8 @@ Proof (sketch).
     w 1j w 2j wk j for each j ∈ X . The results follows from the fact that there are
     2s equally likely choices of X for Bob. Notice that this part of the theorem is
     true regardless of cryptographic assumptions. ····
-    We are now ready for the main tool used in this paper. Consider any Boolean
+
+We are now ready for the main tool used in this paper. Consider any Boolean
 function B : {0,1}t → {0,1} agreed upon between Alice and Bob, and any bits
 b 1, b 2, . . . , bt known to Alice only. For 1 ≤ i ≤ t , let zi be an encryption of bi
 . . .
@@ -273,6 +282,7 @@ of B on the other t bits of the block, and each assignment of truth values occur
 and only once in the ®rst t bits of some block. For example, here is a permuted truth
  table for the binary or: 011000111101, which should be read as 0 or 1 = 1,
  0 or 0 = 0, 1 or 1 = 1 and 1 or 0 = 1. ····
+
 Boolean computation protocol: Let the situation be as in the paragraph
 just before the above de®nition. Let s be a safety parameter agreed upon
 between Alice and Bob. Alice randomly chooses s permuted truth tables for
@@ -281,13 +291,16 @@ a random subset X ⊂__ {1, 2, . . . , s } and sends it to Alice as a challenge.
 . . .
 In order to convince Bob that z is an encryption of B (b 1, b 2, , bt ),
 Alice must:
+
 (i) for each j ∈ X , open the entire encryption of the j th permuted truth
    table, so that Bob can check that it is a valid truth table for B ;
+
 (ii) for each j ∈⁄ X , point out to the appropriate block in the encryption of
    the j th permuted truth table and use the string equality protocol to
 . . .
    convince Bob that z 1z 2 zt z encrypts the same bit string as this
    block. ····
+
 A theorem very similar to the one for the string inequality protocol can be stated
 and the proof is essentially identical. Notice that this protocol is interesting only for
 small t because it is exponential in t . In the sequel, we will use it exclusively with
@@ -313,6 +326,7 @@ encryption z for the value of f (b 1, b 2 , , bk ). It then only remains for Ali
 open z and show Bob that it encrypts a 1.
 
 7. ZKIP FOR THE NUMBER OF PRIME FACTORS
+
 Let us now come back to the problem mentioned in the introduction. Alice has
     . . .
 selected k  distinct primes p 1, p 2,  , pk and she formed their product
@@ -322,17 +336,18 @@ exactly k distinct primes. Let l be the number of bits in m . Each factor will b
 sidered as a length l binary string, with leading zeroes if needed. As a ®rst step, Alice
 encrypts each of the factors and she discloses these encryptions to Bob. The string ine-
 quality protocol is used to convince Bob that the factors are all distinct and that none
-
 of them is equal to 1. She then guides Bob through the simulation of a Boolean circuit
  for iterated multiplication. This produces the encryption of a length kl bit string,
 which Alice opens to show that it encrypts (k −1)l zeroes followed by the binary
 representation of m .
+
 At this point, Alice still has to convince Bob that each of these factors is a prime.
 If she had a proof of this, she could encode it as the input to a proof veri®cation
 Boolean circuit and guide Bob through its evaluation. Recall, however, that her con-
 viction that each of the pi is prime comes from her own running of a probabilistic pri-
 mality test. None of these runs can be considered as interesting by Bob because he
 cannot trust that Alice was honest in her coin tosses.
+
 This is where our technique is most powerful. Consider a Boolean circuit with
 two l -bit inputs p and c that outputs 1 if and only if c mod p is a certi®cate that p
 is composite (where primes have no certi®cates and composites have lots [Rab76,
@@ -361,7 +376,8 @@ to be Babai's class MA [Ba85], which we would rather call RNP as random NP. This
 class is such that NP ∪ BPP ⊂__ RNP, hence NP is almost certainly a strict subset of
 RNP. For a discussion as to why we favour MA over the seemingly more powerful
 AM  or interactive proof systems [GwMiRac85], please consult [BrCr86].
-De®nition._________ Let Σ stand for {0,1}. A decision problem X ⊂__ Σ * belongs to RNP if and
+
+Definition. Let Σ stand for {0,1}. A decision problem X ⊂__ Σ * belongs to RNP if and
 only if there exists a predicate A ⊂__ Σ *× Σ * and a polynomial p (n ) such that
 (i)  A ∈ BPP, and
 (ii) (\/-x ∈ Σ *)[x ∈ X <== > ( -- -a ∈ Σ *)[ a  = p ( x ) and <x ,a > ∈ A ]]
@@ -371,12 +387,14 @@ only if there exists a predicate A ⊂__ Σ *× Σ * and a polynomial p (n ) suc
 had we insisted that A ∈ P. The restriction  a  = p ( x ) instead of the usual
  a  ≤ p ( x ) is there for a technical reason. Notice also that X ∈ NP whenever
  A ∈ NP.  ····
+
 Intuitively X ∈ RNP means that whenever x ∈ X , there is a (possibly hard to
  ®nd) short argument for this, and that the validity of this argument can be checked
  probabilistically in polynomial time. We are about to prove that if X ∈ RNP, if the
  proof that X ∈ RNP is in the public domain, and if Alice knows an argument a for
  some x ∈ X , she can convince Bob with a ZKIP that x ∈ X . Let us ®rst restrict our-
  selves to one-sided probabilistic algorithms.
+
 Recall that RP (sometimes refered to as R) is the class of decision problems that
  can be solved in polynomial time by a one-sided bounded error probabilistic algorithm
  [Ad77]. Here, each time the probabilistic algorithm is run on any yes-instance, it
@@ -386,6 +404,7 @@ Recall that RP (sometimes refered to as R) is the class of decision problems tha
  ably incomparable. Whenever x is a yes-instance of a co-RP problem, one can con-
  vince him/herself that this is so (by repeating the algorithm), but there does not have
  to exist a succinct proof of this.
+ 
  Theorem________ (under QRA). Consider a problem X ∈ RNP such that the corresponding A
 (refer to the de®nition of RNP) belongs to co-RP. Assume that the characteriza-
 tion A for X and a co-RP algorithm for A are in the public domain. Let Alice
@@ -393,7 +412,8 @@ have an argument a for some x ∈ X . Although she does not have a de®nite
 proof that x ∈ X , she convinced herself probabilistically that <x ,a > ∈ A , hence
 x ∈ X . It is then possible for Alice to convince Bob in polynomial time that
 x ∈ X without disclosing any additional information.
- Proof (sketch). Alice and Bob agree on a probabilistic one-sided Boolean circuit for
+
+Proof (sketch). Alice and Bob agree on a probabilistic one-sided Boolean circuit for
 the complement of A . (That is: on any yes-instance of A , using any random
 choices, the circuit outputs a 0; on any no-instance of A , the circuit outputs a 1
 for at least 50% of the random choices.) Alice gives Bob an encryption for each
@@ -407,6 +427,7 @@ mation on a (except for its mere existence) because the only possible outcome
 for the Boolean circuit is 0, provided Alice was not trying to cheat. Bob does not
 even learn the length of a because it had to be exactly p ( x ) by de®nition of
 RNP.  ····
+
 The above protocol does not work directly for X ∈ RNP in general, because it
  would not be zero-knowledge. Indeed, Bob would gain information on Alice's argu-
  ment a from knowledge of which random choices made the circuit accept <x ,a > and
@@ -415,13 +436,15 @@ The above protocol does not work directly for X ∈ RNP in general, because it
  test circuit for A is expected to output sometimes 0 and sometimes 1 on the same
  input; the most frequent answer being correct with high probability.) Two ideas are
 needed to solve this dif®culty.
+
 (i) Alice and Bob agree in advance on the number of runs they wish to carry through
 the test circuit (depending on the error probability they are willing to tolerate). At
 the end of each run, Alice no longer opens the outcome. After all the runs are
 completed, Alice guides Bob through the evaluation of a majority Boolean circuit,
 using the previously obtained encrypted outcomes as input. It is only the resulting
 majority bit that Alice ®nally opens for Bob.
- (ii) Even if Alice is in good faith, the above idea leaves the door open for Bob to
+
+(ii) Even if Alice is in good faith, the above idea leaves the door open for Bob to
 cheat. Indeed, it could be that the circuit outcome is not what she expected
 because Bob could have deliberately chosen the "random" coin tosses to make
 this occurrence 50% likely. Assuming Alice's good faith, this could yield up to
@@ -432,13 +455,16 @@ ther Alice nor Bob can in¯uence the outcome, and such that Bob does not get to
 see the outcome (i.e.: coin tossing in a well). Fortunately, such a protocol is very
 simple: to toss a coin, Alice gives Bob a randomly chosen element of ZZ n*[+1]
 and Bob tells her whether to multiply it or not by the standard y ∈ QNRn [+1].
-Main_____________  Theorem (under QRA). Consider any X ∈ RNP and some x ∈ X for which
+
+Main Theorem (under QRA). Consider any X ∈ RNP and some x ∈ X for which
 Alice knows an argument a . Assume the proof that X ∈ RNP is in the public
 domain 3. Even though Alice may not have a de®nite proof that x ∈ X , she con-
 vinced herself probabilistically that <x ,a > ∈ A , hence x ∈ X . It is possible for
 Alice to convince Bob in polynomial time that x ∈ X without disclosing any
 additional information.
- Proof (sketch). By the above discussion. ····
+
+Proof (sketch). By the above discussion.
+
 Let us stress again that this protocol is interesting even when A ∈ NP, hence
  X ∈ NP (as in section 7 because PRIMES ∈ NP), despite the reduction to SAT in
  these cases. This is so because Alice could know the argument a for x as a result of
@@ -482,6 +508,7 @@ it to Alice as a challenge. In order to convince Bob, Alice must:
 (ii) for each i ∈⁄ X , disclose xi x mod n so that Bob can check that
    (xi x )2 ≡ zi z (mod n ), hence that zi has the same quadratic character
    as z . ····
+
 This protocol is independently given in [Be86]; its essence was already in
 [CoFi85]. Although it is simpler than those of [GwMiRac85, GaHaYu85], it is worth
 mentioning that quadratic non-residuosity cannot be proved with our protocol unless
@@ -489,6 +516,7 @@ the standard y ∈ QNRn [+1] has been proved once and for all. Thus, the protoco
 [GwMiRac85] must be used the very ®rst time in order to make ours effective. Notice
 also that our protocol would not work for quadratic non-residuosity if n had more than
 two distinct prime factors, whereas the protocol of [GwMiRac85] could still be used.
+
 Finally, here is the permutation problem. Let m be some integer agreed upon
 between Alice and Bob. Let σ be a permutation of {1, 2, . . . , m } randomly and
 secretly chosen by Alice. This permutation can be naturally represented by a table of
