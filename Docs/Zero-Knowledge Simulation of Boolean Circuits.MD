@@ -21,7 +21,7 @@ perhaps thanks to her knowledge of some trap-door information, she can con-
 vince Bob as well, without compromising the trap-door in any way.
 
 
-1. INTRODUCTION
+ 1. INTRODUCTION
 The notion of zero-knowledge interactive proofs (ZKIP) introduced a few years
 ago by Goldwasser, Micali and Rackoff [GwMiRac85] has become a very active
 research area. Assume that Alice holds the proof of some theorem. A zero-knowledge
@@ -79,7 +79,7 @@ The above example illustrate the fact that our model does not assume that Alice
  allows Alice to "ef®ciently" (the running time is currently a 12th power polynomial) get short
  proofs for those primes on which the algorithm turns out to be fast. This might reduce the
  interest of this particular example, but not the interest of our general protocol.
-- 3 -
+
 
  merely a convincing argument), this may be the result of her using trap-door informa-
 tion. The protocol itself can be carried out with polynomial time resources.
@@ -123,7 +123,6 @@ random element of QNRn [+1] can be obtained by choosing a random x ∈ ZZ n* and
 computing x 2y mod n . Furthermore, everything we have said so far, except for the
 de®nition of the Jacobi symbol, remains true if n is of the form p i q j , where p and q
 are distinct odd primes and i and j are positive powers of which at least one is odd.
-- 4 -
 
 It is believed that no ef®cient algorithm can distinguish a quadratic residue from
  a quadratic non-residue, even probabilistically speaking, as long as the latter has Jacobi
@@ -131,7 +130,7 @@ It is believed that no ef®cient algorithm can distinguish a quadratic residue f
  quadratic residuosity assumption (QRA) and for more background on number theory,
 please refer to [GwMi84].
 
-3. THE ENCRYPTION OF SECRETS
+ 3. THE ENCRYPTION OF SECRETS
 At the beginning of our protocol, Alice randomly chooses two distinct large
 primes p and q , and she discloses their product n = pq to Bob. Following the QRA,
  we assume throughout that Bob cannot distinguish a quadratic residue modulo n from
@@ -166,7 +165,6 @@ This operation will be refered to as opening the secret z . Notice that this is 
  offer in the sequel the ®rst ZKIP capable of achieving this (and therefore we cannot use it yet).
  This is however of no consequence because Alice could only make herself more vulnerable by
  choosing n = p i q j without i = 1 and j = 1.
-- 5 -
 
  4. CAN BOB COMPUTE ON ENCRYPTED BITS?
 
@@ -217,7 +215,6 @@ The problem reduces to convincing Bob (by a ZKIP) that the string
   . . .
 encrypted by v 1v 2 vk is not identically zero. Let s be a safety parameter
 agreed upon between Alice and Bob. Alice randomly chooses s permutations
-    - 6 -
 
 . . .. . .
     σ1, σ2,    , σs of {1, 2,  , k } and ks random integers xi j ∈ ZZ n* for
@@ -297,7 +294,7 @@ t ≤ 2. This Boolean computation protocol was discovered independently by Josh
 Benaloh [Be86] as an application of the general tool of "cryptographic capsules"
 [CoFi85].
 
-6. ZKIP FOR SAT
+ 6. ZKIP FOR SAT
 The zero-knowledge interactive proof for satis®ability should now be obvious. Let
  f : {0,1}k → {0,1} be the function computed by some satis®able Boolean formula for
     . . .
@@ -325,8 +322,6 @@ encrypts each of the factors and she discloses these encryptions to Bob. The str
 quality protocol is used to convince Bob that the factors are all distinct and that none
 
 of them is equal to 1. She then guides Bob through the simulation of a Boolean circuit
-- 8 -
-
  for iterated multiplication. This produces the encryption of a length kl bit string,
 which Alice opens to show that it encrypts (k −1)l zeroes followed by the binary
 representation of m .
@@ -350,7 +345,7 @@ k  distinct primes. This protocol can be adapted if Alice wished instead to conv
 Bob that there are exactly k distinct primes in the factorization of m , regardless of
 their multiplicities.
 
-8. THE GENERAL PROTOCOL
+ 8. THE GENERAL PROTOCOL
 Recall that BPP stands for the class of decision problems that can be solved in
 probabilistic polynomial time with bounded error probability [Gi77]. It is reasonable to
 consider BPP as the real class of tractable problems (rather than P) because the error
@@ -368,7 +363,6 @@ only if there exists a predicate A ⊂__ Σ *× Σ * and a polynomial p (n ) suc
 (i)  A ∈ BPP, and
 (ii) (\/-x ∈ Σ *)[x ∈ X <== > ( -- -a ∈ Σ *)[ a  = p ( x ) and <x ,a > ∈ A ]]
 (such an a is refered to as an argument for x ).
-- 9 -
 
  Notice that this would correspond to the polynomial hierarchy characterization of NP
 had we insisted that A ∈ P. The restriction  a  = p ( x ) instead of the usual
@@ -413,8 +407,6 @@ RNP.  ····
 The above protocol does not work directly for X ∈ RNP in general, because it
  would not be zero-knowledge. Indeed, Bob would gain information on Alice's argu-
  ment a from knowledge of which random choices made the circuit accept <x ,a > and
-    - 10 -
-
  which made it reject, or even merely from knowledge of the number of each of these
  occurrences. (Recall that if A ∈ BPP but A ∈⁄ RP ∪ co-RP, the probabilistic Boolean
  test circuit for A is expected to output sometimes 0 and sometimes 1 on the same
@@ -456,7 +448,6 @@ Let us stress again that this protocol is interesting even when A ∈ NP, hence
 
  _______________ 
   3 i.e.: the predicate A and the BPP algorithm for A are already known to Bob.
-    - 11 -
 
  9. OTHER EXAMPLES OF ZKIP's
 Our basic technique can be used in various situations. Let us brie¯y mention a
@@ -506,10 +497,9 @@ own ZKIP. This problem has applications if one wishes to keep an electronic poke
 face [Cr86], and its solution is central to the above mentioned ef®cient ZKIP's for
 
 Hamiltonian, Circuit, Clique, Knapsack, etc.
- - 12 -
 
-10. OPEN PROBLEM
-    Can Bob compute encryptions of arbitrary Boolean functions of encrypted
+ 10. OPEN PROBLEM
+Can Bob compute encryptions of arbitrary Boolean functions of encrypted
 Boolean inputs without the help of Alice? For instance, given encryptions for the bits
 b 1 and b 2 , can he compute an encryption for b 1 and b 2? If so, this might allow a
 dramatic improvement in our protocols.
