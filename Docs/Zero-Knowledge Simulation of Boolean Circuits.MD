@@ -21,7 +21,8 @@ perhaps thanks to her knowledge of some trap-door information, she can con-
 vince Bob as well, without compromising the trap-door in any way.
 
 
- 1. INTRODUCTION
+1. INTRODUCTION
+
 The notion of zero-knowledge interactive proofs (ZKIP) introduced a few years
 ago by Goldwasser, Micali and Rackoff [GwMiRac85] has become a very active
 research area. Assume that Alice holds the proof of some theorem. A zero-knowledge
@@ -131,6 +132,7 @@ It is believed that no ef®cient algorithm can distinguish a quadratic residue f
 please refer to [GwMi84].
 
  3. THE ENCRYPTION OF SECRETS
+ 
 At the beginning of our protocol, Alice randomly chooses two distinct large
 primes p and q , and she discloses their product n = pq to Bob. Following the QRA,
  we assume throughout that Bob cannot distinguish a quadratic residue modulo n from
@@ -189,6 +191,7 @@ Could Bob compute an encryption of the and or the or of b 1 or b 2 given only z 
  leads to a simple ZKIP for SAT in Section 6.
 
  5. HOW ALICE CAN HELP BOB COMPUTE ON ENCRYPTED BITS?
+ 
 . . .
 Let u = b 1b 2 bk be a k -bit string of Alice. For each i , 1 ≤ i ≤ k , let zi and
  zÃi be two encryptions of bi randomly chosen by Alice. It is easy for Alice to convince
@@ -268,8 +271,6 @@ De®nition._________ A permuted truth table for the Boolean function B is a bina
 length (t +1)2t formed of 2t blocks of t +1 bits. The last bit of each block is the value
 of B on the other t bits of the block, and each assignment of truth values occurs once
 and only once in the ®rst t bits of some block. For example, here is a permuted truth
-- 7 -
-
  table for the binary or: 011000111101, which should be read as 0 or 1 = 1,
  0 or 0 = 0, 1 or 1 = 1 and 1 or 0 = 1. ····
 Boolean computation protocol: Let the situation be as in the paragraph
@@ -295,6 +296,7 @@ Benaloh [Be86] as an application of the general tool of "cryptographic capsules"
 [CoFi85].
 
  6. ZKIP FOR SAT
+ 
 The zero-knowledge interactive proof for satis®ability should now be obvious. Let
  f : {0,1}k → {0,1} be the function computed by some satis®able Boolean formula for
     . . .
@@ -346,6 +348,7 @@ Bob that there are exactly k distinct primes in the factorization of m , regardl
 their multiplicities.
 
  8. THE GENERAL PROTOCOL
+ 
 Recall that BPP stands for the class of decision problems that can be solved in
 probabilistic polynomial time with bounded error probability [Gi77]. It is reasonable to
 consider BPP as the real class of tractable problems (rather than P) because the error
@@ -450,6 +453,7 @@ Let us stress again that this protocol is interesting even when A ∈ NP, hence
   3 i.e.: the predicate A and the BPP algorithm for A are already known to Bob.
 
  9. OTHER EXAMPLES OF ZKIP's
+ 
 Our basic technique can be used in various situations. Let us brie¯y mention a
  few of them. It allows Alice to convince Bob of the quadratic residuosity of a member
  of ZZ n*[+1] chosen by Bob without yielding additional information, in a way much
@@ -495,20 +499,22 @@ permutation, not just of any function from {1, 2, . . . , m } to {1, 2, . . . , 
 doubt the reader has seen our technique used enough times by now to design his/her
 own ZKIP. This problem has applications if one wishes to keep an electronic poker
 face [Cr86], and its solution is central to the above mentioned ef®cient ZKIP's for
-
 Hamiltonian, Circuit, Clique, Knapsack, etc.
 
  10. OPEN PROBLEM
+ 
 Can Bob compute encryptions of arbitrary Boolean functions of encrypted
 Boolean inputs without the help of Alice? For instance, given encryptions for the bits
 b 1 and b 2 , can he compute an encryption for b 1 and b 2? If so, this might allow a
 dramatic improvement in our protocols.
 
 ACKNOWLEDGEMENT
+
     We wish to thank Joan Feigenbaum, Sha® Goldwasser, Silvio Micali, Jean-Marc
 Robert, Steven Rudich and Moti Yung for fruitful discussions.
 
 REFERENCES
+
 [Ad77] Adleman, L., ``Reducibility, randomness and intractability'', Proceedings of the 9th
     Annual ACM Symposium on the Theory of Computing , 1977, pp. 151-163.
 [Be86] Benaloh (Cohen), J. D., ``Cryptographic Capsules: A Disjunctive Primitive for Interac-
