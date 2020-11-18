@@ -3,7 +3,7 @@ Statistical Zero Knowledge Protocols to Prove Modular Polynomial Relations
 Eiichiro FUJISAKI and Tatsuaki OKAMOTO
 
 Abstract. This paper proposes a bit commitment scheme, BC(-), and
-e1~icient statistical zero knowledge (in short, SZK) protocols in which, for
+e1icient statistical zero knowledge (in short, SZK) protocols in which, for
 any given multi-variable polynomial f(X1, ..,Xt) and any given modulus n, prover :P gives (I1,..,h) to verifier V and can convince V that P knows (x1,.., xt) satisfying f(x1,.., xt) -- 0 (mod n) and Ii = BC(xi),
 (i = 1, .., t). The proposed protocols are O(Inl) times more efficient than
 the corresponding previous ones [Dam93, Dam95, Oka95]. The (knowledge) soundness of our protocols holds under a computational assumption, the intractability of a modified RSA problem (see Def.3), while the
@@ -26,10 +26,10 @@ values, X 1 , .., Xt.
 
 This problem is indeed raised on many cryptographic protocols. In fair exchange and contract signing protocols based on RSA signatures [Dam93, Dam95],
 (n, e) is the public-key of the RSA scheme, f(x) = x e - m and I = BC(x).
-After proving that 7 ~ knows x satisfying the relations, P releases x bit by bit
+After proving that 7  knows x satisfying the relations, P releases x bit by bit
 using I. In untraceable off-line electronic cash protocols, restricted blind signatures [Bra95, Oka95] play an important role, where, for instance, f(xl, x2, x3) =
-(xlx2)x~ and 11 = BC(xl) and I2 = BC(x2). After proving that 7 ) knows
-(Xl,X2,X3) satisfying the relations, ]; stores /1 and /2. If 7 ~ double-spends a
+(xlx2)x and 11 = BC(xl) and I2 = BC(x2). After proving that 7 ) knows
+(Xl,X2,X3) satisfying the relations, ]; stores /1 and /2. If 7  double-spends a
 coin, ]; can get (Xl, x2) from xlx2 as evidence of double-spending (See [Oka95]
 for more details). If f is a polynomial and n is a prime for Shamir's secret
 sharing scheme, some protocols related to secret sharing such as (publicly) verifiable secret sharing [CGMA85, Ped91, Sta96] can be interpreted as this type of
@@ -48,7 +48,7 @@ However, those protocols are very inefficient in general.
 
 In 1993, Damg&rd proposed the first efficient protocol to solve the problem
 with a specific form for constructing a fair exchange and contract signing protocol [Dam93, Dam95]. He proposed the protocols in which prover :P can convince
-verifier V that he knows s of bit commitment BC(s) and that it is a Rabin signature (s = m 1/2 mod n) or a RSA signature (s = m 1/~ rood n), for a message
+verifier V that he knows s of bit commitment BC(s) and that it is a Rabin signature (s = m 1/2 mod n) or a RSA signature (s = m 1/ rood n), for a message
 m. The protocols are PZK computationally-sound proof of knowledge systems
 (PZK arguments of knowledge). Those protocols essentially consist of some primitives: a bit commitment scheme and three protocols, which correspond to the
 basic, comparing, and rood-multi protocols in this paper. His basic protocol is the
@@ -71,7 +71,7 @@ we construct, by using these primitives, statistical zero-knowledge protocols
 (SZK argument of knowledge) in which, for any given multi-variable polynomial
 f(X1, .., Xt) and any given modulus n, prover :P gives (I1, --,/t) to verifier ]3 and
 can convince l) that :P knows (Xl,.., xt) satisfying f(xl, .., xt) =- 0 (mod n) and
-I~ = BC(xi), (i = 1, .., t) without revealing any additional information. The proposed protocols are O(Inl) times more efficient than the corresponding protocols
+I = BC(xi), (i = 1, .., t) without revealing any additional information. The proposed protocols are O(Inl) times more efficient than the corresponding protocols
 in [Dam93, Dam95, Oka95], because our protocols do not need to confirm that
 a secret is in any range nor to execute any (single-bit based) cut-and-choose
 method. At the same time, the communication complexity of our protocols is
@@ -96,13 +96,13 @@ This section mainly defines the factoring assumption and the modified RSA
 problem and its assumption; the modified RSA problem is a little different from
 the well-known RSA problem at the point that a cracking algorithm, A, can on
 input (N, Y) choose a convenient exponent, e (_> 2), to output (X, e) such that
-X -- ~ (mod N) (Of course, it is less intractable than the factoring problem
+X --  (mod N) (Of course, it is less intractable than the factoring problem
 since a cracking algorithm, A, which can factor N, can solve the modified RSA
-problem of N). The validity (soundness) of the whole protocols against 7 ~ can
+problem of N). The validity (soundness) of the whole protocols against 7  can
 be guaranteed under Assumption 4 while the validity of the commitment against
 can be guaranteed under Assumption 2.
 
-Definition 1. f(n) is negligible in n if, for any constant c, there exists a constant, N, such that fin) < (l/n) ~ for any n > N. f(n) is non-negligible in n
+Definition 1. f(n) is negligible in n if, for any constant c, there exists a constant, N, such that fin) < (l/n)  for any n > N. f(n) is non-negligible in n
 if, there exits constants c and N such that fin) > (l/n) c for any n > N. f(n) is
 overwhelming in n if, for any constant c, there exists a constant, N, such that
 f(n) > 1 - (l/n) r for any n > N.
@@ -111,7 +111,7 @@ Assumption 2. (Factoring Assumption) A probabilistic polynomial-time generator A
 probability is taken over the random choices of A1 and A.
 
 Definition 3. Modified RSA problem is, for given (N, Y), finding X and e
-( e >_ 2 ), such that Y - X ~ (rood N), where N is the composite of two prime
+( e >_ 2 ), such that Y - X  (rood N), where N is the composite of two prime
 numbers, P and Q.
 
 Assumption 4. (Modified RSA Assumption) A probabilistic polynomialtime generator A2 exists which on input IlNI outputs (N, Y) such that for any
@@ -120,7 +120,7 @@ the modified RSA problem is negligible. The probability is taken over the random
 choices of A2 and A.
 
 In this paper, we use the following symbols. "a ER S" means uniformly choosing a random element, a, from a set, S. Let ZN be a residue class ring modulo
-N, and Z~v the reduced residue class group. Other symbols and definitions will
+N, and Zv the reduced residue class group. Other symbols and definitions will
 be set as needed. 
 
 3 Bit Commitment and WI protocols
@@ -139,7 +139,7 @@ Our proposed commitment statistically reveals to the verifier no information of
 secret s in BC(s) and holds computational validity against the prover. The validity of the commitment is guaranteed if the factoring assumption (Assumption 2)
 holds true. The commitments are given by
 
-BCbo(S,r) = boSbr 1 rood N or BCbo(s,rl,r2) = boSb~11b~2 mod N.
+BCbo(S,r) = boSbr 1 rood N or BCbo(s,rl,r2) = boSb11b2 mod N.
 
 Here, (N, bo, bl, b2) is a set of system parameters given by verifier Y or authority (i.e. trusted third party).
 
@@ -148,19 +148,19 @@ procedure:
 
 [Set-up procedure]
 
-1. ~ generates large primes, P and Q, including odd prime divisors, p and q,
-such that p = (P - 1)/2, q = (Q - 1)/2, and p ~ q).
+1.  generates large primes, P and Q, including odd prime divisors, p and q,
+such that p = (P - 1)/2, q = (Q - 1)/2, and p  q).
 
-2. 12 finds at random gp e Gp\{1}, and gq E Gq\{1}, where Gp, Gq are subgroups of the order p, q in Zb, Z~ respectively (The complexity of finding gp
-and gq is comparable to that of finding generator elements of Z~ and Z~).
+2. 12 finds at random gp e Gp\{1}, and gq E Gq\{1}, where Gp, Gq are subgroups of the order p, q in Zb, Z respectively (The complexity of finding gp
+and gq is comparable to that of finding generator elements of Z and Z).
 
-3. ~ computes, bo E Z~v, by using the Chinese Remainder Theorem, such that
+3.  computes, bo E Zv, by using the Chinese Remainder Theorem, such that
 bo = gp rood P and bo = gq rood Q (b0 is a generator element of Gpq).
 
-4. ]) finds at random a, ~ E Z~q and sets bl = bo a mod N and b2 = bo a rood N.
+4. ]) finds at random a,  E Zq and sets bl = bo a mod N and b2 = bo a rood N.
 
-5. Y sends (N, bo, bx, b2) to prover 7 ~ . Then Y proves that he knows a, a -1 ,
-/~, and/~-1 such that bl -- bo a mod N, and b2 -- bo a mod N in the zero
+5. Y sends (N, bo, bx, b2) to prover 7  . Then Y proves that he knows a, a -1 ,
+/, and/-1 such that bl -- bo a mod N, and b2 -- bo a mod N in the zero
 knowledge manner (that is, the orders of b0, bl,and b2 are equivalent).
 
 In the bit-commitment phase, 7 ) sends to Y, BCbo (x, r) = b0Zbl r mod N or
@@ -173,8 +173,8 @@ statistically reveal no information of x to 12 .
 The following results show that the validity (security) of these commitments
 are guaranteed if the factoring assumption (Assumption 2) holds true.
 
-Lennna 6. (Miller) Let N = p~l ...p~m be the prime factorization of the odd
-integer g. Let A(N) : lcm{p~l-l(pl - 1), ..,p~n~-l(pm -- 1)} (the Carmichael
+Lennna 6. (Miller) Let N = pl ...pm be the prime factorization of the odd
+integer g. Let A(N) : lcm{pl-l(pl - 1), ..,pn-l(pm -- 1)} (the Carmichael
 A-function) and L be a multiple of A(N) (i.e., A(N)IL ). There exists a probabilistic polynomial-time algorithm M which, on input (N, L), can output the
 factorization of N with non-negligible probability in INI. (Note: N is given by
 A1 and the probability is taken over the coin tosses of A 1 and M.) 
@@ -189,7 +189,7 @@ of the bit commitment scheme.
 Theorem8. (Validity against 7)*) If Assumption 2 holds true, there exists
 no probabilistic polynomial-time algorithm 7)* which, on input ( N, bo, bl), given
 by ABC, can output (sl, rx) and (s2, r2), with non-negligible probability in INI,
-where (sl,rl) # (s2,r2) and bo'lb~ ' - bo82b~ 2 (mod g). (Note: the probability
+where (sl,rl) # (s2,r2) and bo'lb ' - bo82b 2 (mod g). (Note: the probability
 is taken over the coin tosses of ABc and 7)*.)
 
 Sketch of Proof:
@@ -203,7 +203,7 @@ P* above can be replaced by the algorithm which, on input (N, bo, bl), can outpu
 boSbl r - 1 (mod N), (1)
 
 where (s, r) r (0, 0). In addition, by Lemma 6, the algorithm M can be replaced
-by the algorithm which on input N outputs L' such that )~(N)[L'.
+by the algorithm which on input N outputs L' such that )(N)[L'.
 
 The strategy of M is the following:
 
@@ -211,52 +211,52 @@ Algorithm M
 
 1. Input N generated by ABc to M.
 
-2. M picks bo ER ZN and t~ ER (0,2kN) (k = O([ND), then computes bl =
+2. M picks bo ER ZN and t ER (0,2kN) (k = O([ND), then computes bl =
 bo a mod N.
 
 3. M inputs (N, bo, bl) to 7)*.
 
-4. If 7 ~* returns (s,r), go the next step, otherwise M halts.
+4. If 7 * returns (s,r), go the next step, otherwise M halts.
 
 5. M outputs L = 2(r - as) if L r 0, otherwise halts.
 
 The algorithm M can output L with non-negligible probability.
 
 When M picks bo uniformly in ZN in Step 2, the probability that the order
-of b0 is pq is non-negligible because ~(Pq) #ZN = (2p+l)(2q+l) (P-1)(q-D ~ ~' 1 where ~o(.) is
-the Eulerian function and ~(pq) is the number of generators of Gpq. This means
+of b0 is pq is non-negligible because (Pq) #ZN = (2p+l)(2q+l) (P-1)(q-D  ' 1 where o(.) is
+the Eulerian function and (pq) is the number of generators of Gpq. This means
 that the distribution of a non-negligible fraction (about 1/4) of (N, b, bl)'s picked
 by M is indistinguishable from those generated by ABe. 7 )* therefore outputs
 (s, r) with non-negligible probability in Step 4. In Step 5, the probability of
-L ~ 0 is non-negligible. This is because even infinite power 7)* can only know
-a0 -- c~ mod pq. Therefore, if a is uniformly picked in [0, 2kN), the probability
+L  0 is non-negligible. This is because even infinite power 7)* can only know
+a0 -- c mod pq. Therefore, if a is uniformly picked in [0, 2kN), the probability
 of L r 0 is non-negligible. From equation (1), L - 0 (mod pq). This means
 that
 
 L = 2kpq : kA(N), (2)
 
-where k ~ 0, A(N) = lcm(P - 1, Q - 1). [] 
+where k  0, A(N) = lcm(P - 1, Q - 1). [] 
 
 Corollary 9. (Validity against 79*) If Assumption 2 holds true, there exists
 no probabilistie polynomial-time algorithm 79* which, on input ( N, bo, bl, b2),
-given by ABC, can output (t, u, v) ~ (0, 0, 0) such that b~b~b~ = 1 (mod N),
+given by ABC, can output (t, u, v)  (0, 0, 0) such that bbb = 1 (mod N),
 with non-negligible probability.
 
 If base bo is clear, we use the expressions BC(s, r) and BC(s, rl, r2). If auxiliary parameters are not important, we use just BC(s).
 
 3.2 Basic Protocol
 
-Let R (1) (N,bo,bl) := {(/' (x,r))[I = J~C(N,bo,bl)(X,r)). The basic protocol is (statistical) witness indistinguishable (WI) over the relation ~(1) and convinces * ~( N,bo,bl )
+Let R (1) (N,bo,bl) := {(/' (x,r))[I = JC(N,bo,bl)(X,r)). The basic protocol is (statistical) witness indistinguishable (WI) over the relation (1) and convinces * ( N,bo,bl )
 that 79 knows (x, r) such that I = BC(N,bo,bl)(x, r).
 
 [Basic Protocol]
 
 1. )2 executes with 79 the set-up procedure for parameter (N, bo, bl, b2).
 
-2. 79 sets I = BC(N,bo,b~)(x,r) and sends it to V.
+2. 79 sets I = BC(N,bo,b)(x,r) and sends it to V.
 
-3. 79 chooses w ~ w~ eR [0, 22raN) and sets w ~ w I by w ~ = w ~ - 22mN and
-w21 = w~ -22roW. 79 picks four elements, w2,3 's eR [ 0, 2raN), then computes
+3. 79 chooses w  w eR [0, 22raN) and sets w  w I by w  = w  - 22mN and
+w21 = w -22roW. 79 picks four elements, w2,3 's eR [ 0, 2raN), then computes
 0 1 2 t,,3 = BC(wi, wj, wij), where 1 < i,j < 2.
 
 4. 79 sends to 1?, four unordered commitments, ti,j's.
@@ -266,13 +266,13 @@ w21 = w~ -22roW. 79 picks four elements, w2,3 's eR [ 0, 2raN), then computes
 6. 79 setsX = cx+w o i and R = cr+wj 1 such that X,R 9 [0, 22raN), and
 sends to 1), the pair, ( X, R, w?,,3 )"
 
-7. ]2 checks there exists a tij such that BC(X, R, w2j) = t,,jI ~ (mod N).
+7. ]2 checks there exists a tij such that BC(X, R, w2j) = t,,jI  (mod N).
 
-The completeness is obvious, since when X = cx+wi ~ and R = cr+w~ (if 7 9 is
+The completeness is obvious, since when X = cx+wi  and R = cr+w (if 7 9 is
 honest, there exists X, R E [ 0, 22raN) ), the left-hand side in the verification
 equation is equal to the right-hand, because
 
-8 1ll 0 r 1 2 0 1 2 boXblRb2 ~~ =- bo c + 'bl c +W~bzW',~ =_ boW'bl~Jb2~',~I c (rood N).
+8 1ll 0 r 1 2 0 1 2 boXblRb2  =- bo c + 'bl c +WbzW', =_ boW'blJb2',I c (rood N).
 
 Lemma 10. (Soundness) Under Assumption 4, there exists a probabilistic polytime algorithm M such that, for any probabilistic poly-time algorithm 7 9., if
 probabilistic interactive algorithm (79",1) ) accepts with non-negligible probability in INI, then M with ABe and 79*as oracles can extract (x,r) satisfying
@@ -290,9 +290,9 @@ the basic protocol is statistically witness indistinguishable over Rll),bo,bl ).
 
 The following protocol is considered as a kind of the basic protocol. However,
 since it is also utilized in the mod-multi protocol and in Subsection 3.6, we
-state it as a different one. Let "~(N,bo) ~(2) :---- {(1,7)1 1 = b~ mod N}. The checking
-protocol is WI over the relatl "o n R(N,ao) (~) and convinces l) that 50 can know ~/such
-that I = bo ~ mod N.
+state it as a different one. Let "(N,bo) (2) :---- {(1,7)1 1 = b mod N}. The checking
+protocol is WI over the relatl "o n R(N,ao) () and convinces l) that 50 can know /such
+that I = bo  mod N.
 
 [Checking Protocol]
 
@@ -300,23 +300,23 @@ that I = bo ~ mod N.
 
 2. 50 sets I -- bo 7 mod N and sends it to l).
 
-3. 50 chooses w ~ 9 [ 0, 22"~l) and sets w ~ by w ~ = w ~ - 22ml. 50 picks two
-elements, w i 1, s 9 [ 0, 2raN), then computes tl = BCbo(W ~ w i 1 ), where 1 <
+3. 50 chooses w  9 [ 0, 22"l) and sets w  by w  = w  - 22ml. 50 picks two
+elements, w i 1, s 9 [ 0, 2raN), then computes tl = BCbo(W  w i 1 ), where 1 <
 i < 2 and I := max[b - a, N].
 
 4. 50 sends to ];, two unordered commitments, ti's.
 
 5. l; picks a challenge c 9 [ 0, 2") and sends it to 50.
 
-6. 50 sets X := c(7 - a) +w ~ 9 [ 0, 22ml), and sends to Y, the pair, (X, wl).
+6. 50 sets X := c(7 - a) +w  9 [ 0, 22ml), and sends to Y, the pair, (X, wl).
 
-7. Y checks there exists a tij such that BC(X,w 1) - ti(Ibo-a) ~ (mod N).
+7. Y checks there exists a tij such that BC(X,w 1) - ti(Ibo-a)  (mod N).
 
 The following results are easily obtained by the properties of the basic protocol.
 
-Len~aa 12. (Soundness) Under Assumption 4, there exists a probabilistic algorithm M such that, for any probabilistic poly-time algorithm 50", if probabilistic
+Lenaa 12. (Soundness) Under Assumption 4, there exists a probabilistic algorithm M such that, for any probabilistic poly-time algorithm 50", if probabilistic
 interactive algorithm (50",V) accepts with non-negligible probability in INI, then
-M with ABC and 50* as oracles can extract 7 satisfying I = bo ~ rood N with
+M with ABC and 50* as oracles can extract 7 satisfying I = bo  rood N with
 overwhelming probability in IN[ where I is given by 50*as output. The success
 probability of (50",1) ) is taken over the coin tosses of 50* and V (including
 ABC), while the success probability of M over those of ABe, 50* and M.
@@ -326,8 +326,8 @@ checking protocol is statistically witness indistinguishable over R( N,bo).(2)
 
 3.4 Comparing Protocol
 
-Let Rl3),bo,bl,, ) := (((I1,I2), (x, rl,r2))]It = BCbo(X, rl),I~ = BC~(x, r2)}. The
-comparing protocol is WI over the relation ~(3) "~(N,bo,bl,~)' in which 50 can convince
+Let Rl3),bo,bl,, ) := (((I1,I2), (x, rl,r2))]It = BCbo(X, rl),I = BC(x, r2)}. The
+comparing protocol is WI over the relation (3) "(N,bo,bl,)' in which 50 can convince
 l) that he knows (x, rl,r2) such that/1 = BCbo(X, rl) and I2 = BCa(x, rz).
 
 [Comparing Protocol]
@@ -337,21 +337,21 @@ l) that he knows (x, rl,r2) such that/1 = BCbo(X, rl) and I2 = BCa(x, rz).
 2. 50 sets 11 = BCbo(x, rl) and 12 = BCa(x, r2), and sends them to ]) .
 0 1 2 
 
-3. P computes, for 1 _< i, j < 2, tii = BCbo (w ~ wJ, w, 2) and u,j = BCa(w i , Tlj , 71~j).
+3. P computes, for 1 _< i, j < 2, tii = BCbo (w  wJ, w, 2) and u,j = BCa(w i , Tlj , 71j).
 
 4. 50 sends to V, four unordered pairs, (ti,3, uij)'s.
 
-5. V picks a c ER [ 0, 2 "~) and sends it to 50 .
+5. V picks a c ER [ 0, 2 ") and sends it to 50 .
 
-6. 50 sets X := cx+w o i, R1 := crl +wJ, and R2 := cr2+w~ such that
-X, R1 , R2 9 [ 0, 22'~N). 50 then sends to V , the pair, (X, R1, R~, wi,~, 2 7h,k). 2 
+6. 50 sets X := cx+w o i, R1 := crl +wJ, and R2 := cr2+w such that
+X, R1 , R2 9 [ 0, 22'N). 50 then sends to V , the pair, (X, R1, R, wi,, 2 7h,k). 2 
 
-7. V checks that there exists a pair ( tl,j, u~,k ) such that
+7. V checks that there exists a pair ( tl,j, u,k ) such that
 
-BCbo(X, Rl,W, 2) - ti,jI~ (mod N) and BC,(X, R2,~j) = u,,j~ (rood N).
+BCbo(X, Rl,W, 2) - ti,jI (mod N) and BC,(X, R2,j) = u,,j (rood N).
 
 If l) sets a new base a, he has to convince P that there exists an a such that
-a = b0 ~ mod N before executing this protocol, but in many cases, a is set by 7) as
+a = b0  mod N before executing this protocol, but in many cases, a is set by 7) as
 a := 11. Note that in the case of a :=/1, 7) can show )2/2 = BCbo(x2,rlxl +r2).
 This means P can convince ]) that commitments, BCbo (x, rl) and BCbo (y, r2),
 satisfy y = x 2.
@@ -360,8 +360,8 @@ The following results are easily obtained by the properties of the basic protoco
 
 Lem_ma 14. (Soundness) Under Assumption 4, there exists a probabilistic algorithm M such that, for any probabilistic poly-time algorithm 7)*, i] probabilistic
 interactive algorithm (P*,V ) accepts with non-negligible probability in INI, then
-M, with A B C and 7)*as oracles, can extract ( x, r l , 7"2) with overwhelming probability in INI, where (/1,I2) is given by 7)*as output, and h = bo~b~ ~ mod N,
-I2 = a~b~ 2 mod N. The success probability of (7)*,)2) is taken over the coin
+M, with A B C and 7)*as oracles, can extract ( x, r l , 7"2) with overwhelming probability in INI, where (/1,I2) is given by 7)*as output, and h = bob  mod N,
+I2 = ab 2 mod N. The success probability of (7)*,)2) is taken over the coin
 tosses of P* and ]2 (including ABe), while the success probability of M over
 those of ABe, 7 )* and M.
 
@@ -372,8 +372,8 @@ R(3)
 
 3.5 Mod-Multi Protocol
 
-R(4) .-s Let .~(N,bo,bl).-- t ((Ii,I2, I3),(xl,r,,..,x3,r3)) I Ii = BC(x~,r~), x3 -- XlX2
-(mod n) }. The mod-multi protocol is WI over the relation n(4) (We call it "~( N,bo,bl )
+R(4) .-s Let .(N,bo,bl).-- t ((Ii,I2, I3),(xl,r,,..,x3,r3)) I Ii = BC(x,r), x3 -- XlX2
+(mod n) }. The mod-multi protocol is WI over the relation n(4) (We call it "( N,bo,bl )
 a rood-multi protocol to confirm x3 - XlX2 (mod n)). In the mod-multi protocol, 7) can convince V that he knows (xl,x2,x3,rl,r2,r3) such that x3 - xlx2
 (mod n), where/1 = BCbo(Xl, rl), I2 = BCbo (x2, r2) and/3 = BCbo(X3, r3).
 
@@ -384,18 +384,18 @@ a rood-multi protocol to confirm x3 - XlX2 (mod n)). In the mod-multi protocol, 
 2. P sets Ii ----- BCbo(Xl,rl), 12 = BCbo(X2,r2), and Is = BCbo(Xs, rs), and
 sends them to l).
 
-3. P sets I 5 = BCl2(Xl,r4) = BCbo(X, x2,rsxl + r4), and Ia = BC~(d, rd)
+3. P sets I 5 = BCl2(Xl,r4) = BCbo(X, x2,rsxl + r4), and Ia = BC(d, rd)
 where d = (xs - XlX2)/n.
 
-4. P executes in parallel with ]2 the comparing protocol for (I1,I~) and the
+4. P executes in parallel with ]2 the comparing protocol for (I1,I) and the
 three basic protocols for/2,/3, and Id.
 
 5. P computes 7 = (r2xl + r4 + rdn) -- r3, and executes with ]2 the checking
-protocol for b~ = I3(I~Id~) -1 rood N and range [ -2"~N, 22"~+1N) over the
-relation ~(2) "~(N,b~)"
+protocol for b = I3(IId) -1 rood N and range [ -2"N, 22"+1N) over the
+relation (2) "(N,b)"
 
 In this protocol, P executes one comparing protocol, three basic protocols,
-and one checking protocol for b~ in parallel. (in the case of xl = x2 the number
+and one checking protocol for b in parallel. (in the case of xl = x2 the number
 of the basic protocols is reduced to two). This protocol is also WI. 
 
 Lemma 16. (Soundness) Under Assumption 4, there exists a probabilistic algorithm M such that, for any probabilistic poly-time algorithm 7 9., if probabilistic
@@ -430,12 +430,12 @@ We show, as an example, a WI protocol to confirm y -- ax 5 + b mod n.
 Let [Xl,X2;X3] be the mod-multi protocol to confirm xa - xlx2 (mod n)
 and let [Xl;X2] be the mod-multi protocol to confirm x2 - Xl 2 (mod n).
 
-Prover 79 sets (Iy, Ix, Id, I1,12,13) as (BCbo (y, r~), BCbo (x, r), BCbo (d, rd),
+Prover 79 sets (Iy, Ix, Id, I1,12,13) as (BCbo (y, r), BCbo (x, r), BCbo (d, rd),
 BCbo(tl), BCbo(t2), BCbo(t3,r3)) where d = y-(at3+b) tl = x 2 modn, t2
 x 4 mod n and t 3 = X 5 mod n. 7 ) executes with V the two basic protocols for I v
 and Id and the three mod-multi protocols, [x; tl], [tl; t2], and [x, t2; t3], in parallel.
-79 then executes with V a checking protocol for b~ and range [ -2raN, 22re+iN),
-where 7 = ar3 + rdn -- ry and b~ =_ I~bob(IyId) -1 (mod N).
+79 then executes with V a checking protocol for b and range [ -2raN, 22re+iN),
+where 7 = ar3 + rdn -- ry and b =_ Ibob(IyId) -1 (mod N).
 
 4 Statistical Zero Knowledge Protocol
 
@@ -476,8 +476,8 @@ BC(y, rt+l), and y =_ f(xl,..,xt) (mod n) where y = 0.
 
 5. %; checks that It+l = BC(O, rt+O (mod N).
 
-Prover 7 ~ Verifier %)
-( ~l~rl~ ..,xt,rt,O, rt+l )
+Prover 7  Verifier %)
+( lrl ..,xt,rt,O, rt+l )
 set-up procedure
 for (N, bo, bl, b2) (
 11, ..., It+l
@@ -507,8 +507,8 @@ Sketch of Proof:
 Assume that (79",])) has non-negligible success probability. The sketch of the
 proof is as follows: M executes, with 79", the set-up procedure for parameters
 (N, bo,bl,b2) given by ABe, in which M should convince 7 9* that he knows
-c~, c~ -1, ~, and ~-1 such that bl -- bo a mod N, and b2 = bo ~ mod N. Instead
-of using the values, c~, a -1, f~, and/~-1, M can execute the set-up procedure
+c, c -1, , and -1 such that bl -- bo a mod N, and b2 = bo  mod N. Instead
+of using the values, c, a -1, f, and/-1, M can execute the set-up procedure
 using the resetable simulation technique for 79* because the set-up procedure is a
 zero-knowledge system of (M, 79*). After M completes the set-up procedure, 79*
 sends to M, 11, .., It, and It+l to start a WI protocol. Note that this protocol has
@@ -524,25 +524,25 @@ from the output of M with 1)* as an oracle.
 
 Sketch of Proof:
 
-Let M be an expected poly-time algorithm allowed to use V* as an oracle. M can extract a and c~ -1 from 1)* in the set-up procedure. Let L :=
+Let M be an expected poly-time algorithm allowed to use V* as an oracle. M can extract a and c -1 from 1)* in the set-up procedure. Let L :=
 aa -1 - 1. Note that the order of b0, bl, and b2 divides L. Next, M chooses
-x~,rl, 9 .,xt,rt,rt+l ' ' ER [ 0, 2raN) and sets If, ..., I~ ' and/t+l := BC(O, rt+l).
-M computes y := f(x~,..,x~t)mod n and r~+ 1 :-- rt+l -a-ly mod L. Note
-that It+l = BC(O, rt+l) = BC(y,r~+l). M executes with 1)* a (statistical)
-WI protocol over the relation ((/~, .., If,/t+l), (x~, r~, .., x~, r~, y, r~+l) ) such that
-If = BC(x:,r~) (i = 1,..,t),/t+l = BC(y,r~+I), and y - f(Xl,..,xt) (mod n).
+x,rl, 9 .,xt,rt,rt+l ' ' ER [ 0, 2raN) and sets If, ..., I ' and/t+l := BC(O, rt+l).
+M computes y := f(x,..,xt)mod n and r+ 1 :-- rt+l -a-ly mod L. Note
+that It+l = BC(O, rt+l) = BC(y,r+l). M executes with 1)* a (statistical)
+WI protocol over the relation ((/, .., If,/t+l), (x, r, .., x, r, y, r+l) ) such that
+If = BC(x:,r) (i = 1,..,t),/t+l = BC(y,r+I), and y - f(Xl,..,xt) (mod n).
 Finally, M sends rt+l to 1)*.
 
 Here the distribution of (I1, ---, /t, /t+l) such that /, = BC(xi,r,) (i =
-1,..,t),/t+l = BC(O, rt+l) and f(Xl, ..,xt) = 0 (mod n) and that of (/~, ...,
-g, /t+l) such that Ii = BC(x:,r~) (i = 1,..,t), It+l = BC(y,r't+l) and y =
+1,..,t),/t+l = BC(O, rt+l) and f(Xl, ..,xt) = 0 (mod n) and that of (/, ...,
+g, /t+l) such that Ii = BC(x:,r) (i = 1,..,t), It+l = BC(y,r't+l) and y =
 f(Xl, .., xt) (mod n) are statistically indistinguishable. In addition, for common
-input (I~, ..., If, /t+l) the protocols with witness (Xl, rl, ..., xt, rt, O, rt+l)
-and with witness (x~, r~, ..., x~, r~, y, r~+l) are statistically indistinguishable.
+input (I, ..., If, /t+l) the protocols with witness (Xl, rl, ..., xt, rt, O, rt+l)
+and with witness (x, r, ..., x, r, y, r+l) are statistically indistinguishable.
 Therefore the view of 1;* is also statistically indistinguishable from the output
 ofM v*. []
 
-Example 1. Suppose that f(X) -- X ~ - m (mod n). :P can prove, in the statistical zero knowledge manner, that he knows s such that f(s) -- 0 (rood n) and
+Example 1. Suppose that f(X) -- X  - m (mod n). :P can prove, in the statistical zero knowledge manner, that he knows s such that f(s) -- 0 (rood n) and
 BC(s).
 
 Remark. Although the set-up procedure is described in the first step of the
@@ -560,41 +560,41 @@ those of [Dam93, Dam95] for our gradual release protocol. The protocol is as
 follows:
 
 V executes with 7 ) a set-up procedure and they hold parameters ( N, b0, bl, b2)
-in common. Pand Vset I such that Is t < I and compute b~ :- b 2~modN
+in common. Pand Vset I such that Is t < I and compute b :- b 2modN
 ( V should prove that he knows (21) -1 mod pq in the ZK manner to show that bl
-and b~ have the same order) (set-up phase). P sends to V, (m, BCbo,b,~(s, rl),
-BCbo,b,~ (0, r2)). For parameters (N, b0, b~, b2), 7 ~ executes, with V, the protocol
-to confirm that BCb,e~ (s, rl) and BCb,b,~ (0, r2) satisfy the relation s ~ - m -= 0
-(mod n), where (e, n) are RSA (or Rabin) public-key. P then open the commitment BCb,b,~ ( 0, r) (confirming phase). 7 ) releases the secret s bit by bit from
-the least-significant bit (LSB). Let sk be the remaining secret of s after k bit release. :P opens the LSB of sk by revealing X~+x -- bo~=~b~ 2~-k-~ mod N. V can
-know the LSB of sk by checking Xk -= X~+lbo i (mod N) (bit by bit release
+and b have the same order) (set-up phase). P sends to V, (m, BCbo,b,(s, rl),
+BCbo,b, (0, r2)). For parameters (N, b0, b, b2), 7  executes, with V, the protocol
+to confirm that BCb,e (s, rl) and BCb,b, (0, r2) satisfy the relation s  - m -= 0
+(mod n), where (e, n) are RSA (or Rabin) public-key. P then open the commitment BCb,b, ( 0, r) (confirming phase). 7 ) releases the secret s bit by bit from
+the least-significant bit (LSB). Let sk be the remaining secret of s after k bit release. :P opens the LSB of sk by revealing X+x -- bo=b 2-k- mod N. V can
+know the LSB of sk by checking Xk -= X+lbo i (mod N) (bit by bit release
 phase).
 
 6 Efficiency
 
 We compare our protocols with those in [Dam95] from the view points of computational and communication complexity. In [Dam95], the commitment is defined
-by the form BC(s,r) = gSr2~ mod N. As our comparing and rood-multi protocols are constructed in a similar manner to those in [Dam95], it is enough to
+by the form BC(s,r) = gSr2 mod N. As our comparing and rood-multi protocols are constructed in a similar manner to those in [Dam95], it is enough to
 compare our basic protocol with that in [Dam95]. Our comparing protocol is
 composed of at most two basic protocols and our mod-multi protocol consists of
 three basic, a comparing, and a checking protocols. Therefore those in [Dam95]
 have nearly the same construction. We assume below that m = INI = Inl = Ic[.
 
 We estimate the computational complexity of the both basic protocols from
-the number of modular multiplications. In our basic protocol, P needs to compute four auxiliary parameters, tij's (tij = boW~ and ]) needs to check
-the verification tijI c = boXb~b2 '~, where Iw~ = Iw~l = IXI = ]R I = 122mY[ =
-3m and Iwi~l = [2mNI = 2m./~ and V both need O(m) modular multiplications
-of N (about 32m, 9m respectively). In Damgs basic protocol, 7 ~ needs to
-compute 2m auxiliary parameters, ti's (ti = gW~ and V needs to check
-m verifications, tiI= gXR2', where Iw~ = Iwll = IXt = 3m and l = 2m.
+the number of modular multiplications. In our basic protocol, P needs to compute four auxiliary parameters, tij's (tij = boW and ]) needs to check
+the verification tijI c = boXbb2 ', where Iw = Iwl = IXI = ]R I = 122mY[ =
+3m and Iwil = [2mNI = 2m./ and V both need O(m) modular multiplications
+of N (about 32m, 9m respectively). In Damgs basic protocol, 7  needs to
+compute 2m auxiliary parameters, ti's (ti = gW and V needs to check
+m verifications, tiI= gXR2', where Iw = Iwll = IXt = 3m and l = 2m.
 P and V both need O(m 2) modular multiplications of N (about 6m 2, 3m 2 respectively). Accordingly, our protocol is about O(m) times more efficient than
 Darags
 
 The amount of communication in our basic protocol is O(m) bits since 4]tijl+
 Icl + IXI + IRI + Iw2jI = 8m while that of [Dam95] is O(m 2) bits since m. (21ti I +
 IX] + IRI) = 4m 2. Hence, the communication complexity of ours is also Oim )
-times less than that of Damg~rd's.
+times less than that of Damgrd's.
 Comparing our protocols with those in [Oka95], the modulus size of Okamoto's
-bit commitment, BC(s, r) = g~G r mod p, should be at least twice ours. Hence, 
+bit commitment, BC(s, r) = gG r mod p, should be at least twice ours. Hence, 
 our protocol is about O(m 3) times more efficient than [Oka95]. The communication complexity of ours is also O(m) times less than that of [Oka95].
 
 7 Conclusions
@@ -665,38 +665,38 @@ Protocol:
 Step 1 M inputs llnl to ABe and gets parameter (N, b0, bl,b2).
 Step 2 M executes, with P*, the set-up procedure for parameters (N, b0, bl, b2),
 in which M should convince P* that he knows a, a -1, /3, and/3-1
-such that bl = b0 ~ mod N, and b2 -- b0 ~ mod N. Instead of using
+such that bl = b0  mod N, and b2 -- b0  mod N. Instead of using
 the values, a, a -I,/3, and/3 -1, M can execute the set-up procedure
-using the resetable simulation technique for 7 ~* because the set-up
+using the resetable simulation technique for 7 * because the set-up
 procedure is a zero-knowledge system of (M, P*).
-Step 3 M can extract (ti,3, c, X, R, w~,j) and (rid, c', X', R~, w2i,p ~ for the same
+Step 3 M can extract (ti,3, c, X, R, w,j) and (rid, c', X', R, w2i,p  for the same
 ti,j, by using P* as an oracle.
-AX AX ) Step 4 M outputs (~, zxc as a witness of I, where Ac := c - c', AX :=
+AX AX ) Step 4 M outputs (, zxc as a witness of I, where Ac := c - c', AX :=
 X-X'andAR:=R-R I.
 We explain Step 3 and Step 4.
-Consider Step 3. Let ei,z be the success probability of (P*,V) with the conversation, (ti,j, c, X,R, w~5 ). Note that at least one of e,,j's is non-negligible if
-(7~*,V) accepts with non-negligible probability. Then M can find two different
+Consider Step 3. Let ei,z be the success probability of (P*,V) with the conversation, (ti,j, c, X,R, w5 ). Note that at least one of e,,j's is non-negligible if
+(7*,V) accepts with non-negligible probability. Then M can find two different
 pairs for a ti,j in expected polynomial time in INI. Indeed, the following strategy
 succeeds with overwhelming probability (See also [FFS88]):
 1. For any (i,j), do the following steps.
 2. Probe O(1/e) random entries in Hi,j (Here Hi,j's are boolean matrices and
 each Hi,j's rows corresponds to all possible states a of RP and its columns
-correspond to all possible choices c of RV, where the RP is 7~*'s random
+correspond to all possible choices c of RV, where the RP is 7*'s random
 tape, and the RV is V's random tape. ).
-3. If find the first (ti,j, c, X, R, w,,~) 2 which (P*,V) accepts, then probe O(1/e)
+3. If find the first (ti,j, c, X, R, w,,) 2 which (P*,V) accepts, then probe O(1/e)
 random entries along the same row in order to find (tis, ca, X' .... R' w 2 jj which
 (:P*,V) accepts.
-In Step 4, (t~5,c,X,R, wi2,j) and (t,,j,c', X' , R' , w ~,j, 2 ~ satisfy that X - cx +
-w~~ X' - c'x + w i~ R - cr + w~ modpq, and R ~ :- e~R +
-w~ mod pq. Therefore,
+In Step 4, (t5,c,X,R, wi2,j) and (t,,j,c', X' , R' , w ,j, 2  satisfy that X - cx +
+w X' - c'x + w i R - cr + w modpq, and R  :- eR +
+w mod pq. Therefore,
 AX_=Ac.x (modpq) and AR=Ac.r (modpq). (3)
 M can obtain x and r only AX and AR dividing by Ac respectively, with
 overwhelming probability in IN[ under Assumption 4. 
 30
-Let a0 E Zpq such that bl = b~ ~ mod N. Let d := gcd(Ac, AX + ARao).
+Let a0 E Zpq such that bl = b  mod N. Let d := gcd(Ac, AX + ARao).
 From (3), the following relation holds
-/iX +/iRt~o -/ic(x + rao) (mod pq). (4)
-Here we replace, without loss of generality, P* with the poly-time bounded machine which, on input (N, b0, bl, b~) given by ABe, outputs (I, Ac,/iX,/iR) with
+/iX +/iRto -/ic(x + rao) (mod pq). (4)
+Here we replace, without loss of generality, P* with the poly-time bounded machine which, on input (N, b0, bl, b) given by ABe, outputs (I, Ac,/iX,/iR) with
 overwhelming probability in INI. We consider a poly-time bounded algorithm M'
 using :P* as an oracle in the following:
 Algorithm M t
@@ -705,17 +705,17 @@ Algorithm M t
 bl = C a mod N.
 3. M t inputs (N,C, bl,b2) to P*.
 4. If :P* returns (I,/ic,/iX,/iR), go to the next step, otherwise M halts.
-5. M ~ outputs (IYC z mod N, _~_e) and halts, where Y and Z are integers such
+5. M  outputs (IYC z mod N, __e) and halts, where Y and Z are integers such
 that
 /iX +/iRay /ic
-d +---~Z=I.
-Note that C - C ,~x+.,R. d Y +-4~--Z = I-Z- ,~cy C-~ ,c z = (iYcZ) ~- (mod N).
-If d ~ /ic, M ~ is a machine, with :P* as an oracle, which can solve the
+d +---Z=I.
+Note that C - C ,x+.,R. d Y +-4--Z = I-Z- ,cy C- ,c z = (iYcZ) - (mod N).
+If d  /ic, M  is a machine, with :P* as an oracle, which can solve the
 modified RSA problem with non-negligible probability. It contradicts Assumption 4. Therefore d = /ic, namely/icl(/iX + Alia). Moreover, (/ic,/iX,/iR)
-must satisfy that/icl/iX and Acl/iR to hold d --/ic. Let a = a0 + ~pq. From
+must satisfy that/icl/iX and Acl/iR to hold d --/ic. Let a = a0 + pq. From
 d =/ic,
-/iX +/iP~ /iX +/iRao +/iP~,
+/iX +/iP /iX +/iRao +/iP,
 /ic /ic
-As even an infinite power 7 ~* can never know ~, The condition of/icl/iX and
+As even an infinite power 7 * can never know , The condition of/icl/iX and
 /icl/iR has to be held to satisfy that of d =/ic.
 Thus, M can extract (x, r) with overwhelming probability in INI. [] 
