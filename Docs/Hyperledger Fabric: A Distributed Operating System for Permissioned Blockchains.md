@@ -17,6 +17,7 @@ cryptocurrency. This stands in sharp contrast to existing blockchain platforms t
 domain-specific languages or rely on a cryptocurrency. Fabric realizes the permissioned model using a portable notion of membership,
 which may be integrated with industry-standard identity management. To support such flexibility, Fabric introduces an entirely novel
 blockchain design and revamps the way blockchains cope with nondeterminism, resource exhaustion, and performance attacks.
+
 This paper describes Fabric, its architecture, the rationale behind various design decisions, its most prominent implementation
 aspects, as well as its distributed application programming model.
 We further evaluate Fabric by implementing and benchmarking
@@ -24,7 +25,9 @@ a Bitcoin-inspired digital currency. We show that Fabric achieves
 end-to-end throughput of more than 3500 transactions per second
 in certain popular deployment configurations, with sub-second
 latency, scaling well to over 100 peers.
+
 1 INTRODUCTION
+
 A blockchain can be defined as an immutable ledger for recording
 transactions, maintained within a distributed network of mutually
 untrusting peers. Every peer maintains a copy of the ledger. The
@@ -33,6 +36,7 @@ them into blocks, and build a hash chain over the blocks. This
 process forms the ledger by ordering the transactions, as is necessary for consistency. Blockchains have emerged with Bitcoin [3]
 and are widely regarded as a promising technology to run trusted
 exchanges in the digital world.
+
 In a public or permissionless blockchain anyone can participate
 without a specific identity. Public blockchains typically involve a
 native cryptocurrency and often use consensus based on “proof of
@@ -41,6 +45,7 @@ on the other hand, run a blockchain among a set of known, identified participant
 secure the interactions among a group of entities that have a common goal but which do not fully trust each other, such as businesses
 that exchange funds, goods, or information. By relying on the identities of the peers, a permissioned blockchain can use traditional
 Byzantine-fault tolerant (BFT) consensus.
+
 Blockchains may execute arbitrary, programmable transaction
 logic in the form of smart contracts, as exemplified by Ethereum [5].
 The scripts in Bitcoin were a predecessor of the concept. A smart
@@ -55,6 +60,7 @@ distributed applications run concurrently; (2) applications may be
 deployed dynamically and by anyone; and (3) the application code is
 untrusted, potentially even malicious. These differences necessitate
 new designs.
+
 Many existing smart-contract blockchains follow the blueprint
 of SMR [48] and implement so-called active replication [27]: a protocol for consensus or atomic broadcast first orders the transactions
 and propagates them to all peers; and second, each peer executes
@@ -67,25 +73,33 @@ not immediately apparent in all systems, because the additional
 transaction validation step may blur it, its limitations are inherent
 in all: every peer executes every transaction and transactions must
 be deterministic.
+
 Prior permissioned blockchains suffer from many limitations,
 which often stem from their permissionless relatives or from using
 the order-execute architecture. In particular:
+
 • Consensus is hard-coded within the platform, which contradicts the well-established understanding that there is no
 “one-size-fits-all” (BFT) consensus protocol [52];
+
 • The trust model of transaction validation is determined by
 the consensus protocol and cannot be adapted to the requirements of the smart contract;
+
 • Smart contracts must be written in a fixed, non-standard, or
 domain-specific language, which hinders wide-spread adoption and may lead to programming errors;
+
 • The sequential execution of all transactions by all peers limits
 performance, and complex measures are needed to prevent
 denial-of-service attacks against the platform originating
 from untrusted contracts (such as accounting for runtime
 with “gas” in Ethereum);
+
 • Transactions must be deterministic, which can be difficult to
 ensure programmatically;
+
 • Every smart contract runs on all peers, which is at odds with
 confidentiality, and prohibits the dissemination of contract
 code and state to a subset of peers.
+
 In this paper we describe Hyperledger Fabric or simply Fabric,
 an open-source [8] blockchain platform that overcomes these limitations. Fabric is one of the projects of Hyperledger [7] under the
 auspices of the Linux Foundation [11]. Fabric is used in more than
@@ -93,21 +107,25 @@ auspices of the Linux Foundation [11]. Fabric is used in more than
 cases include but are not limited to areas such as dispute resolution, trade logistics, FX netting, food safety, contract management,
 diamond provenance, rewards point management, low liquidity
 securities trading and settlement, identity management, and settlement through digital currency.
+
 Fabric introduces a new blockchain architecture aiming at resiliency, flexibility, scalability, and confidentiality. Designed as
 a modular and extensible general-purpose permissioned blockchain, Fabric is the first blockchain system to support the execution of distributed applications written in standard programming
 languages, in a way that allows them to be executed consistently
 across many nodes, giving impression of execution on a single
 globally-distributed blockchain computer. This makes Fabric the
 first distributed operating system [54] for permissioned blockchains.
+
 The architecture of Fabric follows a novel execute-order-validate
 paradigm for distributed execution of untrusted code in an untrusted environment. It separates the transaction flow into three
 steps, which may be run on different entities in the system: (1) executing a transaction and checking its correctness, thereby endorsing
 it (corresponding to “transaction validation” in other blockchains);
 (2) ordering through a consensus protocol, irrespective of transaction semantics; and (3) transaction validation per applicationspecific trust assumptions, which also prevents race conditions due
 to concurrency.
+
 This design departs radically from the order-execute paradigm
 in that Fabric typically executes transactions before reaching final agreement on their order. It combines the two well-known
 approaches to replication, passive and active, as follows.
+
 First, Fabric uses passive or primary-backup replication [21, 27]
 as often found in distributed databases, but with middleware-based
 asymmetric update processing [40, 41] and ported to untrusted
@@ -116,6 +134,7 @@ executed (endorsed) only by a subset of the peers, which allows for
 parallel execution and addresses potential non-determinism, drawing on “execute-verify” BFT replication [37]. A flexible endorsement
 policy specifies which peers, or how many of them, need to vouch
 for the correct execution of a given smart contract.
+
 Second, Fabric incorporates active replication in the sense that
 the transaction’s effects on the ledger state are only written after
 reaching consensus on a total order among them, in the deterministic validation step executed by each peer individually. This allows
@@ -129,25 +148,32 @@ trust assumption of a particular deployment. Although it is readily
 possible to use the blockchain peers also for implementing consensus, the separation of the two roles adds flexibility and allows one
 to rely on well-established toolkits for CFT (crash fault-tolerant) or
 BFT ordering.
+
 Overall, this hybrid replication design, which mixes passive and
 active replication in the Byzantine model, and the execute-ordervalidate paradigm, represent the main innovation in Fabric architecture. They resolve the issues mentioned before and make Fabric
 a scalable system for permissioned blockchains supporting flexible
 trust assumptions.
+
 To implement this architecture, Fabric contains modular building
 blocks for each of the following components:
-2
+
 • An ordering service atomically broadcasts state updates to
 peers and establishes consensus on the order of transactions.
+
 • A membership service provider is responsible for associating
 peers with cryptographic identities. It maintains the permissioned nature of Fabric.
+
 • An optional peer-to-peer gossip service disseminates the blocks
 output by ordering service to all peers.
+
 • Smart contracts in Fabric run within a container environment
 for isolation. They can be written in standard programming
 languages but do not have direct access to the ledger state.
+
 • Each peer locally maintains the ledger in the form of the
 append-only blockchain and as a snapshot of the most recent
 state in a key-value store.
+
 The remainder of this paper describes the architecture of Fabric
 and our experience with it. Section 2 summarizes the state of the
 art and explains the rationale behind various design decisions. Section 3 introduces the architecture and the execute-order-validate
@@ -161,12 +187,16 @@ of more than 3500 tps, achieving finality [57] with latency of a few
 hundred ms and scaling well to over 100 peers. In Section 6 we
 discuss a few real production use cases of Fabric. Finally, Section 7
 discusses related work.
+
 2 BACKGROUND
+
 2.1 Order-Execute Architecture for
 Blockchains
+
 All previous blockchain systems, permissioned or not, follow the
 order-execute architecture. This means that the blockchain network orders transactions first, using a consensus protocol, and then
 executes them in the same order on all peers sequentially.1
+
 For instance, a PoW-based permissionless blockchain such as
 Ethereum combines consensus and execution of transactions as
 follows: (1) every peer (i.e., a node that participates in consensus) assembles a block containing valid transactions (to establish validity,
@@ -178,27 +208,20 @@ thereby repeats the execution of the lucky peer from its first step.
 Moreover, all peers execute the transactions sequentially (within
 one block and across blocks). The order-execute architecture is
 illustrated by Fig. 1.
+
 Existing permissioned blockchains such as Tendermint, Chain, or
 Quorum typically use BFT consensus [24], provided by PBFT [26] or
 other protocols for atomic broadcast. Nevertheless, they all follow
-1
-In many blockchains with a hard-coded primary application, such as Bitcoin,
-this transaction execution is called “transaction validation.” Here we call this step
-transaction execution to harmonize the terminology. Order Execute Update state
-● Deterministic (!)
-execution
-● Persist state on
-all peers
-● Consensus or
-atomic broadcast
-Figure 1: Order-execute architecture in replicated services.
 the same order-execute approach and implement classical active
 SMR [27, 48].
+
 2.2 Limitations of Order-Execute
+
 The order-execute architecture is conceptually simple and therefore
 also widely used. However, it has several drawbacks when used in
 a general-purpose permissioned blockchain. We discuss the three
 most significant ones next.
+
 Sequential execution. Executing the transactions sequentially on
 all peers limits the effective throughput that can be achieved by
 the blockchain. In particular, since the throughput is inversely proportional to the execution latency, this may become a performance
@@ -210,6 +233,7 @@ reduces the performance of such a blockchain, could simply introduce smart contr
 example, a smart contract that executes an infinite loop has a fatal
 effect, but cannot be detected automatically because the halting
 problem is unsolvable.
+
 To cope with this issue, public programmable blockchains with a
 cryptocurrency account for the execution cost. Ethereum [58], for
 example, introduces the concept of gas consumed by a transaction
@@ -219,6 +243,7 @@ low-level computation step, introducing its own VM for controlling
 execution. Although this appears to be a viable solution for public
 blockchains, it is not adequate in the permissioned model for a
 general-purpose system without a native cryptocurrency.
+
 The distributed-systems literature proposes many ways to improve performance compared to sequential execution, for instance
 through parallel execution of unrelated operations [46]. Unfortunately, such techniques are still to be applied successfully in the
 blockchain context of smart contracts. For instance, one challenge
@@ -226,16 +251,17 @@ is the requirement for deterministically inferring all dependencies
 across smart contracts, which is particularly challenging when combined with possible confidentiality constraints. Furthermore, these
 techniques are of no help against DoS attacks by contract code from
 untrusted developers.
+
 Non-deterministic code. Another important problem for an orderexecute architecture are non-deterministic transactions. Operations
 executed after consensus in active SMR must be deterministic, or
 the distributed ledger “forks” and violates the basic premise of a
 blockchain, that all peers hold the same state. This is usually addressed by programming blockchains in domain-specific languages
-3
 (e.g., Ethereum Solidity) that are expressive enough for their applications but limited to deterministic execution. However, such
 languages are difficult to design for the implementer and require
 additional learning by the programmer. Writing smart contracts
 in a general-purpose language (e.g., Go, Java, C/C++) instead appears more attractive and accelerates the adoption of blockchain
 solutions.
+
 Unfortunately, generic languages pose many problems for ensuring deterministic execution. Even if the application developer
 does not introduce obviously non-deterministic operations, hidden
 implementation details can have the same devastating effect (e.g., a
@@ -245,19 +271,23 @@ on the potentially untrusted programmer. Only one non-deterministic contract cre
 whole blockchain to a halt. A modular solution to filter diverging
 operations on a blockchain has also been investigated [23], but it
 appears costly in practice.
+
 Confidentiality of execution. According to the blueprint of public
 blockchains, many permissioned systems run all smart contracts
 on all peers. However, many intended use cases for permissioned blockchains require confidentiality, i.e., that access to smartcontract logic, transaction data, or ledger state can be restricted.
 Although cryptographic techniques, ranging from data encryption
 to advanced zero-knowledge proofs [18] and verifiable computation [42], can help to achieve confidentiality, this often comes with
 a considerable overhead and is not viable in practice.
+
 Fortunately, it suffices to propagate the same state to all peers
 instead of running the same code everywhere. Thus, the execution
 of a smart contract can be restricted to a subset of the peers trusted
 for this task, that vouch for the results of the execution. This design departs from active replication towards a variant of passive
 replication [21], adapted to the trust model of blockchain.
+
 2.3 Further Limitations of Existing
 Architectures
+
 Fixed trust model. Most permissioned blockchains rely on asynchronous BFT replication protocols to establish consensus [57].
 Such protocols typically rely on a security assumption that among
 n > 3f peers, up to f are tolerated to misbehave and exhibit socalled Byzantine faults [20]. The same peers often execute the applications as well, under the same security assumption (even though
@@ -265,6 +295,7 @@ one could actually restrict BFT execution to fewer peers [59]). However, such a 
 roles in the system, may not match the trust required for smartcontract execution. In a flexible system, trust at the application
 level should not be fixed to trust at the protocol level. A generalpurpose blockchain should decouple these two assumptions and
 permit flexible trust models for applications.
+
 Hard-coded consensus. Fabric is the first blockchain system that
 introduced pluggable consensus. Before Fabric, virtually all blockchain systems, permissioned or not, came with a hard-coded consensus protocol. However, decades of research on consensus protocols
 have shown there is no such “one-size-fits-all” solution. For instance,
@@ -280,11 +311,14 @@ to a given blockchain deployment scenario. Indeed, one may want to
 replace BFT consensus with a protocol based on an alternative trust
 model such as XFT [43], or a CFT protocol, such as Paxos/Raft [45]
 and ZooKeeper [36], or even a permissionless protocol.
+
 2.4 Experience with Order-Execute Blockchain
+
 Prior to realizing the execute-order-validate architecture of Fabric, we gained experience with building a permissioned blockchain
 platform in the order-execute model, with PBFT [26] for consensus. Namely, previous versions of Fabric (up to v0.6, released in
 September 2016) have been architected following the ‘traditional‘
 order-execute architecture.
+
 From feedback obtained in many proof-of-concept applications,
 the limitations of this approach became immediately clear. For
 instance, users often observed diverging states at the peers and reported a bug in the consensus protocol; in all cases, closer inspection
@@ -296,40 +330,27 @@ properties of a blockchain system, namely consistency, security,
 and performance, must not depend on the knowledge and goodwill
 of its users, in particular since the blockchain should run in an
 untrusted environment.
+
 3 ARCHITECTURE
+
 In this section, we introduce the three-phase execute-order-validate
 architecture and then explain the transaction flow.
+
 3.1 Fabric Overview
+
 Fabric is a distributed operating system for permissioned blockchains that executes distributed applications written in generalpurpose programming languages (e.g., Go, Java, Node.js). It securely
 tracks its execution history in an append-only replicated ledger
 data structure and has no cryptocurrency built in.
+
 Fabric introduces the execute-order-validate blockchain architecture (illustrated in Fig. 2) and does not follow the standard orderexecute design, for reasons explained in Section 2. In a nutshell, a
 distributed application for Fabric consists of two parts:
+
 • A smart contract, called chaincode, which is program code
 that implements the application logic and runs during the
 execution phase. The chaincode is the central part of a distributed application in Fabric and may be written by an untrusted developer. Special chaincodes exist for managing the
 blockchain system and maintaining parameters, collectively
 called system chaincodes (Sec. 4.6).
-4
-Update state
-● Order rw-sets
-● Atomic broadcast
-(consensus)
-● Stateless ordering
-service
-● Persist state on all
-peers
-● Simulate trans.
-and endorse
-● Create rw-set
-● Collect endorsements
-Execute Order Validate
-✓
-● Validate endorsements & rw-sets
-● Eliminate invalid
-and conflicting
-trans.
-Figure 2: Execute-order-validate architecture of Fabric (rwset means a readset and writeset as explained in Sec. 3.2).
+
 • An endorsement policy that is evaluated in the validation
 phase. Endorsement policies cannot be chosen or modified
 by untrusted application developers. An endorsement policy acts as a static library for transaction validation in Fabric, which can merely be parameterized by the chaincode.
@@ -341,6 +362,7 @@ of peers that are necessary for endorsement; it uses a monotone logical expressi
 “(A ∧ B) ∨ C.” Custom endorsement policies may implement
 arbitrary logic (e.g., our Bitcoin-inspired cryptocurrency in
 Sec. 5.1).
+
 A client sends transactions to the peers specified by the endorsement policy. Each transaction is then executed by specific peers
 and its output is recorded; this step is also called endorsement. After
 execution, transactions enter the ordering phase, which uses a pluggable consensus protocol to produce a totally ordered sequence
@@ -355,39 +377,24 @@ novel hybrid replication paradigm in the Byzantine model, which
 combines passive replication (the pre-consensus computation of
 state updates) and active replication (the post-consensus validation
 of execution results and state changes).
+
 A Fabric blockchain consists of a set of nodes that form a network
 (see Fig. 3). As Fabric is permissioned, all nodes that participate in
 the network have an identity, as provided by a modular membership
 service provider (MSP) (Sec. 4.1). Nodes in a Fabric network take up
 one of three roles:
+
 • Clients submit transaction proposals for execution, help orchestrate the execution phase, and, finally, broadcast transactions for ordering.
+
 • Peers execute transaction proposals and validate transactions.
 All peers maintain the blockchain ledger, an append-only
 data structure recording all transactions in the form of a
 hash chain, as well as the state, a succinct representation of
 the latest ledger state. Not all peers execute all transaction
-Appl.
-MSP
-P
-SDK
-P P P P P P
-SDK
-OSN
-P
-OSN OSN OSN OSN
-Client
-Ordering
-service
-Peer-to-peer gossip
-Peers (P)
-Client
-Appl.
-Appl.
-Figure 3: A Fabric network with federated MSPs and running
-multiple (differently shaded and colored) chaincodes, selectively installed on peers according to policy.
 proposals, only a subset of them called endorsing peers (or,
 simply, endorsers) does, as specified by the policy of the
 chaincode to which the transaction pertains.
+
 • Ordering Service Nodes (OSN) (or, simply, orderers) are the
 nodes that collectively form the ordering service. In short, the
 ordering service establishes the total order of all transactions
@@ -399,6 +406,7 @@ do not participate in the execution nor in the validation
 of transactions. This design choice renders consensus in
 Fabric as modular as possible and simplifies replacement of
 consensus protocols in Fabric.
+
 A Fabric network actually supports multiple blockchains connected to the same ordering service. Each such blockchain is called
 a channel and may have different peers as its members. Channels
 can be used to partition the state of the blockchain network, but
@@ -406,11 +414,14 @@ consensus across channels is not coordinated and the total order of
 transactions in each channel is separate from the others. Certain deployments that consider all orderers as trusted may also implement
 by-channel access control for peers. In the following we mention
 channels only briefly and concentrate on one single channel.
+
 In the next three sections we explain the transaction flow in
 Fabric (depicted in Fig. 4) and illustrate the steps of the execution,
 ordering, and validation phases. Then, we summarize the trust and
 fault model of Fabric (Sec. 3.5).
+
 3.2 Execution Phase
+
 In the execution phase, clients sign and send the transaction proposal
 (or, simply, proposal) to one or more endorsers for execution. Recall
 that every chaincode implicitly specifies a set of endorsers via
@@ -420,38 +431,11 @@ the form of an operation to execute, parameters, and the identifier
 of the chaincode, a nonce to be used only once by each client (such
 as a counter or a random value), and a transaction identifier derived
 from the client identifier and the nonce.
-5
-client endorsing
-peer 1
-endorsing
-peer 2
-endorsing
-peer 3
-Peer
-(non-endorsing)
-ordering service
-orderers
-Invocation Commit
-1
-1 1
-2
-3
-4
-4
-5
-5
-5 5
-1 Chaincode
-execution
-2
-Endorsement
-collection 3/4 Ordering
-Broadcast/Delivery
-5 Validation
-Figure 4: Fabric high level transaction flow.
+
 The endorsers simulate the proposal, by executing the operation
 on the specified chaincode, which has been installed on the blockchain. The chaincode runs in a Docker container, isolated from the
 main endorser process.
+
 A proposal is simulated against the endorser’s local blockchain
 state, without synchronization with other peers. Moreover, endorsers do not persist the results of the simulation to the ledger
 state. The state of the blockchain is maintained by the peer transaction manager (PTM) in the form of a versioned key-value store,
@@ -461,6 +445,7 @@ directly by another chaincode. Note that the chaincode is not supposed to mainta
 it maintains in the blockchain state that is accessed with GetState,
 PutState, and DelState operations. Given the appropriate permission, a chaincode may invoke another chaincode to access its state
 within the same channel.
+
 As a result of the simulation, each endorser produces a value
 writeset, consisting of the state updates produced by simulation
 (i.e., the modified keys along with their new values), as well as
@@ -473,6 +458,7 @@ satisfy the endorsement policy of the chaincode, which the transaction invokes (
 as determined by the policy to produce the same execution result
 (i.e., identical readset and writeset). Then, the client proceeds to
 create the transaction and passes it to the ordering service.
+
 Discussion on design choices. As the endorsers simulate the proposal without synchronizing with other endorsers, two endorsers
 may execute it on different states of the ledger and produce different outputs. For the standard endorsement policy which requires
 multiple endorsers to produce the same result, this implies that
@@ -481,6 +467,7 @@ client may not be able to satisfy the endorsement policy. This is a
 new consideration compared to primary-backup replication in replicated databases with synchronization through middleware [40]: a
 consequence of the assumption that no single peer is trusted for
 correct execution in a blockchain.
+
 We consciously adopted this design, as it considerably simplifies
 the architecture and is adequate for typical blockchain applications. As demonstrated by the approach of Bitcoin, distributed
 applications can be formulated such that contention by operations
@@ -491,18 +478,22 @@ attack [44]). In the future, we plan to gradually enhance the liveness semantics
 CRDTs [51] for complementing the current version dependency
 checks, as well as a per-chaincode lead-endorser that would act as
 a transaction sequencer.
+
 Executing a transaction before the ordering phase is critical to
 tolerating non-deterministic chaincodes (see also Sec. 2). A chaincode in Fabric with non-deterministic transactions can only endanger the liveness of its own operations, because a client might not
 gather a sufficient number of endorsements, for instance. This is
 a fundamental advantage over order-execute architecture, where
 non-deterministic operations lead to inconsistencies in the state of
 the peers.
+
 Finally, tolerating non-deterministic execution also addresses
 DoS attacks from untrusted chaincode as an endorser can simply
 abort an execution according to a local policy if it suspects a DoS
 attack. This will not endanger the consistency of the system, and
 again, such unilateral abortion of execution is not possible in orderexecute architectures.
+
 3.3 Ordering Phase
+
 When a client has collected enough endorsements on a proposal,
 it assembles a transaction and submits this to the ordering service.
 The transaction contains the transaction payload (i.e., the chaincode operation including parameters), transaction metadata, and a
@@ -513,24 +504,28 @@ consensus on transactions, despite faulty orderers. Moreover, the ordering servi
 a hash-chained sequence of blocks containing transactions. Grouping or batching transactions into blocks improves the throughput
 of the broadcast protocol, which is a well-known technique used in
 fault-tolerant broadcasts.
+
 At a high level, the interface of the ordering service only supports
 the following two operations invoked by a peer and implicitly
 parameterized by a channel identifier:
+
 • broadcast(tx): A client calls this operation to broadcast an
 arbitrary transaction tx, which usually contains the transaction payload and a signature of the client, for dissemination.
+
 • B ← deliver(s): A client calls this to retrieve block B with
 non-negative sequence number s. The block contains a list
 of transactions [tx1, . . . ,txk
 ] and a hash-chain value h representing the block with sequence number s − 1, i.e., B =
 ([tx1, . . . ,txk
 ],h). As the client may call this multiple times
-6
 and always returns the same block once it is available, we
 say the peer delivers block B with sequence number s when
 it receives B for the first time upon invoking deliver(s).
+
 The ordering service ensures that the delivered blocks on one
 channel are totally ordered. More specifically, ordering ensures the
 following safety properties for each channel:
+
 Agreement: For any two blocks B delivered with sequence numbers and B
 ′ delivered with s
 ′
@@ -540,6 +535,7 @@ at correct peers such thats = s
 it holds B = B
 ′
 .
+
 Hash chain integrity: If some correct peer delivers a block B
 with number s and another correct peer delivers block B
 ′ =
@@ -549,18 +545,24 @@ with number s and another correct peer delivers block B
 ) with numbers+1, then it holds h
 ′ = H(B),
 where H(·) denotes the cryptographic hash function.
+
 No skipping: If a correct peerp delivers a block with numbers > 0
 then for each i = 0, . . . ,s − 1, peer p has already delivered a
 block with number i.
+
 No creation: When a correct peer delivers block B with number s,
 then for every tx ∈ B some client has already broadcast tx.
+
 For liveness, the ordering service supports at least the following
 “eventual” property:
+
 Validity: If a correct client invokes broadcast(tx), then every correct peer eventually delivers a block B that includes tx, with
 some sequence number.
+
 However, every individual ordering implementation is allowed to
 come with its own liveness and fairness guarantees with respect to
 client requests.
+
 Since there may be a large number of peers in the blockchain
 network, but only relatively few nodes are expected to implement
 the ordering service, Fabric can be configured to use a built-in gossip
@@ -569,10 +571,12 @@ to all peers (Sec. 4.3). The implementation of gossip is scalable and
 agnostic to the particular implementation of the ordering service,
 hence it works with both CFT and BFT ordering services, ensuring
 the modularity of Fabric.
+
 The ordering service may also perform access control checks to
 see if a client is allowed to broadcast messages or receive blocks on
 a given channel. This and other features of the ordering service are
 further explained in Section 4.2.
+
 Discussion on design choices. It is very important that the ordering service does not maintain any state of the blockchain, and
 neither validates nor executes transactions. This architecture is
 a crucial, defining feature of Fabric, and makes Fabric the first
@@ -585,10 +589,13 @@ require the ordering service to prevent transaction duplication. This
 simplifies its implementation and is not a concern since duplicated
 transactions are filtered in the read-write check by the peers during
 validation.
+
 3.4 Validation Phase
+
 Blocks are delivered to peers either directly by the ordering service
 or through gossip. A new block then enters the validation phase
 which consists of three sequential steps:
+
 (1) The endorsement policy evaluation occurs in parallel for all
 transactions within the block. The evaluation is the task of
 the so-called validation system chaincode (VSCC), a static
@@ -597,10 +604,12 @@ responsible for validating the endorsement with respect to
 the endorsement policy configured for the chaincode (see
 Sec. 4.6). If the endorsement is not satisfied, the transaction
 is marked as invalid and its effects are disregarded.
+
 (2) A read-write conflict check is done for all transactions in the
 block sequentially. For each transaction it compares the versions of the keys in the readset field to those in the current
 state of the ledger, as stored locally by the peer, and ensures
 they are still the same. If the versions do not match, the transaction is marked as invalid and its effects are disregarded.
+
 (3) The ledger update phase runs last, in which the block is
 appended to the locally stored ledger and the blockchain
 state is updated. In particular, when adding the block to the
@@ -610,12 +619,14 @@ transactions that are valid within the block. This facilitates
 the reconstruction of the state at a later time. Furthermore,
 all state updates are applied by writing all key-value pairs
 in writeset to the local state.
+
 The default VSCC in Fabric allows monotone logical expressions
 over the set of endorsers configured for a chaincode to be expressed.
 The VSCC evaluation verifies that the set of peers, as expressed
 through valid signatures on endorsements of the transaction, satisfy
 the expression. Different VSCC policies can be configured statically,
 however.
+
 Discussion on design choices. The ledger of Fabric contains all
 transactions, including those that are deemed invalid. This follows
 from the overall design, because ordering service, which is agnostic
@@ -629,13 +640,15 @@ would be to black-list such clients according to a policy that could
 be put in place. Furthermore, a specific deployment could implement transaction fees (using our currency implementation from
 Sec. 5.1 or another approach) to charge for transaction invocation,
 which would render a DoS attack prohibitively expensive.
+
 3.5 Trust and Fault Model
+
 Fabric can accommodate flexible trust and fault assumptions. In
 general, any client is considered potentially malicious or Byzantine.
 Peers are grouped into organizations and every organization forms
-7
 one trust domain, such that a peer trusts all peers within its organization but no peer of another organization. The ordering service
 considers all peers (and clients) as potentially Byzantine.
+
 The integrity of a Fabric network relies on the consistency of the
 ordering service. The trust model of the ordering service depends
 directly on its implementation (see Sec. 3.3). As of release v1.0.6,
@@ -643,28 +656,21 @@ Fabric supports a centralized, single-node implementation, used
 in development and testing, and a CFT ordering service running
 on a cluster. A third implementation, a proof of concept based on
 BFT-SMaRt [19], tolerates up to one third of Byzantine OSNs [53].
+
 Note that Fabric decouples the trust model for applications from
 the trust model of consensus. Namely, a distributed application can
 define its own trust assumptions, which are conveyed through the
 endorsement policy, and are independent from those of consensus
 implemented by the ordering service (see also Sec. 3.4).
+
 4 FABRIC COMPONENTS
+
 Fabric is written in Go and uses the gRPC framework [6] for communication between clients, peers, and orderers. In the following
 we describe some important components in more detail. Figure 5
 shows the components of a peer.
-Committer
-Peer
-Endorser
-Ledger
-Gossip
-KVS
-Validation, configuration, sys. chaincode
-Block store, peer trans. manager (PTM)
-LevelDB, CouchDB
-Peer-to-peer block gossip
-Chaincode execution, containers
-Figure 5: Components of a Fabric peer.
+
 4.1 Membership Service
+
 The membership service provider (MSP) maintains the identities of
 all nodes in the system (clients, peers, and OSNs) and is responsible
 for issuing node credentials that are used for authentication and
@@ -674,6 +680,7 @@ digital signatures. The membership service comprises a component
 at each node, where it may authenticate transactions, verify the
 integrity of transactions, sign and validate endorsements, and authenticate other blockchain operations. Tools for key management
 and registration of nodes are also part of the MSP.
+
 The MSP is an abstraction for which different instantiations
 are possible. The default MSP implementation in Fabric handles
 standard PKI methods for authentication based on digital signatures
@@ -682,31 +689,40 @@ A stand-alone CA is provided as well with Fabric, called Fabric-CA.
 Furthermore, alternative MSP implementations are envisaged, such
 as one relying on anonymous credentials for authorizing a client
 to invoke a transaction without linking this to an identity [25].
+
 Fabric allows two modes for setting up a blockchain network.
 In offline mode, credentials are generated by a CA and distributed
 out-of-band to all nodes. Peers and orderers can only be registered
 in offline mode. For enrolling clients, Fabric-CA provides an online
 mode that issues cryptographic credentials to them. The MSP configuration must ensure that all nodes, especially all peers, recognize
 the same identities and authentications as valid.
+
 The MSP permits identity federation, for example, when multiple
 organizations operate a blockchain network. Each organization
 issues identities to its own members and every peer recognizes
 members of all organizations. This can be achieved with multiple
 MSP instantiations, for example, by creating a mapping between
 each organization and an MSP.
+
 4.2 Ordering Service
+
 The ordering service manages multiple channels. On every channel,
 it provides the following services:
+
 (1) Atomic broadcast for establishing order on transactions, implementing the broadcast and deliver calls (Sec. 3.3).
+
 (2) Reconfiguration of a channel, when its members modify the
 channel by broadcasting a configuration update transaction
 (Sec. 4.6).
+
 (3) Optionally, access control, in those configurations where the
 ordering service acts as a trusted entity, restricting broadcasting of transactions and receiving of blocks to specified
 clients and peers.
+
 The ordering service is bootstrapped with a genesis block on the
 system channel. This block carries a configuration transaction that
 defines the ordering service poroperties.
+
 The current production implementation consists of ordering-service nodes (OSNs) that implement the operations described here
 and communicate through the system channel. The actual atomic
 broadcast function is provided by an instance of Apache Kafka
@@ -714,6 +730,7 @@ broadcast function is provided by an instance of Apache Kafka
 consistency despite node crashes, based on ZooKeeper. Kafka may
 run on physical nodes separate from the OSNs. The OSNs act as
 proxies between the peers and Kafka.
+
 An OSN directly injects a newly received transaction to the
 atomic broadcast (e.g., to the Kafka broker). OSNs batch transactions
 received from the atomic broadcast and form blocks. A block is cut
@@ -722,6 +739,7 @@ the specified maximal number of transactions; (2) the block has
 reached a maximal size (in bytes); or (3) an amount of time has
 elapsed since the first transaction of a new block was received, as
 explained below.
+
 This batching process is deterministic and therefore produces
 the same blocks at all nodes. It is easy to see that the first two conditions are trivially deterministic, given the stream of transactions
 received from the atomic broadcast. To ensure deterministic block
@@ -733,17 +751,19 @@ sequence number of the block which it intends to cut. On the other
 hand, every OSN immediately cuts a new block upon receiving the
 first time-to-cut transaction for the given block number. Since this
 transaction is atomically delivered to all connected OSNs, they all
-8
 include the same list of transactions in the block. The OSNs persist a range of the most recently delivered blocks directly to their
 filesystem, so they can answer to peers retrieving blocks through
 deliver.
+
 The ordering service based on Kafka is one of three implementations currently available. A centralized orderer, called Solo, runs on
 one node and is used for development. A proof-of-concept ordering
 service based on BFT-SMaRt [19] has also been made available [53];
 it ensures the atomic broadcast service, but not yet reconfiguration
 and access control. This illustrates the modularity of consensus in
 Fabric.
+
 4.3 Peer Gossip
+
 One advantage of separating the execution, ordering, and validation phases is that they can be scaled independently. However,
 since most consensus algorithms (in the CFT and BFT models) are
 bandwidth-bound, the throughput of the ordering service is capped
@@ -757,6 +777,7 @@ utilizes epidemic multicast [29] for this purpose. The blocks are
 signed by the ordering service. This means that a peer can, upon
 receiving all blocks, independently assemble the blockchain and
 verify its integrity.
+
 The communication layer for gossip is based on gRPC and utilizes
 TLS with mutual authentication, which enables each side to bind
 the TLS credentials to the identity of the remote peer. The gossip
@@ -764,6 +785,7 @@ component maintains an up-to-date membership view of the online
 peers in the system. All peers independently build a local view from
 periodically disseminated membership data. Furthermore, a peer
 can reconnect to the view after a crash or a network outage.
+
 Fabric gossip uses two phases for information dissemination:
 during push, each peer selects a random set of active neighbors
 from the membership view, and forwards them the message; during
@@ -776,14 +798,18 @@ the ordering nodes to the network, the protocol also elects a leader
 peer that pulls blocks from the ordering service on their behalf
 and initiates the gossip distribution. This mechanism is resilient to
 leader failures.
+
 4.4 Ledger
+
 The ledger component at each peer maintains the ledger and the
 state on persistent storage and enables simulation, validation, and
 ledger-update phases. Broadly, it consists of a block store and a peer
 transaction manager.
+
 The ledger block store persists transaction blocks and is implemented as a set of append-only files. Since the blocks are immutable
 and arrive in a definite order, an append-only structure gives maximum performance. In addition, the block store maintains a few
 indices for random access to a block or to a transaction in a block.
+
 The peer transaction manager (PTM) maintains the latest state
 in a versioned key-value store. It stores one tuple of the form
 (key, val, ver) for each unique entry key stored by any chaincode,
@@ -792,6 +818,7 @@ ver. The version consists of the block sequence number and the sequence number o
 block. This makes the version unique and monotonically increasing.
 The PTM uses a local key-value store to realize its versioned variant, with implementations using LevelDB (in Go) [10] and Apache
 CouchDB [1].
+
 During simulation the PTM provides a stable snapshot of the
 latest state to the transaction. As mentioned in Section 3.2, the
 PTM records in readset a tuple (key, ver) for each entry accessed by
@@ -800,6 +827,7 @@ with PutState by the transaction. In addition, the PTM supports
 range queries, for which it computes a cryptographic hash of the
 query results (a set of tuples (key, ver)) and adds the query string
 itself and the hash to readset.
+
 For transaction validation (Sec. 3.4), the PTM validates all transactions in a block sequentially. This checks whether a transaction
 conflicts with any preceding transaction (within the block or earlier). For any key in readset, if the version recorded in readset differs
 from the version present in the latest state (assuming that all preceding valid transactions are committed), then the PTM marks
@@ -807,6 +835,7 @@ the transaction as invalid. For range queries, the PTM re-executes
 the query and compares the hash with the one present in readset,
 to ensure that no phantom reads occur. This read-write conflict
 semantics results in one-copy serializability [39].
+
 The ledger component tolerates a crash of the peer during the
 ledger update as follows. After receiving a new block, the PTM
 has already performed validation and marked transactions as valid
@@ -817,22 +846,28 @@ transactions to the local versioned store. Finally, it computes and
 persists a value savepoint, which denotes the largest successfully
 applied block number. The value savepoint is used to recover the indices and the latest state from the persisted blocks when recovering
 from a crash.
+
 4.5 Chaincode Execution
+
 Chaincode is executed within an environment loosely coupled to
 the rest of the peer, which supports plugins for adding new chaincode programming languages. Currently Go, Java, and Node are
 supported.
+
 Every user-level or application chaincode runs in a separate process within a Docker container environment, which isolates the
 chaincodes from each other and from the peer. This also simplifies the management of the lifecycle for chaincodes (i.e., starting,
 stopping, or aborting chaincode). The chaincode and the peer communicate using gRPC messages. Through this loose coupling, the
-9
 peer is agnostic of the actual language in which chaincode is implemented.
+
 In contrast to application chaincode, system chaincode runs directly in the peer process. System chaincode can implement specific
 functions needed by Fabric and may be used in situations where the
 isolation among user chaincodes is overly restrictive. More details
 on system chaincodes are given in the next section.
+
 4.6 Configuration and System Chaincodes
+
 Fabric is customized through channel configuration and through
 special chaincodes, known as system chaincodes.
+
 Recall each channel in Fabric forms one logical blockchain. The
 configuration of a channel is maintained in metadata persisted in
 special configuration blocks. Each configuration block contains the
@@ -844,6 +879,7 @@ shared configuration for the consensus implementation and the ordering service, 
 access to the ordering service operations (broadcast, and deliver),
 and (5) rules governing how each part the channel configuration
 may be modified.
+
 The configuration of a channel may be updated using a channel
 configuration update transaction. This transaction contains a representation of the changes to be made to the configuration, as well as
 a set of signatures. The ordering service nodes evaluate whether
@@ -853,6 +889,7 @@ new configuration and the configuration update transaction. Peers
 receiving this block validate whether the configuration update is
 authorized based on the current configuration; if valid, they update
 their current configuration.
+
 The application chaincodes are deployed with a reference to an
 endorsement system chaincode (ESCC) and to a validation system
 chaincode (VSCC). These two chaincodes are selected such that the
@@ -867,7 +904,9 @@ For the default VSCC, the endorsements are collected and evaluated
 against the endorsement policy specified for the chaincode. Further
 system chaincodes implement other support functions, such as
 chaincode lifecycle.
+
 5 EVALUATION
+
 Even though Fabric is not yet performance-tuned and optimized, we
 report in this section on some preliminary performance numbers.
 Fabric is a complex distributed system; its performance depends on
@@ -876,6 +915,7 @@ and transaction size, the ordering service and consensus implementation and thei
 of nodes in the network, the hardware on which nodes run, the number of nodes and channels, further configuration parameters, and
 the network dynamics. Therefore, in-depth performance evaluation
 of Fabric is postponed to future work.
+
 In the absence of a standard benchmark for blockchains, we use
 the most prominent blockchain application for evaluating Fabric, a
 simple authority-minted cryptocurrency that uses the data model of
@@ -884,10 +924,13 @@ This allows us to put the performance of Fabric in the context
 of other permissioned blockchains, which are often derived from
 Bitcoin or Ethereum. For example, it is also the application used in
 benchmarks of other permissioned blockchains [35, 50].
+
 In the following, we first describe Fabcoin (Sec. 5.1), which also
 demonstrates how to customize the validation phase and endorsement policy. In Section 5.2 we present the benchmark and discuss
 our results.
+
 5.1 Fabric Coin (Fabcoin)
+
 UTXO cryptocurrencies. The data model introduced by Bitcoin [44]
 has become known as “unspent transaction output” or UTXO, and
 is also used by many other cryptocurrencies and distributed applications. UTXO represents each step in the evolution of a data object
@@ -900,6 +943,7 @@ designating the miner as the owner. Any coin can be spent in the
 sense that the coin is assigned to a new owner by a transaction that
 atomically destroys the current coin state designating the previous
 owner and creates another coin state representing the new owner.
+
 We capture the UTXO model in the key-value store of Fabric as
 follows. Each UTXO state corresponds to a unique KVS entry that
 is created once (the coin state is “unspent”) and destroyed once (the
@@ -908,6 +952,7 @@ KVS entry with logical version 0 after creation; when it is destroyed
 again, it receives version 1. There should not be any concurrent
 updates to such entries (e.g., attempting to update a coin state in
 different ways amounts to double-spending the coin).
+
 Value in the UTXO model is transferred through transactions
 that refer to several input states that all belong to the entity issuing
 the transaction. An entity owns a state because the public key of
@@ -918,17 +963,18 @@ the values in the input states equals the sum of the output states’
 values. There is also a policy determining how value is created (e.g.,
 coinbase transactions in Bitcoin or specific mint operations in other
 systems) or destroyed.
+
 Fabcoin implementation. Each state in Fabcoin is a tuple of the
 form (key, val) = (txid.j, (amount, owner, label)), denoting the coin
 state created as the j-th output of a transaction with identifier txid
 and allocating amount units labeled with label to the entity whose
-10
 public key is owner. Labels are strings used to identify a given
 type of a coin (e.g., ‘USD‘, ‘EUR‘, ‘FBC‘). Transaction identifiers are
 short values that uniquely identify every Fabric transaction. The
 Fabcoin implementation consists of three parts: (1) a client wallet,
 (2) the Fabcoin chaincode, and (3) a custom VSCC for Fabcoin
 implementing its endorsement policy.
+
 Client wallet. By default, each Fabric client maintains a Fabcoin wallet that locally stores a set of cryptographic keys allowing
 the client to spend coins. For creating a spend transaction that
 transfers one or more coins, the client wallet creates a Fabcoin
@@ -950,6 +996,7 @@ nonce. Fabcoin may be configured to use multiple CBs or specify a
 threshold number of signatures from a set of CBs. Finally, the client
 wallet includes the Fabcoin request into a transaction and sends
 this to a peer of its choice.
+
 Fabcoin chaincode. A peer runs the chaincode of Fabcoin which
 simulates the transaction and creates readsets and writesets. In a
 nutshell, in the case of a spend transaction, for every input coin
@@ -965,6 +1012,7 @@ but it allows the (correct) peers to filter out potentially malformed
 transactions. In our implementation, the chaincode runs the Fabcoin
 VSCC without cryptographically verifying the signatures (these
 are verified only in the actual VSCC).
+
 Custom VSCC. Finally, every peer validates Fabcoin transactions
 using a custom VSCC. This verifies the cryptographic signature(s)
 in sigs under the respective public key(s) and performs semantic
@@ -977,6 +1025,7 @@ amounts for all input coin states equals the sum of amounts of all
 output coin states, and (3) that input and output coin labels match.
 Here, the VSCC obtains the input coin amounts by retrieving their
 current values from the ledger.
+
 Note that the Fabcoin VSCC does not check transactions for
 double spending, as this occurs through Fabric’s standard validation
 that runs after the custom VSCC. In particular, if two transactions
@@ -987,7 +1036,9 @@ to Sections 3.4 and 4.4, the PTM verifies that the current version
 number stored in the ledger matches the one in the readset; hence,
 after the first transaction has changed the version of the coin state,
 the transaction ordered second will be recognized as invalid.
+
 5.2 Experiments
+
 Setup. Unless explicitly mentioned differently, in our experiments: (1) nodes run on Fabric version v1.1.0-preview2
 instrumented for performance evaluation through local logging, (2) nodes
 are hosted in a single IBM Cloud (SoftLayer) data center (DC) as
@@ -1001,6 +1052,7 @@ and all being Fabcoin endorsers, and (6) signatures use the default
 the transaction flow spanning multiple nodes, the node clocks are
 synchronized with an NTP service throughout the experiments. All
 communication among Fabric nodes is configured to use TLS.
+
 Methodology. In every experiment, in the first phase we invoke
 transactions that contain only Fabcoin mint operations to produce
 the coins, and then run a second phase of the experiment in which
@@ -1014,18 +1066,19 @@ state of an experiment, disregarding the “tail,” where some client
 threads already stop submitting their share of transactions. In every
 experiment, the client threads collectively invoke at least 500k mint
 and spend transactions.
+
 Experiment 1: Choosing the block size. A critical Fabric configuration parameter that impacts both throughput and latency is block
 size. To fix the block size for subsequent experiments, and to evaluate the impact of block size on performance, we ran experiments
 varying block size from 0.5MB to 4MB. Results are depicted in Fig. 6,
 showing peak throughput measured at the peers along with the
 corresponding average end-to-end (e2e) latency.
+
 We can observe that throughput does not significantly improve
 beyond a block size of 2MB, but latency gets worse (as expected).
 2Patched with commit IDs 9e770062 and eb437dab in the Fabric master branch.
-11
-Figure 6: Impact of block size on throughput and latency.
 Therefore, we adopt 2MB as the block size for the following experiments, with the goal of maximizing the measured throughput,
 assuming the end-to-end latency of roughly 500ms is acceptable.
+
 Size of transactions. During this experiment, we also observed
 the size mint and spend transactions. In particular, the 2MB-blocks
 contained 473 mint or 670 spend transactions, i.e., the average
@@ -1033,15 +1086,18 @@ transaction size is 3.06kB for spend and 4.33kB for mint. In general, transactio
 information. Besides, mint transactions of Fabcoin are larger than
 spend transactions because they carry CB certificates. This is an
 avenue for future improvement of both Fabric and Fabcoin.
+
 Experiment 2: Impact of peer CPU. Fabric peers run many CPUintensive cryptographic operations. To estimate the impact of CPU
 power on throughput, we performed a set of experiments in which
 4 peers run on 4, 8, 16, and 32 vCPU VMs, while also doing coarsegrained latency staging of block validation to identify bottlenecks.
+
 Our experiment focused on the validation phase, as ordering
 with the Kafka ordering service has never been a bottleneck in our
 cluster experiments (within one data center). The validation phase,
 and in particular the VSCC validation of Fabcoin, is computationally intensive, due to its many digital signature verifications. We
 calculate the validation throughput at the peer based on measuring
 validation phase latency locally at the peer.
+
 The results, with 2MB blocks, are shown in Fig. 7, for blocks
 containing mint (Fig. 7a) and spend (Fig. 7b) operations. For both
 operations the measured throughput and latency scale in the same
@@ -1053,43 +1109,32 @@ dominant with a larger number of cores (vCPUs). This is in particular noticeable
 mint transactions can fit into a 2MB block, which prolongs the
 duration of the sequential validation stages (i.e., read-write-check
 and ledger-access).
+
 This experiment suggests that future versions of Fabric could
 profit from pipelining the validation stages (which are now sequential), removing sequential overhead in the peer that causes a
-(a) Blocks containing only mint transactions.
-(b) Blocks containing only spend transactions.
-Figure 7: Impact of peer CPU on end-to-end throughput, validation throughput and block validation latency.
 noticeable difference between validation and end-to-end throughput, optimizing stable-storage access, and parallelizing read-write
 dependency checks.
+
 Finally, in this experiment, we measured over 3560 transactions
 per second (tps) average spend (end-to-end) throughput at the 32-
 vCPU peer. The mint throughput is, in general, slightly lower than
 that of spend, but the difference is within 10%, with 32-vCPU peer
 reaching over 3420 tps average mint throughput.
+
 Latency profiling by stages. We further performed coarse-grained
 profiling of latency during our previous experiment at the peak
 reported throughput. Results are depicted in Table 1. The ordering
 phase comprises broadcast-deliver latency and internal latency
 within a peer before validation starts. The table reports average
 latencies for mint and spend, standard deviation, and tail latencies.
+
 We observe that ordering dominates the overall latency. We
 also see that average latencies lie below 550ms with sub-second
 tail latencies. In particular, the highest end-to-end latencies in our
 experiment come from the first blocks, during the load build-up.
 Latency under lower load can be regulated and reduced using the
 time-to-cut parameter of the orderer (see Sec. 3.3), which we basically do not use in our experiments, as we set it to a large value.
-12
-avg st.dev 99% 99.9%
-(1) endorsement 5.6 / 7.5 2.4 / 4.2 15 / 21 19 / 26
-(2) ordering 248 / 365 60.0 / 92.0 484 / 624 523 / 636
-(3) VSCC val. 31.0 / 35.3 10.2 / 9.0 72.7 / 57.0 113 / 108.4
-(4) R/W check 34.8 / 61.5 3.9 / 9.3 47.0 / 88.5 59.0 / 93.3
-(5) ledger 50.6 / 72.2 6.2 / 8.8 70.1 / 97.5 72.5 / 105
-(6) validation (3+4+5) 116 / 169 12.8 / 17.8 156 / 216 199 / 230
-(7) end-to-end (1+2+6) 371 / 542 63 / 94 612 / 805 646 / 813
-Table 1: Latency statistics in milliseconds (ms) for mint and
-spend, broken down into five stages at a 32-vCPU peer with
-2MB blocks. Validation (6) comprises stages 3, 4, and 5; the
-end-to-end latency contains stages 1–5.
+
 Experiment 3: SSD vs. RAM disk. To evaluate the potential gains
 related to stable storage, we repeated the previous experiment with
 RAM disks (tmpfs) mounted as stable storage at all peer VMs. The
@@ -1097,15 +1142,17 @@ benefits are limited, as tmpfs only helps with the ledger phase of
 the validation at the peer. We measured sustained peak throughput
 at 3870 SPEND tps at 32-vCPU peer, roughly a 9% improvement
 over SSD.
+
 Experiment 4: Scalability on LAN. In this and the following experiment we increase the number of peers (with 16 vCPUs each) to
 evaluate the scalability of Fabric.
+
 In this experiment we maintain one peer per organization hosted
 in a single IBM Cloud DC (Hong Kong, HK). All peers receive blocks
 directly from the ordering service without gossip. We start from 20
 peers (10 of which are Fabcoin endorsers) and increase the number
 of peers to 100. The achievable peak throughput in function of the
 number of peers is depicted in Fig. 8 (“LAN” suffix).
-Figure 8: Impact of varying number of peers on nonendorsing peer throughput.
+
 We observe that the Kafka ordering service handles the added
 number of peers well and scales with the increase. As peers connect
 randomly to OSNs, the bandwidth of 3 OSNs should become a
@@ -1114,6 +1161,7 @@ However, this does not occur. We tracked down the reason for
 this and found that the provisioned bandwidth in the IBM Cloud
 was higher than nominal one, with netperf reporting consistently
 5-6.5Gbps between pairs of nodes.
+
 Experiment 5: Scalability over two DCs and impact of gossip. In a
 follow-up experiment, we moved the ordering service, 10 endorsers,
 and the clients to the nearby Tokyo (TK) data center, leaving the
@@ -1124,12 +1172,14 @@ peers in HK from 20 to 80, maintaining direct connectivity with the
 ordering service (i.e., one peer per org), in addition to 10 endorsing
 peers in TK. The single-TCP netperf throughput reported between
 two VMs in TK and HK is 240 Mbps on average.
+
 The peak throughput in function of the (total) number of peers is
 depicted in Fig. 8 (“2DC” suffix). We clearly see that the throughput
 is basically the same as in the previous experiment with 30 peers,
 but it drops when the number of peers increases. The throughput
 is reduced since the network connections of 3 OSNs in TK are saturated. We measured 1910 tps mint and 2190 tps spend throughput
 (at HK peers) with a total of 90 peers in this configuration.
+
 To cope with this, and to improve the scalability over a WAN,
 Fabric may employ gossip (Sec. 4.3). We repeated the last measurement with 80 peers in HK (totaling 90 peers) but reconfigured these
 peers into 8 orgs of 10 peers each. In this configuration, only one
@@ -1140,6 +1190,7 @@ throughput at HK peers, which means that gossip nicely serves its
 intended function. The throughput is somewhat lower than in the
 LAN experiment, as org leader peers (directly connected to OSNs
 in both experiments) now need to manage gossip as well.
+
 Experiment 6: Performance over multiple data centers (WAN). Finally, we extend the last experiment to 5 different data centers:
 Tokyo (TK), Hong Kong (HK), Melbourne (ML), Sydney (SD), and
 Oslo (OS), with 20 peers in each data center, totaling 100 peers. As
@@ -1150,17 +1201,7 @@ center, fanout 7). The results are summarized in Table 2, averaged
 across peers belonging to same data center. For reference, the first
 row of the table shows the netperf throughput between a VM in a
 given data center and TK.
-HK ML SD OS
-netperf to TK [Mbps] 240 98 108 54
-peak mint / spend
-throughput [tps]
-(without gossip)
-1914 / 2048 1914 / 2048 1914 / 2048 1389 / 1838
-peak mint / spend
-throughput [tps]
-(with gossip)
-2553 / 2762 2558 / 2763 2271 / 2409 1484 / 2013
-Table 2: Experiment with 100 peers across 5 data centers.
+
 The results again clearly show the benefits of using gossip when
 the peers are scattered over a WAN. We observe interesting results
 with the peers in OS and SD compared to HK and ML. The lower
@@ -1173,8 +1214,9 @@ OS to TK, as our netperf measurement suggests. Hence, the true
 benefits of gossip in OS cannot be observed; we attribute the slight
 improvement in throughput in OS in the experiment with gossip
 to fewer TCP connections running from OS to TK.
-13
+
 6 APPLICATIONS AND USE CASES
+
 Major cloud operators already offer (or have announced) “blockchainas-a-service” running Fabric, including Oracle, IBM, and Microsoft.
 Moreover, Fabric currently powers more than 400 prototypes and
 proofs-of-concepts of distributed ledger technology and several
@@ -1182,6 +1224,7 @@ production systems, across different industries and use cases [47].
 Examples include a food-safety network [16], cloud-service blockchain platforms for banking [31], and a digital global shipping
 trade [33] solution. In this section, we illustrate some real use cases
 where Fabric has been deployed.
+
 Foreign exchange (FX) netting. A system for bilateral payment
 netting of foreign exchange runs on Fabric. It uses a Fabric channel
 for each pair of involved client institutions for privacy. A special
@@ -1190,6 +1233,7 @@ member of all channels and runs the ordering service. The blockchain helps to re
 the necessary information in the ledger. This data can be accessed
 in real time by clients and helps with liquidity, resolving disputes,
 reducing exposures, and minimizing credit risk [49].
+
 Enterprise asset management (EAM). This solution tracks hardware assets as they move from manufacturing to deployment and
 eventually to disposal, capturing additionally licenses of software
 assets associated with the hardware. The blockchain records the
@@ -1200,6 +1244,7 @@ consortium blockchain runs among the manufacturer, shippers,
 receivers, customers, and the installers. It uses a 3-tiered architecture, with a user interface connecting through the Fabric client to
 the peers. A detailed description of the first version is available
 online [56].
+
 Global cross-currency payments. In collaboration with Stellar.org
 and KlickEx Group, IBM has operated a cross-currency payment
 solution since October 2017, which processes transactions among
@@ -1207,13 +1252,16 @@ partners in the APFII organization in the Pacific region [15]. The
 Fabric blockchain records financial payments in the form of transactions endorsed by the participants, together with the conditions
 they agree on. All appropriate parties have access and insight into
 the clearing and settlement of financial transactions.
+
 The solution is designed for all payment types and values, and
 allows financial institutions to choose the settlement network. In
 particular, settlement may use different methods, and Fabric makes
 a decision on how to settle a payment, depending on the configuration of the participants. One possible kind of settlement is through
 Lumens (Stellar’s cryptocurrency), other ways are based on the
 type of the traded financial instrument.
+
 7 RELATED WORK
+
 The architecture of Fabric resembles that of a middleware-replicated
 database as pioneered by Kemme and Alonso [40]. However, all
 existing work on this addressed only crash failures, not the setting
@@ -1223,6 +1271,7 @@ relies on one node to execute each transaction, which would not
 work on a blockchain. The execute-order-validate architecture of
 Fabric can be interpreted as a generalization of this work to the
 Byzantine model, with practical applications to distributed ledgers.
+
 Byzantium [32] and HRDB [55] are two further predecessors of
 Fabric from the viewpoint of BFT database replication. Byzantium
 allows transactions to run in parallel and uses active replication,
@@ -1234,11 +1283,13 @@ triggers a costly protocol to change the master. HRDB relies in an
 even stronger way on a correct master. In contrast to Fabric, both
 systems use active replication, cannot handle a flexible trust model,
 and rely on deterministic operations.
+
 In Eve [37] a related architecture for BFT SMR has also been
 explored. Its peers execute transactions concurrently and then verify that they all reach the same output state, using a consensus
 protocol. If the states diverge, they roll back and execute operations
 sequentially. Eve contains the element of independent execution,
 which also exists in Fabric, but offers none of its other features.
+
 A large number of distributed ledger platforms in the permissioned model have come out recently, which makes it impossible to compare to all (some prominent ones are Tendermint [14],
 Quorum [13], Chain Core [4], Multichain [12], Hyperledger Sawtooth [9], the Volt proposal [50], and more, see references in recent
 overviews [24, 30]). All platforms follow the order-execute architecture, as discussed in Section 2. As a representative example, take the
@@ -1247,18 +1298,24 @@ With its consensus based on Raft [45], it disseminates a transaction
 to all peers using gossip and the Raft leader (called minter) assembles valid transactions to a block, and distributes this using Raft.
 All peers execute the transaction in the order decided by the leader.
 Therefore it suffers from the limitations mentioned in Sections 1–2.
+
 8 CONCLUSION
+
 Fabric is a modular and extensible distributed operating system
 for running permissioned blockchains. It introduces a novel architecture that separates transaction execution from consensus
 and enables policy-based endorsement and that is reminiscent of
 middleware-replicated databases.
+
 Through its modularity, Fabric is well-suited for many further improvements and investigations. Future work will address (1) performance by exploring benchmarks and optimizations, (2) scalability
 to large deployments, (3) consistency guarantees and more general
 data models, (4) other resilience guarantees through different consensus protocols, (5) privacy and confidentiality for transactions
 and ledger data through cryptographic techniques, and much more.
+
 ACKNOWLEDGMENTS
+
 We thank Pramod Bhatotia and the anonymous reviewers for their
 very insightful and constructive comments.
+
 This work was supported in part by the European Union’s Horizon 2020 Framework Programme under grant agreement number 643964 (SUPERCLOUD) and in part by the Swiss State Secretariat for Education, Research and Innovation (SERI) under contract
 number 15.0091.
 14
