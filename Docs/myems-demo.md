@@ -2,7 +2,7 @@
 
 tbl_combined_equipments(组合设备)
 id| name| uuid|  is_input_counted| is_output_counted| cost_center_id| description 
--|-|-|-|-|-
+-|-|-|-|-|-|-
 1|组合式设备1|48aab70f-2e32-4518-9986-a6b7395acf58| true| false| 1|description|
 2|组合式设备2|c235e68c-e1be-4d7a-84e7-976c83ff6e44| true| false| 1| description|
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -101,7 +101,7 @@ id| name| uuid| svg|  description
 
 tbl_energy_categories(能源分类)
 id| name| uuid| unit_of_measure| kgce| kgco2e
--|-|-|-|-|
+-|-|-|-|-|-
 1|电|6d0753ed-8b43-4332-b6fd-d2f5813831d3|kWh| 0.1229| 0.928|
 2|自来水|3dbfa598-fccc-4d60-bf11-14bd55540c66|m³| 0.0857| 0.910|
 3|天然气|6d0753ed-8b43-4332-b6fd-d2f5813831d3|m³| 1.3300| 2.1622|
